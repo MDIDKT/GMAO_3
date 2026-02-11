@@ -1,0 +1,166 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+{# <form method="post">
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+        </div>
+    {% endif %}
+
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <label for="inputEmail">Email</label>
+    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+    <label for="inputPassword">Password</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+    <button class="btn btn-lg btn-primary" type="submit">
+        Sign in
+    </button>
+</form> #}
+<body class="bg-linear-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+    <!-- Container principal -->
+    <div class="w-full max-w-md">
+
+        <!-- Logo et titre -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800">GMAO MDIDKT</h1>
+            <p class="text-gray-600 mt-2">Gestion de Maintenance Assistée par Ordinateur</p>
+        </div>
+
+        <!-- Card de connexion -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+
+            <!-- Titre du formulaire -->
+            <div class="mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800">Connexion</h2>
+                <p class="text-gray-600 text-sm mt-1">Accédez à votre espace de gestion</p>
+            </div>
+
+            <!-- Message d'erreur (exemple) -->
+            <div class="hidden mb-4 bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 text-sm">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 mr-2 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                              clip-rule="evenodd"></path>
+                    </svg>
+                    <span>Identifiants incorrects. Veuillez réessayer.</span>
+                </div>
+            </div>
+
+            <!-- Formulaire -->
+            <form action="#" method="POST">
+
+                <!-- Champ Email -->
+                <div class="mb-4" >
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                        Adresse email
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                            </svg>
+                        </div>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition duration-150"
+                            placeholder="exemple@entreprise.com"
+                        >
+                    </div>
+                </div>
+
+                <!-- Champ Mot de passe -->
+                <div class="mb-6">
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                        Mot de passe
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition duration-150"
+                            placeholder="••••••••"
+                        >
+                    </div>
+                </div>
+
+                <!-- Se souvenir / Mot de passe oublié -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center ">
+                        <input
+                            type="checkbox"
+                            id="remember"
+                            name="remember"
+                            class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+                        >
+                        <label for="remember" class="ml-2 block text-sm text-gray-700">
+                            Se souvenir de moi
+                        </label>
+                    </div>
+                    <a href="#" class="text-sm text-primary hover:text-indigo-600 font-medium">
+                        Mot de passe oublié ?
+                    </a>
+                </div>
+
+                <!-- Bouton de connexion -->
+                <button
+                    type="submit"
+                    class="w-full bg-primary hover:bg-indigo-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-200 transform hover:-translate-y-0.5"
+                >
+                    Se connecter
+                </button>
+
+                {#CSRF Token (à implémenter avec Symfony) #}
+                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            </form>
+
+            <!-- Divider -->
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <p class="text-center text-sm text-gray-600">
+                    Besoin d'un compte ?
+                    <a href="#" class="text-primary hover:text-blue-700 font-medium">
+                        Contactez l’administrateur
+                    </a>
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-6">
+            <p class="text-sm text-gray-600">
+                © 2026 GMAO MDIDKT - Tous droits réservés
+            </p>
+        </div>
+
+    </div>
+</body>
+{% endblock %}
