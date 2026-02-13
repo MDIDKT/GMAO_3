@@ -26,7 +26,6 @@ security:
                 # target: app_any_route
                 # where to redirect after logout
                 # target: app_any_route
-            user_checker: App\Security\UserChecker
 
             remember_me:
                 secret: '%kernel.secret%'
@@ -37,7 +36,6 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-                default_target_path: app_home
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -47,9 +45,9 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-         - { path: ^/login, roles: PUBLIC_ACCESS }
-         - { path: ^/admin, roles: ROLE_ADMIN }
-         - { path: ^/, roles: ROLE_USER }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/, roles: ROLE_USER }
 
 when@test:
     security:

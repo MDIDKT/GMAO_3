@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inviter un utilisateur{% endblock %}
+
+{% block body %}
+    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <h2 class="text-center text-2xl font-bold tracking-tight text-white">
+                Inviter un utilisateur
+            </h2>
+        </div>
+
+        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+
+            {% for message in app.flashes('success') %}
+                <div class="bg-green-800 text-green-100 p-3 rounded mb-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+
+            <div>
+                {{ form_label(form.email, null, {
+                    'label_attr': {'class': 'block text-sm font-medium text-gray-100'}
+                }) }}
+                <div class="mt-2">
+                    {{ form_widget(form.email, {
+                        'attr': {'class': 'block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6'}
+                    }) }}
+                    {{ form_errors(form.email) }}
+                </div>
+            </div>
+
+            <div>
+                {{ form_label(form.nom, null, {
+                    'label_attr': {'class': 'block text-sm font-medium text-gray-100'}
+                }) }}
+                <div class="mt-2">
+                    {{ form_widget(form.nom, {
+                        'attr': {'class': 'block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6'}
+                    }) }}
+                    {{ form_errors(form.nom) }}
+                </div>
+            </div>
+
+            <div>
+                {{ form_label(form.prenom, null, {
+                    'label_attr': {'class': 'block text-sm font-medium text-gray-100'}
+                }) }}
+                <div class="mt-2">
+                    {{ form_widget(form.prenom, {
+                        'attr': {'class': 'block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6'}
+                    }) }}
+                    {{ form_errors(form.prenom) }}
+                </div>
+            </div>
+
+            <div>
+                {{ form_label(form.roles, null, {
+                    'label_attr': {'class': 'block text-sm font-medium text-gray-100'}
+                }) }}
+                <div class="mt-2">
+                    {{ form_widget(form.roles, {
+                        'attr': {'class': 'block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6'}
+                    }) }}
+                    {{ form_errors(form.roles) }}
+                </div>
+            </div>
+
+            <div>
+                {{ form_label(form.organisation, null, {
+                    'label_attr': {'class': 'block text-sm font-medium text-gray-100'}
+                }) }}
+                <div class="mt-2">
+                    {{ form_widget(form.organisation, {
+                        'attr': {'class': 'block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6'}
+                    }) }}
+                    {{ form_errors(form.organisation) }}
+                </div>
+            </div>
+
+            <div>
+                <button type="submit"
+                        class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400">
+                    Envoyer l'invitation
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
