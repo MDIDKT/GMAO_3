@@ -39,7 +39,7 @@
 //                    ],
                 ])
                 ->add('roles', ChoiceType::class, [
-                    'label' => 'Rôle',
+                    'label' => 'Rôles',
                     'choices' => [
                         'Administrateur' => 'ROLE_ADMIN',
                         'Planificateur' => 'ROLE_PLANIFICATEUR',

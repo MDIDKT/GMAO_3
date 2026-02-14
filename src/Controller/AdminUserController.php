@@ -58,7 +58,7 @@
                             'token' => $token,
                         ], UrlGeneratorInterface::ABSOLUTE_URL),
                     ]);
-//                $mailer->send($email);
+                $mailer->send($email);
 
                 $this->addFlash('success', 'Invitation envoyée à ' . $user->getEmail());
                 return $this->redirectToRoute('app_admin_user_inviter');

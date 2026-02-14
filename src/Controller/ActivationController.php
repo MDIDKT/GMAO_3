@@ -11,7 +11,7 @@ final class ActivationController extends AbstractController
     #[Route('/activation', name: 'app_activation')]
     public function index(): Response
     {
-        return $this->render('activation/index.html.twig', [
+        return $this->render('activation/activation.html.twig', [
             'controller_name' => 'ActivationController',
         ]);
     }
