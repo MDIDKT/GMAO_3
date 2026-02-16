@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrganisationRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Organisation
 {
     #[ORM\Id]
@@ -18,14 +19,27 @@ class Organisation
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column]
-    private ?bool $actif = null;
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    private bool $actif = true;
+
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
+    }
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
+    }
 
     /**
      * @var Collection<int, User>
