@@ -69,18 +69,6 @@
             </div>
 
             <div>
-                {{ form_label(form.organisation, null, {
-                    'label_attr': {'class': 'block text-sm font-medium text-gray-100'}
-                }) }}
-                <div class="mt-2">
-                    {{ form_widget(form.organisation, {
-                        'attr': {'class': 'block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6'}
-                    }) }}
-                    {{ form_errors(form.organisation) }}
-                </div>
-            </div>
-
-            <div>
                 <button type="submit"
                         class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400">
                     Envoyer l'invitation

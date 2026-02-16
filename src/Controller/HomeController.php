@@ -11,8 +11,6 @@
         #[Route('/home', name: 'app_home')]
         public function index(): Response
         {
-            return $this->render('home/inviter.html.twig', [
-                'controller_name' => 'HomeController',
-            ]);
+            return $this->render('templates/home/home.html.twig');
         }
     }

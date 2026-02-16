@@ -7,6 +7,7 @@
     use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
     use Symfony\Component\Form\FormBuilderInterface;
 //    use Symfony\Component\Validator\Constraints\Length;
+    use Symfony\Component\Validator\Constraints\Length;
     use Symfony\Component\Validator\Constraints\NotBlank;
 
     final class SetPasswordType extends AbstractType
@@ -21,7 +22,7 @@
                 'mapped' => false,
                 'constraints' => [
                     new NotBlank(),
-//                    new Length(['min' => 8]),
+                    new Length(min: 8),
                 ],
             ]);
         }

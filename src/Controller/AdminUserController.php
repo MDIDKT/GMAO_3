@@ -65,7 +65,7 @@
             }
 
             return $this->render('adminUser/inviter.html.twig', [
-                'form' => $form,
+                'form' => $form->createView(),
             ]);
         }
     }

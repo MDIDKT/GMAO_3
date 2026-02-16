@@ -3,16 +3,15 @@
     namespace App\Form;
 
 
-    use App\Entity\Organisation;
     use App\Entity\User;
-    use Symfony\Bridge\Doctrine\Form\Type\EntityType;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
     use Symfony\Component\Form\Extension\Core\Type\EmailType;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
-    use Symfony\Component\Validator\Constraints as Assert;
+    use Symfony\Component\Validator\Constraints\Email;
+    use Symfony\Component\Validator\Constraints\NotBlank;
 
     class InvitationType extends AbstractType
     {
@@ -21,24 +20,24 @@
             $builder
                 ->add('email', EmailType::class, [
                     'label' => 'Adresse email',
-//                    'constraints' => [
-//                        new Assert\NotBlank(['message' => 'L\'email est obligatoire.']),
-//                        new Assert\Email(['message' => 'Adresse email invalide.']),
-//                    ],
+                    'constraints' => [
+                        new NotBlank(message :'L\'email est obligatoire.'),
+                        new Email(message:'Adresse email invalide.'),
+                    ],
                 ])
                 ->add('nom', TextType::class, [
                     'label' => 'Nom',
-//                    'constraints' => [
-//                        new Assert\NotBlank(['message' => 'Le nom est obligatoire.']),
-//                    ],
+                    'constraints' => [
+                        new NotBlank(message : 'Le nom est obligatoire.'),
+                    ],
                 ])
                 ->add('prenom', TextType::class, [
                     'label' => 'Prénom',
-//                    'constraints' => [
-//                        new Assert\NotBlank(['message' => 'Le prénom est obligatoire.']),
-//                    ],
+                    'constraints' => [
+                        new NotBlank(message :'Le prénom est obligatoire.'),
+                    ],
                 ])
-                ->add('roles', ChoiceType::class, [
+                ->add('roles', ChoiceType::class, options: [
                     'label' => 'Rôles',
                     'choices' => [
                         'Administrateur' => 'ROLE_ADMIN',
@@ -58,13 +57,6 @@
                     'setter' => function (User $user, ?string $role): void {
                         $user->setRoles($role ? [$role] : []);
                     },
-                ])
-                ->add('organisation', EntityType::class, [
-                    'class' => Organisation::class,
-                    'choice_label' => 'nom',
-                    'label' => 'Organisation de rattachement',
-                    'required' => false,
-                    'placeholder' => '-- Aucun (toutes les organisations) --',
                 ]);
         }
 

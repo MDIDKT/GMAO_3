@@ -31,7 +31,7 @@
 
             if ($user->getTokenExpiresAt() < new DateTimeImmutable()) {
                 $this->addFlash('danger', 'Lien expiré. Demande une nouvelle invitation.');
-                return $this->redirectToRoute('app_login');
+                return $this->redirectToRoute(route: 'app_login');
             }
 
             $form = $this->createForm(SetPasswordType::class);
