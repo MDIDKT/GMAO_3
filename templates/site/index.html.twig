@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Site index{% endblock %}
+
+{% block body %}
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <h1>Site index</h1>
+    <table class="table-auto w-full">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Adresse</th>
+                <th>CodePostal</th>
+                <th>Ville</th>
+                <th>Telephone</th>
+                <th>Email</th>
+                <th>Actif</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for site in sites %}
+            <tr>
+                <td>{{ site.id }}</td>
+                <td>{{ site.nom }}</td>
+                <td>{{ site.adresse }}</td>
+                <td>{{ site.codePostal }}</td>
+                <td>{{ site.ville }}</td>
+                <td>{{ site.telephone }}</td>
+                <td>{{ site.email }}</td>
+                <td>{{ site.actif ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_site_show', {'id': site.id}) }}">show</a>
+                    <a href="{{ path('app_site_edit', {'id': site.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+    <a href="{{ path('app_site_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Batiment index{% endblock %}
+
+{% block body %}
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <h1>Batiment index</h1>
+
+    <table class="table-auto w-full">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Etage</th>
+                <th>Actif</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for batiment in batiments %}
+            <tr>
+                <td>{{ batiment.id }}</td>
+                <td>{{ batiment.nom }}</td>
+                <td>{{ batiment.etage }}</td>
+                <td>{{ batiment.actif ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_batiment_show', {'id': batiment.id}) }}">show</a>
+                    <a href="{{ path('app_batiment_edit', {'id': batiment.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_batiment_new') }}">Create new</a>
+{% endblock %}

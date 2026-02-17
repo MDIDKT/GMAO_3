@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Batiment{% endblock %}
+
+{% block body %}
+    <h1>Batiment</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ batiment.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ batiment.nom }}</td>
+            </tr>
+            <tr>
+                <th>Etage</th>
+                <td>{{ batiment.etage }}</td>
+            </tr>
+            <tr>
+                <th>Actif</th>
+                <td>{{ batiment.actif ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_batiment_index') }}">back to list</a>
+
+    <a href="{{ path('app_batiment_edit', {'id': batiment.id}) }}">edit</a>
+
+    {{ include('batiment/_delete_form.html.twig') }}
+{% endblock %}

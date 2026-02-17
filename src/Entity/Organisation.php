@@ -36,9 +36,16 @@ class Organisation
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'organisation')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, Site>
+     */
+    #[ORM\OneToMany(targetEntity: Site::class, mappedBy: 'organisation')]
+    private Collection $sites;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->sites = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -136,6 +143,36 @@ class Organisation
         }
 
         $this->users->removeElement($user);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Site>
+     */
+    public function getSites(): Collection
+    {
+        return $this->sites;
+    }
+
+    public function addSite(Site $site): static
+    {
+        if (!$this->sites->contains($site)) {
+            $this->sites->add($site);
+            $site->setOrganisation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSite(Site $site): static
+    {
+        if ($this->sites->removeElement($site)) {
+            // set the owning side to null (unless already changed)
+            if ($site->getOrganisation() === $this) {
+                $site->setOrganisation(null);
+            }
+        }
 
         return $this;
     }

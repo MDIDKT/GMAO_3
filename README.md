@@ -16,3 +16,9 @@ Activation du compte OK
 Rception mail OK
 Validation du mdp OK
 continuer a valider le fonctionnement du jour 5
+
+17-02-26
+Validation du mdp OK
+correction réalisé avec l'aide de codex 100%
+il a corriger et fait du copie coller le code fonctionne une verification reste a faire pour bien comprendre 
+je passe au jour 6
