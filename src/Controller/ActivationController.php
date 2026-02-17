@@ -26,12 +26,14 @@
             $user = $em->getRepository(User::class)->findOneBy(['invitationToken' => $token]);
 
             if (!$user) {
+                $this->addFlash('danger', 'Lien invalide. Demande une nouvelle invitation.');
                 throw $this->createNotFoundException('Lien invalide.');
             }
 
-            if ($user->getTokenExpiresAt() < new DateTimeImmutable()) {
+            $expiresAt = $user->getTokenExpiresAt();
+            if ($expiresAt === null || $expiresAt < new DateTimeImmutable()) {
                 $this->addFlash('danger', 'Lien expiré. Demande une nouvelle invitation.');
-                return $this->redirectToRoute(route: 'app_login');
+                return $this->redirectToRoute('app_login');
             }
 
             $form = $this->createForm(SetPasswordType::class);
@@ -52,7 +54,7 @@
             }
 
             return $this->render('security/activation.html.twig', [
-                'form' => $form,
+                'form' => $form ->createView(),
             ]);
         }
     }

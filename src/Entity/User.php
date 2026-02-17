@@ -10,6 +10,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ORM\Index(name: 'IDX_USER_INVITATION_TOKEN', columns: ['invitation_token'])]
+#[ORM\Index(name: 'IDX_USER_ORG_ACTIF', columns: ['organisation_id', 'actif'])]
 #[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -40,35 +42,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $prenom = null;
 
 
-    #[ORM\Column]
-    private ?bool $actif = null;
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $actif = false;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Organisation $organisation = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private ?DateTimeImmutable $createdAt = null;
+    #[ORM\Column(type: 'datetime_immutable')]
+    private ?DateTimeImmutable $updatedAt = null;
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $invitationToken = null;
+    #[ORM\Column(nullable: true)]
+    private ?DateTimeImmutable $tokenExpiresAt = null;
 
     #[ORM\PrePersist]
-    public function setCreatedAtValue(): void
+    public function initializeTimestamps(): void
     {
+        $now = new DateTimeImmutable();
+
         if ($this->createdAt === null) {
-            $this->createdAt = new DateTimeImmutable();
+            $this->createdAt = $now;
+        }
+
+        if ($this->updatedAt === null) {
+            $this->updatedAt = $now;
         }
     }
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?DateTimeImmutable $updatedAt = null;
 
     #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
+    public function refreshUpdatedAt(): void
     {
         $this->updatedAt = new DateTimeImmutable();
     }
-    #[ORM\Column(length: 64, nullable: true)]
-    private ?string $invitationToken = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?DateTimeImmutable $tokenExpiresAt = null;
 
     public function getId(): ?int
     {
@@ -169,7 +177,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isActif(): ?bool
+    public function isActif(): bool
     {
         return $this->actif;
     }
@@ -186,9 +194,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->organisation;
     }
 
-    public function setOrganisation(?Organisation $organisation): static
+    public function setOrganisation(Organisation $organisation): static
     {
+        if ($this->organisation === $organisation) {
+            return $this;
+        }
+
+        $previousOrganisation = $this->organisation;
         $this->organisation = $organisation;
+
+        if ($previousOrganisation !== null) {
+            $previousOrganisation->getUsers()->removeElement($this);
+        }
+
+        if (!$organisation->getUsers()->contains($this)) {
+            $organisation->getUsers()->add($this);
+        }
 
         return $this;
     }

@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\OrganisationRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrganisationRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQ_ORGANISATION_NOM', fields: ['nom'])]
 #[ORM\HasLifecycleCallbacks]
 class Organisation
 {
@@ -23,24 +25,11 @@ class Organisation
     private bool $actif = true;
 
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\Column(type: 'datetime_immutable')]
+    private ?DateTimeImmutable $createdAt = null;
 
-    #[ORM\PrePersist]
-    public function setCreatedAtValue(): void
-    {
-        if ($this->createdAt === null) {
-            $this->createdAt = new \DateTimeImmutable();
-        }
-    }
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
-    #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-
+    #[ORM\Column(type: 'datetime_immutable')]
+    private ?DateTimeImmutable $updatedAt = null;
     /**
      * @var Collection<int, User>
      */
@@ -50,6 +39,26 @@ class Organisation
     public function __construct()
     {
         $this->users = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    public function initializeTimestamps(): void
+    {
+        $now = new DateTimeImmutable();
+
+        if ($this->createdAt === null) {
+            $this->createdAt = $now;
+        }
+
+        if ($this->updatedAt === null) {
+            $this->updatedAt = $now;
+        }
+    }
+
+    #[ORM\PreUpdate]
+    public function refreshUpdatedAt(): void
+    {
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -69,7 +78,7 @@ class Organisation
         return $this;
     }
 
-    public function isActif(): ?bool
+    public function isActif(): bool
     {
         return $this->actif;
     }
@@ -81,24 +90,24 @@ class Organisation
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 
@@ -115,22 +124,18 @@ class Organisation
 
     public function addUser(User $user): static
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->setOrganisation($this);
-        }
+        $user->setOrganisation($this);
 
         return $this;
     }
 
     public function removeUser(User $user): static
     {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getOrganisation() === $this) {
-                $user->setOrganisation(null);
-            }
+        if ($user->getOrganisation() === $this) {
+            throw new \LogicException('A user must belong to an organisation. Reassign it before removal.');
         }
+
+        $this->users->removeElement($user);
 
         return $this;
     }

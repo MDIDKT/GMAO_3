@@ -6,14 +6,15 @@
     use App\Form\InvitationType;
     use DateTimeImmutable;
     use Doctrine\ORM\EntityManagerInterface;
+    use Symfony\Bridge\Twig\Mime\TemplatedEmail;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Mailer\MailerInterface;
+    use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
     use Symfony\Component\Routing\Attribute\Route;
-    use Symfony\Component\Security\Http\Attribute\IsGranted;
-    use Symfony\Bridge\Twig\Mime\TemplatedEmail;
     use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+    use Symfony\Component\Security\Http\Attribute\IsGranted;
 
     #[IsGranted('ROLE_ADMIN')]
     final class AdminUserController extends AbstractController
@@ -22,7 +23,8 @@
         public function inviter(
             Request                $request,
             EntityManagerInterface $em,
-            MailerInterface        $mailer
+            MailerInterface        $mailer,
+        UserPasswordHasherInterface $passwordHasher,
         ): Response
         {
             $user = new User();
@@ -34,13 +36,18 @@
                 $token = bin2hex(random_bytes(32));
                 $user->setInvitationToken($token);
                 $user->setTokenExpiresAt(new DateTimeImmutable('+48 hours'));
+                $user->setActif(false);
 
                 // 2. User inactif, sans mot de passe
-                $user->setActif(false);
-                $user->setPassword(''); // Pas de mot de passe pour l'instant
+                $randomPlain = bin2hex(random_bytes(24));
+                $user->setPassword($passwordHasher->hashPassword($user, $randomPlain));
 
                 // 3. Rattacher à l'organisation de l'admin connecté
-                $user->setOrganisation($this->getUser()->getOrganisation());
+                $admin = $this->getUser();
+                if (!$admin instanceof User || $admin->getOrganisation() === null) {
+                    throw $this->createAccessDeniedException('Admin account is not linked to an organisation.');
+                }
+                $user->setOrganisation($admin->getOrganisation());
 
                 // 4. Sauvegarder en base
                 $em->persist($user);
