@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\BatimentRepository;
+use App\Repository\CategorieEquipementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: BatimentRepository::class)]
-class Batiment
+#[ORM\Entity(repositoryClass: CategorieEquipementRepository::class)]
+class CategorieEquipement
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,19 +19,16 @@ class Batiment
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $etage = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
 
-    #[ORM\Column]
-    private ?bool $actif = null;
-
-    #[ORM\ManyToOne(inversedBy: 'batiments')]
-    private ?Site $site = null;
+    #[ORM\ManyToOne(inversedBy: 'categorieEquipements')]
+    private ?Organisation $organisation = null;
 
     /**
      * @var Collection<int, Equipement>
      */
-    #[ORM\OneToMany(targetEntity: Equipement::class, mappedBy: 'batiment')]
+    #[ORM\OneToMany(targetEntity: Equipement::class, mappedBy: 'categorie')]
     private Collection $equipements;
 
     public function __construct()
@@ -56,38 +54,26 @@ class Batiment
         return $this;
     }
 
-    public function getEtage(): ?string
+    public function getDescription(): ?string
     {
-        return $this->etage;
+        return $this->description;
     }
 
-    public function setEtage(?string $etage): static
+    public function setDescription(?string $description): static
     {
-        $this->etage = $etage;
+        $this->description = $description;
 
         return $this;
     }
 
-    public function isActif(): ?bool
+    public function getOrganisation(): ?Organisation
     {
-        return $this->actif;
+        return $this->organisation;
     }
 
-    public function setActif(bool $actif): static
+    public function setOrganisation(?Organisation $organisation): static
     {
-        $this->actif = $actif;
-
-        return $this;
-    }
-
-    public function getSite(): ?Site
-    {
-        return $this->site;
-    }
-
-    public function setSite(?Site $site): static
-    {
-        $this->site = $site;
+        $this->organisation = $organisation;
 
         return $this;
     }
@@ -104,7 +90,7 @@ class Batiment
     {
         if (!$this->equipements->contains($equipement)) {
             $this->equipements->add($equipement);
-            $equipement->setBatiment($this);
+            $equipement->setCategorie($this);
         }
 
         return $this;
@@ -114,8 +100,8 @@ class Batiment
     {
         if ($this->equipements->removeElement($equipement)) {
             // set the owning side to null (unless already changed)
-            if ($equipement->getBatiment() === $this) {
-                $equipement->setBatiment(null);
+            if ($equipement->getCategorie() === $this) {
+                $equipement->setCategorie(null);
             }
         }
 

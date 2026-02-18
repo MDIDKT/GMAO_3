@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use LogicException;
 
 #[ORM\Entity(repositoryClass: OrganisationRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_ORGANISATION_NOM', fields: ['nom'])]
@@ -42,10 +43,24 @@ class Organisation
     #[ORM\OneToMany(targetEntity: Site::class, mappedBy: 'organisation')]
     private Collection $sites;
 
+    /**
+     * @var Collection<int, CategorieEquipement>
+     */
+    #[ORM\OneToMany(targetEntity: CategorieEquipement::class, mappedBy: 'organisation')]
+    private Collection $categorieEquipements;
+
+    /**
+     * @var Collection<int, Equipement>
+     */
+    #[ORM\OneToMany(targetEntity: Equipement::class, mappedBy: 'organisation')]
+    private Collection $equipements;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->sites = new ArrayCollection();
+        $this->categorieEquipements = new ArrayCollection();
+        $this->equipements = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -139,7 +154,7 @@ class Organisation
     public function removeUser(User $user): static
     {
         if ($user->getOrganisation() === $this) {
-            throw new \LogicException('A user must belong to an organisation. Reassign it before removal.');
+            throw new LogicException('A user must belong to an organisation. Reassign it before removal.');
         }
 
         $this->users->removeElement($user);
@@ -176,4 +191,65 @@ class Organisation
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, CategorieEquipement>
+     */
+    public function getCategorieEquipements(): Collection
+    {
+        return $this->categorieEquipements;
+    }
+
+    public function addCategorieEquipement(CategorieEquipement $categorieEquipement): static
+    {
+        if (!$this->categorieEquipements->contains($categorieEquipement)) {
+            $this->categorieEquipements->add($categorieEquipement);
+            $categorieEquipement->setOrganisation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategorieEquipement(CategorieEquipement $categorieEquipement): static
+    {
+        if ($this->categorieEquipements->removeElement($categorieEquipement)) {
+            // set the owning side to null (unless already changed)
+            if ($categorieEquipement->getOrganisation() === $this) {
+                $categorieEquipement->setOrganisation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Equipement>
+     */
+    public function getEquipements(): Collection
+    {
+        return $this->equipements;
+    }
+
+    public function addEquipement(Equipement $equipement): static
+    {
+        if (!$this->equipements->contains($equipement)) {
+            $this->equipements->add($equipement);
+            $equipement->setOrganisation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEquipement(Equipement $equipement): static
+    {
+        if ($this->equipements->removeElement($equipement)) {
+            // set the owning side to null (unless already changed)
+            if ($equipement->getOrganisation() === $this) {
+                $equipement->setOrganisation(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

@@ -46,9 +46,18 @@ class Site
     #[ORM\OneToMany(targetEntity: Batiment::class, mappedBy: 'site')]
     private Collection $batiments;
 
+    /**
+     * @var Collection<int, Equipement>
+     */
+    #[ORM\OneToMany(targetEntity: Equipement::class, mappedBy: 'site')]
+    private Collection $equipements;
+    
+
     public function __construct()
     {
         $this->batiments = new ArrayCollection();
+        $this->site = new ArrayCollection();
+        $this->equipements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,4 +190,35 @@ class Site
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Equipement>
+     */
+    public function getEquipements(): Collection
+    {
+        return $this->equipements;
+    }
+
+    public function addEquipement(Equipement $equipement): static
+    {
+        if (!$this->equipements->contains($equipement)) {
+            $this->equipements->add($equipement);
+            $equipement->setSite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEquipement(Equipement $equipement): static
+    {
+        if ($this->equipements->removeElement($equipement)) {
+            // set the owning side to null (unless already changed)
+            if ($equipement->getSite() === $this) {
+                $equipement->setSite(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

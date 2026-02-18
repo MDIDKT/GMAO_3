@@ -23,3 +23,9 @@ correction réalisé avec l'aide de codex 100%
 il a corriger et fait du copie coller le code fonctionne une verification reste a faire pour bien comprendre 
 je passe au jour 6
 J'ai cree les entty et CRUD pour site et batiment
+
+18-02-26
+j'ai tenté de faire les filtre mais je ne les comprends pas je n'y arrive pas . je ne comprend pas trop la notion et comment l'implementer
+je passe au jour 7
+J'ai fait ajouter les entity pour categorie et equipement(+CRUD)
+il me reste a faire les filtres
