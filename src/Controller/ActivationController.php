@@ -12,6 +12,7 @@
     use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
     use Symfony\Component\Routing\Attribute\Route;
 
+
     final class ActivationController extends AbstractController
     {
         #[Route('/activation/{token}', name: 'app_activation')]
@@ -54,7 +55,7 @@
             }
 
             return $this->render('security/activation.html.twig', [
-                'form' => $form ->createView(),
+                'form' => $form->createView(),
             ]);
         }
     }
