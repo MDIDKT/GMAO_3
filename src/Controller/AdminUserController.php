@@ -19,6 +19,10 @@
     #[IsGranted('ROLE_ADMIN')]
     final class AdminUserController extends AbstractController
     {
+        /**
+         * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+         * @throws \Random\RandomException
+         */
         #[Route('/admin/user/inviter', name: 'app_admin_user_inviter')]
         public function inviter(
             Request                $request,

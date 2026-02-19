@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Equipement;
-use App\Enum\StatutEquipement;
 use App\Form\EquipementType;
 use App\Repository\EquipementRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,7 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/equipement')]
-#[ORM\Column(enumType: StatutEquipement::class)]
 final class EquipementController extends AbstractController
 {
     #[Route(name: 'app_equipement_index', methods: ['GET'])]

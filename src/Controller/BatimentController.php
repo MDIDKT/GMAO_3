@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Batiment;
+use App\Entity\User;
 use App\Form\BatimentType;
 use App\Repository\BatimentRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,10 +18,23 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class BatimentController extends AbstractController
 {
     #[Route(name: 'app_batiment_index', methods: ['GET'])]
-    public function index(BatimentRepository $batimentRepository): Response
+    public function index(Request $request, BatimentRepository $batimentRepository): Response
     {
+        $user = $this->getUser();
+        if (!$user instanceof User || $user->getOrganisation() === null) {
+            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+        }
+
+        $actifFilter = $request->query->get('actif');
+        $actif = match ($actifFilter) {
+            '1' => true,
+            '0' => false,
+            default => null,
+        };
+
         return $this->render('batiment/index.html.twig', [
-            'batiments' => $batimentRepository->findAll(),
+            'batiments' => $batimentRepository->findBatiments($user->getOrganisation(), $actif),
+            'selectedActif' => $actifFilter === '0' || $actifFilter === '1' ? $actifFilter : '',
         ]);
     }
 

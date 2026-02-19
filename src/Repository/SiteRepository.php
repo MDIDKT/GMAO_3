@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Organisation;
 use App\Entity\Site;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,6 +17,24 @@ class SiteRepository extends ServiceEntityRepository
         parent::__construct($registry, Site::class);
     }
 
+    /**
+     * @return Site[] Returns an array of Site objects
+     */
+    public function findOrganisation(Organisation $organisation, ?bool $actif = null): array
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->andWhere('e.organisation = :organisation')
+            ->setParameter('organisation', $organisation)
+            ->orderBy('e.nom', 'ASC');
+
+        if ($actif !== null) {
+            $qb
+                ->andWhere('e.actif = :actif')
+                ->setParameter('actif', $actif);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
     //    /**
     //     * @return Site[] Returns an array of Site objects
     //     */

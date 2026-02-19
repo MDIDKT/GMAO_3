@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Site;
+use App\Entity\User;
 use App\Form\SiteType;
 use App\Repository\SiteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,10 +18,26 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class SiteController extends AbstractController
 {
     #[Route(name: 'app_site_index', methods: ['GET'])]
-    public function index(SiteRepository $siteRepository): Response
+    public function index(Request $request, SiteRepository $siteRepository): Response
     {
+        $user = $this->getUser();
+        if (!$user instanceof User || $user->getOrganisation() === null) {
+            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+        }
+
+        $actifFilter = $request->query->get('actif');
+        $actif = match ($actifFilter) {
+            '1' => true,
+            '0' => false,
+            default => null,
+        };
+
         return $this->render('site/index.html.twig', [
-            'sites' => $siteRepository->findAll(),
+            'sites' => $siteRepository->findOrganisation(
+                $user->getOrganisation(),
+                $actif
+            ),
+            'selectedActif' => $actifFilter === '0' || $actifFilter === '1' ? $actifFilter : '',
         ]);
     }
 

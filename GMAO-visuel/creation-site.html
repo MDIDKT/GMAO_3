@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMAO - Nouveau Site</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#64748B',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+
+    <div class="flex h-screen">
+        
+        <!-- Sidebar (simplifié) -->
+        <aside class="w-64 bg-white shadow-lg">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-gray-800">GMAO SaaS</h1>
+                        <p class="text-xs text-gray-500">Maintenance</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto">
+            
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200">
+                <div class="px-8 py-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Nouveau site</h2>
+                            <p class="text-sm text-gray-600 mt-1">
+                                <a href="#" class="text-gray-400 hover:text-gray-600">Accueil</a>
+                                <span class="text-gray-400 mx-2">/</span>
+                                <a href="liste-sites.html" class="text-gray-400 hover:text-gray-600">Sites</a>
+                                <span class="text-gray-400 mx-2">/</span>
+                                <span>Nouveau</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="p-8">
+                
+                <!-- Form Card -->
+                <div class="max-w-3xl mx-auto">
+                    <div class="bg-white rounded-xl shadow-md">
+                        
+                        <!-- Form Header -->
+                        <div class="px-8 py-6 border-b border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-800">Informations du site</h3>
+                            <p class="text-sm text-gray-600 mt-1">Remplissez les informations principales du site</p>
+                        </div>
+
+                        <!-- Form Body -->
+                        <form class="p-8 space-y-6">
+                            
+                            <!-- Nom -->
+                            <div>
+                                <label for="nom" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Nom du site <span class="text-red-500">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="nom" 
+                                    name="nom" 
+                                    required
+                                    placeholder="Ex: Bâtiment Principal"
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition"
+                                >
+                                <p class="mt-1 text-sm text-gray-500">Nom d'identification du site</p>
+                            </div>
+
+                            <!-- Adresse -->
+                            <div>
+                                <label for="adresse" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Adresse
+                                </label>
+                                <textarea 
+                                    id="adresse" 
+                                    name="adresse" 
+                                    rows="3"
+                                    placeholder="Adresse complète du site"
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition"
+                                ></textarea>
+                            </div>
+
+                            <!-- Contact -->
+                            <div>
+                                <label for="contact" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Contact sur site
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="contact" 
+                                    name="contact" 
+                                    placeholder="Nom et coordonnées du responsable"
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition"
+                                >
+                            </div>
+
+                            <!-- Grid 2 colonnes -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                
+                                <!-- Téléphone -->
+                                <div>
+                                    <label for="telephone" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Téléphone
+                                    </label>
+                                    <input 
+                                        type="tel" 
+                                        id="telephone" 
+                                        name="telephone" 
+                                        placeholder="+33 1 23 45 67 89"
+                                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition"
+                                    >
+                                </div>
+
+                                <!-- Email -->
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Email
+                                    </label>
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        name="email" 
+                                        placeholder="contact@site.fr"
+                                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition"
+                                    >
+                                </div>
+
+                            </div>
+
+                            <!-- Notes -->
+                            <div>
+                                <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Notes / Informations complémentaires
+                                </label>
+                                <textarea 
+                                    id="notes" 
+                                    name="notes" 
+                                    rows="4"
+                                    placeholder="Informations utiles, horaires d'accès, particularités..."
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition"
+                                ></textarea>
+                            </div>
+
+                            <!-- Statut -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Statut
+                                </label>
+                                <div class="flex items-center space-x-6">
+                                    <label class="flex items-center">
+                                        <input 
+                                            type="radio" 
+                                            name="actif" 
+                                            value="1" 
+                                            checked
+                                            class="h-4 w-4 text-primary border-gray-300 focus:ring-primary"
+                                        >
+                                        <span class="ml-2 text-sm text-gray-700">Actif</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input 
+                                            type="radio" 
+                                            name="actif" 
+                                            value="0"
+                                            class="h-4 w-4 text-primary border-gray-300 focus:ring-primary"
+                                        >
+                                        <span class="ml-2 text-sm text-gray-700">Inactif</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Divider -->
+                            <div class="border-t border-gray-200 pt-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500">
+                                            <span class="text-red-500">*</span> Champs obligatoires
+                                        </p>
+                                    </div>
+                                    <div class="flex items-center space-x-4">
+                                        <a href="liste-sites.html" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                                            Annuler
+                                        </a>
+                                        <button type="submit" class="px-6 py-3 bg-primary hover:bg-blue-600 text-white rounded-lg transition font-medium flex items-center space-x-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                            <span>Enregistrer le site</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                    <!-- Info Box -->
+                    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-blue-800">À savoir</h3>
+                                <div class="mt-2 text-sm text-blue-700">
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li>Vous pourrez ajouter des équipements après la création du site</li>
+                                        <li>Le site peut être désactivé temporairement si nécessaire</li>
+                                        <li>Les informations de contact facilitent les interventions sur site</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

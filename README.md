@@ -1,4 +1,4 @@
-# GMAO_2
+# GMAO_3
 Création de ma GMAO en MVP
 
 14-02-26
@@ -29,3 +29,9 @@ j'ai tenté de faire les filtre mais je ne les comprends pas je n'y arrive pas .
 je passe au jour 7
 J'ai fait ajouter les entity pour categorie et equipement(+CRUD)
 il me reste a faire les filtres
+
+19-02-26
+J'ai fait les filtres et les ajouter dans le tableau des batiments 100%
+corrections fait avec codex donc reste a comprendre ce qu'il fait et comment il fonctionne exactement
+jour6 tout est ok
+je passe au jour 7 avec les filtres a finir avant de passer au jour 8

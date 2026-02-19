@@ -5,6 +5,20 @@
 {% block body %}
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <h1>Site index</h1>
+    <form method="get" class="mb-4 flex items-end gap-3">
+        <div>
+            <label for="actif">Filtre actif</label>
+            <select id="actif" name="actif">
+                <option value="" {{ selectedActif == '' ? 'selected' : '' }}>Tous</option>
+                <option value="1" {{ selectedActif == '1' ? 'selected' : '' }}>Actifs</option>
+                <option value="0" {{ selectedActif == '0' ? 'selected' : '' }}>Inactifs</option>
+            </select>
+        </div>
+        <button type="submit">Filtrer</button>
+        {% if selectedActif != '' %}
+            <a href="{{ path('app_site_index') }}">Reinitialiser</a>
+        {% endif %}
+    </form>
     <table class="table-auto w-full">
         <thead>
             <tr>
@@ -16,6 +30,7 @@
                 <th>Telephone</th>
                 <th>Email</th>
                 <th>Actif</th>
+                <th>Organisation</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -30,6 +45,7 @@
                 <td>{{ site.telephone }}</td>
                 <td>{{ site.email }}</td>
                 <td>{{ site.actif ? 'Yes' : 'No' }}</td>
+                <td>{{ site.organisation.nom }}</td>
                 <td>
                     <a href="{{ path('app_site_show', {'id': site.id}) }}">show</a>
                     <a href="{{ path('app_site_edit', {'id': site.id}) }}">edit</a>
@@ -37,7 +53,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="9">no records found</td>
+                <td colspan="10">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
