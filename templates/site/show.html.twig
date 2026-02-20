@@ -1,50 +1,80 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/app.html.twig' %}
 
-{% block title %}Site{% endblock %}
+{% block page_title %}{{ site.nom }}{% endblock %}
+{% block page_subtitle %}Detail du site{% endblock %}
 
-{% block body %}
-    <h1>Site</h1>
+{% block page_actions %}
+    <a href="{{ path('app_site_edit', {'id': site.id}) }}" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+        Modifier
+    </a>
+{% endblock %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ site.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ site.nom }}</td>
-            </tr>
-            <tr>
-                <th>Adresse</th>
-                <td>{{ site.adresse }}</td>
-            </tr>
-            <tr>
-                <th>CodePostal</th>
-                <td>{{ site.codePostal }}</td>
-            </tr>
-            <tr>
-                <th>Ville</th>
-                <td>{{ site.ville }}</td>
-            </tr>
-            <tr>
-                <th>Telephone</th>
-                <td>{{ site.telephone }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ site.email }}</td>
-            </tr>
-            <tr>
-                <th>Actif</th>
-                <td>{{ site.actif ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
+{% block page_content %}
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+            <div class="flex items-start justify-between mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Informations du site</h3>
+                    <span class="px-3 py-1 text-sm font-semibold rounded-full {{ site.actif ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                        {{ site.actif ? 'Actif' : 'Inactif' }}
+                    </span>
+                </div>
+                <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                </div>
+            </div>
 
-    <a href="{{ path('app_site_index') }}">back to list</a>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Nom</p>
+                    <p class="text-gray-800">{{ site.nom }}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Adresse</p>
+                    <p class="text-gray-800">{{ site.adresse ?: '-' }}</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Code postal</p>
+                        <p class="text-gray-800">{{ site.codePostal }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Ville</p>
+                        <p class="text-gray-800">{{ site.ville ?: '-' }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Telephone</p>
+                        <p class="text-gray-800">{{ site.telephone ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Email</p>
+                        <p class="text-gray-800">{{ site.email ?: '-' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <a href="{{ path('app_site_edit', {'id': site.id}) }}">edit</a>
-
-    {{ include('site/_delete_form.html.twig') }}
+        <div class="space-y-6">
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
+                <p class="text-sm text-gray-600 font-medium">ID site</p>
+                <p class="text-3xl font-bold text-gray-800 mt-1">{{ site.id }}</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-secondary">
+                <p class="text-sm text-gray-600 font-medium">Organisation</p>
+                <p class="text-lg font-semibold text-gray-800 mt-1">{{ site.organisation.nom }}</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex flex-col gap-3">
+                    <a href="{{ path('app_site_index') }}" class="text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                        Retour a la liste
+                    </a>
+                    {{ include('site/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

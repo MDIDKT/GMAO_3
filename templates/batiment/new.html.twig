@@ -1,11 +1,18 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/app.html.twig' %}
 
-{% block title %}New Batiment{% endblock %}
+{% block page_title %}Nouveau batiment{% endblock %}
+{% block page_subtitle %}Creation d'un batiment{% endblock %}
 
-{% block body %}
-    <h1>Create new Batiment</h1>
-
-    {{ include('batiment/_form.html.twig') }}
-
-    <a href="{{ path('app_batiment_index') }}">back to list</a>
+{% block page_content %}
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-xl shadow-md">
+            <div class="px-8 py-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">Informations du batiment</h3>
+                <p class="text-sm text-gray-600 mt-1">Renseignez les informations principales</p>
+            </div>
+            <div class="p-8">
+                {{ include('batiment/_form.html.twig', {'button_label': 'Enregistrer le batiment', 'cancel_path': path('app_batiment_index')}) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}

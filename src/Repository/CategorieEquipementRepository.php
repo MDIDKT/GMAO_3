@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\CategorieEquipement;
+use App\Entity\Organisation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,19 @@ class CategorieEquipementRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CategorieEquipement::class);
+    }
+
+    /**
+     * @return CategorieEquipement[]
+     */
+    public function findByOrganisation(Organisation $organisation): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.organisation = :organisation')
+            ->setParameter('organisation', $organisation)
+            ->orderBy('c.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     //    /**

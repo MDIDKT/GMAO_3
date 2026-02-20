@@ -1,34 +1,55 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/app.html.twig' %}
 
-{% block title %}Batiment{% endblock %}
+{% block page_title %}{{ batiment.nom }}{% endblock %}
+{% block page_subtitle %}Detail du batiment{% endblock %}
 
-{% block body %}
-    <h1>Batiment</h1>
+{% block page_actions %}
+    <a href="{{ path('app_batiment_edit', {'id': batiment.id}) }}" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+        Modifier
+    </a>
+{% endblock %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ batiment.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ batiment.nom }}</td>
-            </tr>
-            <tr>
-                <th>Etage</th>
-                <td>{{ batiment.etage }}</td>
-            </tr>
-            <tr>
-                <th>Actif</th>
-                <td>{{ batiment.actif ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
+{% block page_content %}
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+            <div class="flex items-start justify-between mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Informations du batiment</h3>
+                    <span class="px-3 py-1 text-sm font-semibold rounded-full {{ batiment.actif ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                        {{ batiment.actif ? 'Actif' : 'Inactif' }}
+                    </span>
+                </div>
+            </div>
 
-    <a href="{{ path('app_batiment_index') }}">back to list</a>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Nom</p>
+                    <p class="text-gray-800">{{ batiment.nom }}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Etage</p>
+                    <p class="text-gray-800">{{ batiment.etage ?: '-' }}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Site</p>
+                    <p class="text-gray-800">{{ batiment.site ? batiment.site.nom : '-' }}</p>
+                </div>
+            </div>
+        </div>
 
-    <a href="{{ path('app_batiment_edit', {'id': batiment.id}) }}">edit</a>
-
-    {{ include('batiment/_delete_form.html.twig') }}
+        <div class="space-y-6">
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
+                <p class="text-sm text-gray-600 font-medium">ID batiment</p>
+                <p class="text-3xl font-bold text-gray-800 mt-1">{{ batiment.id }}</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex flex-col gap-3">
+                    <a href="{{ path('app_batiment_index') }}" class="text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                        Retour a la liste
+                    </a>
+                    {{ include('batiment/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,13 +1,23 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/app.html.twig' %}
 
-{% block title %}Edit Batiment{% endblock %}
+{% block page_title %}Modifier le batiment{% endblock %}
+{% block page_subtitle %}Mise a jour des informations du batiment{% endblock %}
 
-{% block body %}
-    <h1>Edit Batiment</h1>
+{% block page_content %}
+    <div class="max-w-3xl mx-auto space-y-6">
+        <div class="bg-white rounded-xl shadow-md">
+            <div class="px-8 py-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">Edition</h3>
+                <p class="text-sm text-gray-600 mt-1">Modifiez les informations et enregistrez</p>
+            </div>
+            <div class="p-8">
+                {{ include('batiment/_form.html.twig', {'button_label': 'Mettre a jour', 'cancel_path': path('app_batiment_show', {'id': batiment.id})}) }}
+            </div>
+        </div>
 
-    {{ include('batiment/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_batiment_index') }}">back to list</a>
-
-    {{ include('batiment/_delete_form.html.twig') }}
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <h4 class="text-sm font-semibold text-gray-700 mb-4">Suppression</h4>
+            {{ include('batiment/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

@@ -1,46 +1,87 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/app.html.twig' %}
 
-{% block title %}Equipement{% endblock %}
+{% block page_title %}{{ equipement.nom }}{% endblock %}
+{% block page_subtitle %}Detail de l'equipement{% endblock %}
 
-{% block body %}
-    <h1>Equipement</h1>
+{% block page_actions %}
+    <a href="{{ path('app_equipement_edit', {'id': equipement.id}) }}" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+        Modifier
+    </a>
+{% endblock %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ equipement.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ equipement.nom }}</td>
-            </tr>
-            <tr>
-                <th>Marque</th>
-                <td>{{ equipement.marque }}</td>
-            </tr>
-            <tr>
-                <th>Modele</th>
-                <td>{{ equipement.modele }}</td>
-            </tr>
-            <tr>
-                <th>NumeroDeSerie</th>
-                <td>{{ equipement.numeroDeSerie }}</td>
-            </tr>
-            <tr>
-                <th>Statut</th>
-                <td>{{ equipement.statut ? equipement.statut.label() : '' }}</td>
-            </tr>
-            <tr>
-                <th>Actif</th>
-                <td>{{ equipement.actif ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
+{% block page_content %}
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+            <div class="flex items-start justify-between mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Informations de l'equipement</h3>
+                    <span class="px-3 py-1 text-sm font-semibold rounded-full {{ equipement.actif ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                        {{ equipement.actif ? 'Actif' : 'Inactif' }}
+                    </span>
+                </div>
+            </div>
 
-    <a href="{{ path('app_equipement_index') }}">back to list</a>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Nom</p>
+                    <p class="text-gray-800">{{ equipement.nom }}</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Marque</p>
+                        <p class="text-gray-800">{{ equipement.marque ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Modele</p>
+                        <p class="text-gray-800">{{ equipement.modele ?: '-' }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Numero de serie</p>
+                        <p class="text-gray-800">{{ equipement.numeroDeSerie ?: '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Statut</p>
+                        <p class="text-gray-800">{{ equipement.statut ? equipement.statut.label() : '-' }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Site</p>
+                        <p class="text-gray-800">{{ equipement.site ? equipement.site.nom : '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Batiment</p>
+                        <p class="text-gray-800">{{ equipement.batiment ? equipement.batiment.nom : '-' }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Categorie</p>
+                        <p class="text-gray-800">{{ equipement.categorie ? equipement.categorie.nom : '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Organisation</p>
+                        <p class="text-gray-800">{{ equipement.organisation ? equipement.organisation.nom : '-' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <a href="{{ path('app_equipement_edit', {'id': equipement.id}) }}">edit</a>
-
-    {{ include('equipement/_delete_form.html.twig') }}
+        <div class="space-y-6">
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
+                <p class="text-sm text-gray-600 font-medium">ID equipement</p>
+                <p class="text-3xl font-bold text-gray-800 mt-1">{{ equipement.id }}</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex flex-col gap-3">
+                    <a href="{{ path('app_equipement_index') }}" class="text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                        Retour a la liste
+                    </a>
+                    {{ include('equipement/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

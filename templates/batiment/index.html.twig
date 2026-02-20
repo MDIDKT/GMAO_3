@@ -1,56 +1,105 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/app.html.twig' %}
 
-{% block title %}Batiment index{% endblock %}
+{% block page_title %}Batiments{% endblock %}
+{% block page_subtitle %}Gestion des batiments{% endblock %}
 
-{% block body %}
-<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-    <h1>Batiment index</h1>
-    <form method="get" class="mb-4 flex items-end gap-3">
-        <div>
-            <label for="actif">Filtre actif</label>
-            <select id="actif" name="actif">
-                <option value="" {{ selectedActif == '' ? 'selected' : '' }}>Tous</option>
-                <option value="1" {{ selectedActif == '1' ? 'selected' : '' }}>Actifs</option>
-                <option value="0" {{ selectedActif == '0' ? 'selected' : '' }}>Inactifs</option>
-            </select>
-        </div>
-        <button type="submit">Filtrer</button>
-        {% if selectedActif != '' %}
-            <a href="{{ path('app_batiment_index') }}">Reinitialiser</a>
+{% block page_actions %}
+    <a href="{{ path('app_batiment_new') }}" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition flex items-center space-x-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        <span>Nouveau batiment</span>
+    </a>
+{% endblock %}
+
+{% block page_content %}
+    {% set activeCount = 0 %}
+    {% for batiment in batiments %}
+        {% if batiment.actif %}
+            {% set activeCount = activeCount + 1 %}
         {% endif %}
-    </form>
+    {% endfor %}
+    {% set totalCount = batiments|length %}
+    {% set inactiveCount = totalCount - activeCount %}
 
-    <table class="table-auto w-full">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Etage</th>
-                <th>Actif</th>
-                <th>site</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for batiment in batiments %}
-            <tr>
-                <td>{{ batiment.id }}</td>
-                <td>{{ batiment.nom }}</td>
-                <td>{{ batiment.etage }}</td>
-                <td>{{ batiment.actif ? 'Yes' : 'No' }}</td>
-                <td>{{ batiment.site.nom }}</td>
-                <td>
-                    <a href="{{ path('app_batiment_show', {'id': batiment.id}) }}">show</a>
-                    <a href="{{ path('app_batiment_edit', {'id': batiment.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label for="actif" class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+                <select id="actif" name="actif" class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                    <option value="" {{ selectedActif == '' ? 'selected' : '' }}>Tous</option>
+                    <option value="1" {{ selectedActif == '1' ? 'selected' : '' }}>Actifs</option>
+                    <option value="0" {{ selectedActif == '0' ? 'selected' : '' }}>Inactifs</option>
+                </select>
+            </div>
+            <div class="flex items-end">
+                <button type="submit" class="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition font-medium">
+                    Filtrer
+                </button>
+            </div>
+            <div class="flex items-end">
+                <a href="{{ path('app_batiment_index') }}" class="w-full text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                    Reinitialiser
+                </a>
+            </div>
+        </form>
+    </div>
 
-    <a href="{{ path('app_batiment_new') }}">Create new</a>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-success">
+            <p class="text-sm text-gray-600 font-medium">Batiments actifs</p>
+            <p class="text-2xl font-bold text-gray-800 mt-1">{{ activeCount }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-gray-400">
+            <p class="text-sm text-gray-600 font-medium">Batiments inactifs</p>
+            <p class="text-2xl font-bold text-gray-800 mt-1">{{ inactiveCount }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-primary">
+            <p class="text-sm text-gray-600 font-medium">Total batiments</p>
+            <p class="text-2xl font-bold text-gray-800 mt-1">{{ totalCount }}</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <p class="text-sm font-medium text-gray-700">{{ totalCount }} batiments trouves</p>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Etage</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Site</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for batiment in batiments %}
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ batiment.nom }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ batiment.etage ?: '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ batiment.site ? batiment.site.nom : '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ batiment.actif ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                    {{ batiment.actif ? 'Actif' : 'Inactif' }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex items-center gap-4">
+                                    <a href="{{ path('app_batiment_show', {'id': batiment.id}) }}" class="text-primary hover:text-blue-700">Voir</a>
+                                    <a href="{{ path('app_batiment_edit', {'id': batiment.id}) }}" class="text-gray-700 hover:text-gray-900">Modifier</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-10 text-center text-gray-500">Aucun batiment trouve.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

@@ -35,3 +35,10 @@ J'ai fait les filtres et les ajouter dans le tableau des batiments 100%
 corrections fait avec codex donc reste a comprendre ce qu'il fait et comment il fonctionne exactement
 jour6 tout est ok
 je passe au jour 7 avec les filtres a finir avant de passer au jour 8
+
+20_02_26
+J'ai realisé le jours 7 avec codex mise en place des filtre comme demandé
+correction des different incoherence dans mon code.
+Mise en place des fixture
+modification des templates pour avoir la meme ui que sur GMAO_VISUEL
+Je passe au jour 8

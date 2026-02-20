@@ -1,13 +1,23 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/app.html.twig' %}
 
-{% block title %}Edit Equipement{% endblock %}
+{% block page_title %}Modifier l'equipement{% endblock %}
+{% block page_subtitle %}Mise a jour des informations de l'equipement{% endblock %}
 
-{% block body %}
-    <h1>Edit Equipement</h1>
+{% block page_content %}
+    <div class="max-w-4xl mx-auto space-y-6">
+        <div class="bg-white rounded-xl shadow-md">
+            <div class="px-8 py-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">Edition</h3>
+                <p class="text-sm text-gray-600 mt-1">Modifiez les informations et enregistrez</p>
+            </div>
+            <div class="p-8">
+                {{ include('equipement/_form.html.twig', {'button_label': 'Mettre a jour', 'cancel_path': path('app_equipement_show', {'id': equipement.id})}) }}
+            </div>
+        </div>
 
-    {{ include('equipement/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_equipement_index') }}">back to list</a>
-
-    {{ include('equipement/_delete_form.html.twig') }}
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <h4 class="text-sm font-semibold text-gray-700 mb-4">Suppression</h4>
+            {{ include('equipement/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}
