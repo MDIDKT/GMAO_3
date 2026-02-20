@@ -14,8 +14,11 @@
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Attribute\Route;
+    use Symfony\Component\Security\Http\Attribute\IsGranted;
+    use function is_string;
 
     #[Route('/equipement')]
+    #[IsGranted("ROLE_ADMIN")]
     final class EquipementController extends AbstractController
     {
         #[Route(name: 'app_equipement_index', methods: ['GET'])]
@@ -38,7 +41,7 @@
             $actifFilter = $request->query->get('actif');
 
             $site = null;
-            if (\is_string($siteFilter) && ctype_digit($siteFilter)) {
+            if (is_string($siteFilter) && ctype_digit($siteFilter)) {
                 $site = $siteRepository->findOneBy([
                     'id' => (int) $siteFilter,
                     'organisation' => $organisation,
@@ -46,14 +49,14 @@
             }
 
             $categorie = null;
-            if (\is_string($categorieFilter) && ctype_digit($categorieFilter)) {
+            if (is_string($categorieFilter) && ctype_digit($categorieFilter)) {
                 $categorie = $categorieEquipementRepository->findOneBy([
                     'id' => (int) $categorieFilter,
                     'organisation' => $organisation,
                 ]);
             }
 
-            $statut = \is_string($statutFilter) ? StatutEquipement::tryFrom($statutFilter) : null;
+            $statut = is_string($statutFilter) ? StatutEquipement::tryFrom($statutFilter) : null;
             $actif = match ($actifFilter) {
                 '1' => true,
                 '0' => false,

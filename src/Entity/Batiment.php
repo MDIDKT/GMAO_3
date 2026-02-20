@@ -33,9 +33,16 @@ class Batiment
     #[ORM\OneToMany(targetEntity: Equipement::class, mappedBy: 'batiment')]
     private Collection $equipements;
 
+    /**
+     * @var Collection<int, Demande>
+     */
+    #[ORM\OneToMany(targetEntity: Demande::class, mappedBy: 'batiment')]
+    private Collection $demandes;
+
     public function __construct()
     {
         $this->equipements = new ArrayCollection();
+        $this->demandes = new ArrayCollection();
     }
 
 
@@ -116,6 +123,36 @@ class Batiment
             // set the owning side to null (unless already changed)
             if ($equipement->getBatiment() === $this) {
                 $equipement->setBatiment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Demande>
+     */
+    public function getDemandes(): Collection
+    {
+        return $this->demandes;
+    }
+
+    public function addDemande(Demande $demande): static
+    {
+        if (!$this->demandes->contains($demande)) {
+            $this->demandes->add($demande);
+            $demande->setBatiment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemande(Demande $demande): static
+    {
+        if ($this->demandes->removeElement($demande)) {
+            // set the owning side to null (unless already changed)
+            if ($demande->getBatiment() === $this) {
+                $demande->setBatiment(null);
             }
         }
 

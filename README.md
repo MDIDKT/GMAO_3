@@ -42,3 +42,6 @@ correction des different incoherence dans mon code.
 Mise en place des fixture
 modification des templates pour avoir la meme ui que sur GMAO_VISUEL
 Je passe au jour 8
+Début du jour 8
+verification des enum pour voir s'il sont tous fait
+creation de l'entité demande

@@ -53,6 +53,7 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/site, roles: ROLE_ADMIN }
         - { path: ^/batiment, roles: ROLE_ADMIN }
+        - { path: ^/equipement, roles: ROLE_ADMIN }
         - { path: ^/, roles: ROLE_USER }
 
 when@test:

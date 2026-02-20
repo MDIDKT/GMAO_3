@@ -3,11 +3,11 @@
     namespace App\Enum;
     enum StatutIntervention: string
     {
-        case A_PLANIFIER = 'a_planifier';
-        case PLANIFIE = 'planifie';
-        case EN_COURS = 'en_cours';
-        case TERMINEE = 'terminee';
-        case VALIDEE = 'validee';
+        case A_PLANIFIER = 'A_PLANIFIER';
+        case PLANIFIE = 'PLANIFIE';
+        case EN_COURS = 'EN_COURS';
+        case TERMINEE = 'TERMINEE';
+        case VALIDEE = 'VALIDEE';
 
         public function label(): string
         {

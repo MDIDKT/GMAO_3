@@ -3,10 +3,10 @@
     namespace App\Enum;
     enum Priorite: string
     {
-        case P1_URGENTE = 'p1_urgente';
-        case P2_HAUTE = 'p2_haute';
-        case P3_NORMALE = 'p3_normale';
-        case P4_BASSE = 'p4_basse';
+        case P1_URGENTE = 'p1_URGENTE';
+        case P2_HAUTE = 'p2_HAUTE';
+        case P3_NORMALE = 'p3_NORMALE';
+        case P4_BASSE = 'p4_BASSE';
 
         public function label(): string
         {

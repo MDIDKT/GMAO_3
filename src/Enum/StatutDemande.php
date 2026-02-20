@@ -3,13 +3,13 @@
     namespace App\Enum;
     enum StatutDemande: string
     {
-        case NOUVEAU = 'nouveau';
-        case A_QUALIFIER = 'a_qualifier';
-        case QUALIFIE = 'qualifie';
-        case PLANIFIE = 'planifie';
-        case EN_COURS = 'en_cours';
-        case CLOTURE = 'cloture';
-        case REJETEE = 'rejetee';
+        case NOUVEAU = 'NOUVEAU';
+        case A_QUALIFIER = 'A_QUALIFIER';
+        case QUALIFIE = 'QUALIFIE';
+        case PLANIFIE = 'PLANIFIE';
+        case EN_COURS = 'EN_COURS';
+        case CLOTURE = 'CLOTURE';
+        case REJETEE = 'REJETEE';
 
         public function label(): string
         {

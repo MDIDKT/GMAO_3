@@ -55,12 +55,19 @@ class Organisation
     #[ORM\OneToMany(targetEntity: Equipement::class, mappedBy: 'organisation')]
     private Collection $equipements;
 
+    /**
+     * @var Collection<int, Demande>
+     */
+    #[ORM\OneToMany(targetEntity: Demande::class, mappedBy: 'organisation')]
+    private Collection $demandes;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->sites = new ArrayCollection();
         $this->categorieEquipements = new ArrayCollection();
         $this->equipements = new ArrayCollection();
+        $this->demandes = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -246,6 +253,36 @@ class Organisation
             // set the owning side to null (unless already changed)
             if ($equipement->getOrganisation() === $this) {
                 $equipement->setOrganisation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Demande>
+     */
+    public function getDemandes(): Collection
+    {
+        return $this->demandes;
+    }
+
+    public function addDemande(Demande $demande): static
+    {
+        if (!$this->demandes->contains($demande)) {
+            $this->demandes->add($demande);
+            $demande->setOrganisation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemande(Demande $demande): static
+    {
+        if ($this->demandes->removeElement($demande)) {
+            // set the owning side to null (unless already changed)
+            if ($demande->getOrganisation() === $this) {
+                $demande->setOrganisation(null);
             }
         }
 

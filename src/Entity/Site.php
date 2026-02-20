@@ -51,13 +51,18 @@ class Site
      */
     #[ORM\OneToMany(targetEntity: Equipement::class, mappedBy: 'site')]
     private Collection $equipements;
-    
+
+    /**
+     * @var Collection<int, Demande>
+     */
+    #[ORM\OneToMany(targetEntity: Demande::class, mappedBy: 'site')]
+    private Collection $demandes;
 
     public function __construct()
     {
         $this->batiments = new ArrayCollection();
-        $this->site = new ArrayCollection();
         $this->equipements = new ArrayCollection();
+        $this->demandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,6 +220,36 @@ class Site
             // set the owning side to null (unless already changed)
             if ($equipement->getSite() === $this) {
                 $equipement->setSite(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Demande>
+     */
+    public function getDemandes(): Collection
+    {
+        return $this->demandes;
+    }
+
+    public function addDemande(Demande $demande): static
+    {
+        if (!$this->demandes->contains($demande)) {
+            $this->demandes->add($demande);
+            $demande->setSite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemande(Demande $demande): static
+    {
+        if ($this->demandes->removeElement($demande)) {
+            // set the owning side to null (unless already changed)
+            if ($demande->getSite() === $this) {
+                $demande->setSite(null);
             }
         }
 
