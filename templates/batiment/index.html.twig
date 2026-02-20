@@ -4,7 +4,7 @@
 {% block page_subtitle %}Gestion des batiments{% endblock %}
 
 {% block page_actions %}
-    <a href="{{ path('app_batiment_new') }}" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition flex items-center space-x-2">
+    <a href="{{ path('app_batiment_new') }}" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition flex items-center space-x-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
@@ -33,7 +33,7 @@
                 </select>
             </div>
             <div class="flex items-end">
-                <button type="submit" class="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition font-medium">
+                <button type="submit" class="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-medium">
                     Filtrer
                 </button>
             </div>
@@ -88,7 +88,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center gap-4">
-                                    <a href="{{ path('app_batiment_show', {'id': batiment.id}) }}" class="text-primary hover:text-blue-700">Voir</a>
+                                    <a href="{{ path('app_batiment_show', {'id': batiment.id}) }}" class="text-primary hover:text-primary/80">Voir</a>
                                     <a href="{{ path('app_batiment_edit', {'id': batiment.id}) }}" class="text-gray-700 hover:text-gray-900">Modifier</a>
                                 </div>
                             </td>
