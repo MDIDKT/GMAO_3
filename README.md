@@ -45,3 +45,11 @@ Je passe au jour 8
 Début du jour 8
 verification des enum pour voir s'il sont tous fait
 creation de l'entité demande
+jour 8 tout est ok
+
+21-02-26
+creation de mon service demande qui fait le numero de demande avec le prefixe et la date
+il passe bien dans mon controlleur puis je l'affiche
+j'ai mis un numero aleatoire mais je doit mettre en place la recherche du dernier numero de demande en bdd vie le
+repository
+le recuperer dans le service demande
