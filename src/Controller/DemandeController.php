@@ -2,6 +2,7 @@
 
     namespace App\Controller;
 
+    use App\Entity\User;
     use App\Entity\Demande;
     use App\Enum\StatutDemande;
     use App\Form\DemandeType;
@@ -33,6 +34,16 @@
         #[Route('/new', name: 'app_demande_new', methods: ['GET', 'POST'])]
         public function new(Request $request, EntityManagerInterface $entityManager): Response
         {
+            $currentUser = $this->getUser();
+            if (!$currentUser instanceof User) {
+                throw $this->createAccessDeniedException('Utilisateur non authentifie.');
+            }
+
+            $organisation = $currentUser->getOrganisation();
+            if ($organisation === null) {
+                throw $this->createAccessDeniedException('Aucune organisation associee a cet utilisateur.');
+            }
+
             $demande = new Demande();
             $form = $this->createForm(DemandeType::class, $demande);
             $form->handleRequest($request);
@@ -41,6 +52,8 @@
                 $number = $this->numberingService->generateNumero('DEM');
                 $demande->setNumero($number);
                 $demande->setStatut(StatutDemande::A_QUALIFIER);
+                $demande->setUser($currentUser);
+                $demande->setOrganisation($organisation);
                 $entityManager->persist($demande);
                 $entityManager->flush();
 

@@ -16,17 +16,21 @@
          */
         public function generateNumero(string $prefix): string
         {
-            $numero = $this->demandeRepository->findNumDemande();
-            $date = date('Y');
+            $year = (int) date('Y');
+            $lastNumero = $this->demandeRepository->findLastNumeroForPrefixAndYear($prefix, $year);
+            $nextSequence = 1;
 
-            if ($numero === null) {
-                $numeroDemande = 1;
-            } else {
-                $numeroDemande = (int)explode('-', $numero['numero'])[2];
-                $numeroDemande++;
+            if ($lastNumero !== null) {
+                $parts = explode('-', $lastNumero);
+                $nextSequence = ((int) ($parts[2] ?? 0)) + 1;
             }
 
-            return sprintf('%s-%s-%04d', $prefix, $date, $numeroDemande);
+            do {
+                $numero = sprintf('%s-%d-%04d', $prefix, $year, $nextSequence);
+                ++$nextSequence;
+            } while ($this->demandeRepository->numeroExists($numero));
+
+            return $numero;
         }
 
     }

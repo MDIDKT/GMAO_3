@@ -31,12 +31,11 @@ class DemandeRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function findNumDemande(): ?array
+    public function findLastNumeroForPrefixAndYear(string $prefix, int $year): ?string
     {
-        $annee = date('Y');
-        $pattern = 'DEM-' . $annee . '-%';
+        $pattern = sprintf('%s-%d-%%', $prefix, $year);
 
-        return $this->createQueryBuilder('d')
+        $result = $this->createQueryBuilder('d')
             ->select('d.numero')
             ->andWhere('d.numero LIKE :pattern')
             ->setParameter('pattern', $pattern)
@@ -44,5 +43,17 @@ class DemandeRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+
+        return $result['numero'] ?? null;
+    }
+
+    public function numeroExists(string $numero): bool
+    {
+        return (int) $this->createQueryBuilder('d')
+            ->select('COUNT(d.id)')
+            ->andWhere('d.numero = :numero')
+            ->setParameter('numero', $numero)
+            ->getQuery()
+            ->getSingleScalarResult() > 0;
     }
 }

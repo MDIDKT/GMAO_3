@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DemandeRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQ_DEMANDE_NUMERO', fields: ['numero'])]
 #[ORM\HasLifecycleCallbacks]
 class Demande
 {
