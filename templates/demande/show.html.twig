@@ -1,46 +1,121 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/app.html.twig' %}
 
-{% block title %}Demande{% endblock %}
+{% block page_title %}{{ demande.numero ?: ('Demande #' ~ demande.id) }}{% endblock %}
+{% block page_subtitle %}Detail de la demande{% endblock %}
 
-{% block body %}
-    <h1>Demande</h1>
+{% block page_actions %}
+    <a href="{{ path('app_demande_edit', {'id': demande.id}) }}"
+       class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+        Modifier
+    </a>
+{% endblock %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ demande.id }}</td>
-            </tr>
-            <tr>
-                <th>Titre</th>
-                <td>{{ demande.titre }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ demande.description }}</td>
-            </tr>
-            <tr>
-                <th>Priorite</th>
-                <td>{{ demande.priorite }}</td>
-            </tr>
-            <tr>
-                <th>Statut</th>
-                <td>{{ demande.statut }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ demande.createdAt ? demande.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ demande.updatedAt ? demande.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+{% block page_content %}
+    {% set prioriteClass = 'bg-gray-100 text-gray-800' %}
+    {% if demande.priorite %}
+        {% if demande.priorite.value == 'p1_URGENTE' %}
+            {% set prioriteClass = 'bg-red-100 text-red-800' %}
+        {% elseif demande.priorite.value == 'p2_HAUTE' %}
+            {% set prioriteClass = 'bg-orange-100 text-orange-800' %}
+        {% elseif demande.priorite.value == 'p3_NORMALE' %}
+            {% set prioriteClass = 'bg-blue-100 text-blue-800' %}
+        {% endif %}
+    {% endif %}
 
-    <a href="{{ path('app_demande_index') }}">back to list</a>
+    {% set statutClass = 'bg-gray-100 text-gray-800' %}
+    {% if demande.statut %}
+        {% if demande.statut.value == 'EN_COURS' %}
+            {% set statutClass = 'bg-blue-100 text-blue-800' %}
+        {% elseif demande.statut.value == 'PLANIFIE' or demande.statut.value == 'A_QUALIFIER' or demande.statut.value == 'QUALIFIE' %}
+            {% set statutClass = 'bg-yellow-100 text-yellow-800' %}
+        {% elseif demande.statut.value == 'CLOTURE' %}
+            {% set statutClass = 'bg-green-100 text-green-800' %}
+        {% elseif demande.statut.value == 'REJETEE' %}
+            {% set statutClass = 'bg-red-100 text-red-800' %}
+        {% endif %}
+    {% endif %}
 
-    <a href="{{ path('app_demande_edit', {'id': demande.id}) }}">edit</a>
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+            <div class="flex items-start justify-between mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Informations de la demande</h3>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="px-3 py-1 text-sm font-semibold rounded-full {{ prioriteClass }}">
+                            {{ demande.priorite ? demande.priorite.label() : 'Priorite non definie' }}
+                        </span>
+                        <span class="px-3 py-1 text-sm font-semibold rounded-full {{ statutClass }}">
+                            {{ demande.statut ? demande.statut.label() : 'Statut non defini' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
 
-    {{ include('demande/_delete_form.html.twig') }}
+            <div class="space-y-4">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Numero</p>
+                    <p class="text-gray-800">{{ demande.numero ?: '-' }}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Titre</p>
+                    <p class="text-gray-800">{{ demande.titre }}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Description</p>
+                    <p class="text-gray-800 whitespace-pre-line">{{ demande.description ?: '-' }}</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Site</p>
+                        <p class="text-gray-800">{{ demande.site ? demande.site.nom : '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Batiment</p>
+                        <p class="text-gray-800">{{ demande.batiment ? demande.batiment.nom : '-' }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Equipement</p>
+                        <p class="text-gray-800">{{ demande.equipement ? demande.equipement.nom : '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Demandeur</p>
+                        <p class="text-gray-800">
+                            {% if demande.user %}
+                                {{ demande.user.prenom }} {{ demande.user.nom }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Organisation</p>
+                    <p class="text-gray-800">{{ demande.organisation ? demande.organisation.nom : '-' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
+                <p class="text-sm text-gray-600 font-medium">ID demande</p>
+                <p class="text-3xl font-bold text-gray-800 mt-1">{{ demande.id }}</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-secondary">
+                <p class="text-sm text-gray-600 font-medium">Creee le</p>
+                <p class="text-lg font-semibold text-gray-800 mt-1">{{ demande.createdAt ? demande.createdAt|date('d/m/Y H:i') : '-' }}</p>
+                <p class="text-sm text-gray-500 mt-2">Maj: {{ demande.updatedAt ? demande.updatedAt|date('d/m/Y H:i') : '-' }}</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex flex-col gap-3">
+                    <a href="{{ path('app_demande_index') }}"
+                       class="text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                        Retour a la liste
+                    </a>
+                    {{ include('demande/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

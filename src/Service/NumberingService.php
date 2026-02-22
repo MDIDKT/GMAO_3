@@ -2,19 +2,31 @@
 
     namespace App\Service;
 
-    use function Symfony\Component\Clock\now;
+    use App\Repository\DemandeRepository;
 
-    class NumberingService
+    readonly class NumberingService
     {
+        public function __construct(private DemandeRepository $demandeRepository)
+        {
+        }
 
         /**
-         * @throws \DateMalformedStringException
+         * @param string $prefix
+         * @return string
          */
         public function generateNumero(string $prefix): string
         {
-            $nbAleatoire = rand(1000, 9999);
-            $date = date(now()->format('Y'));
-            return $prefix . '-' . $date . '-' . $nbAleatoire;
+            $numero = $this->demandeRepository->findNumDemande();
+            $date = date('Y');
+
+            if ($numero === null) {
+                $numeroDemande = 1;
+            } else {
+                $numeroDemande = (int)explode('-', $numero['numero'])[2];
+                $numeroDemande++;
+            }
+
+            return sprintf('%s-%s-%04d', $prefix, $date, $numeroDemande);
         }
 
     }

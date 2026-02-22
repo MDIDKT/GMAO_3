@@ -1,47 +1,145 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/app.html.twig' %}
 
-{% block title %}Demande index{% endblock %}
+{% block page_title %}Demandes{% endblock %}
+{% block page_subtitle %}Gestion des demandes de maintenance{% endblock %}
 
-{% block body %}
-    <h1>Demande index</h1>
+{% block page_actions %}
+    <a href="{{ path('app_demande_new') }}"
+       class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition flex items-center space-x-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        <span>Nouvelle demande</span>
+    </a>
+{% endblock %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Titre</th>
-                <th>Description</th>
-                <th>Priorite</th>
-                <th>Statut</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>demande</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for demande in demandes %}
-            <tr>
-                <td>{{ demande.id }}</td>
-                <td>{{ demande.titre }}</td>
-                <td>{{ demande.description }}</td>
-                <td>{{ demande.priorite.value }}</td>
-                <td>{{ demande.statut.value }}</td>
-                <td>{{ demande.createdAt ? demande.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ demande.updatedAt ? demande.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ number }}</td>
-                <td>
-                    <a href="{{ path('app_demande_show', {'id': demande.id}) }}">show</a>
-                    <a href="{{ path('app_demande_edit', {'id': demande.id}) }}">edit</a>
-                </td>
-            </tr>
+{% block page_content %}
+    {% set totalCount = demandes|length %}
+    {% set urgentCount = 0 %}
+    {% set openCount = 0 %}
+    {% set closedCount = 0 %}
+
+    {% for demande in demandes %}
+        {% if demande.priorite and demande.priorite.value == 'p1_URGENTE' %}
+            {% set urgentCount = urgentCount + 1 %}
+        {% endif %}
+
+        {% if demande.statut and (demande.statut.value == 'CLOTURE' or demande.statut.value == 'REJETEE') %}
+            {% set closedCount = closedCount + 1 %}
         {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            {% set openCount = openCount + 1 %}
+        {% endif %}
+    {% endfor %}
 
-    <a href="{{ path('app_demande_new') }}">Create new</a>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-danger">
+            <p class="text-sm text-gray-600 font-medium">Demandes urgentes</p>
+            <p class="text-2xl font-bold text-gray-800 mt-1">{{ urgentCount }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-warning">
+            <p class="text-sm text-gray-600 font-medium">Demandes ouvertes</p>
+            <p class="text-2xl font-bold text-gray-800 mt-1">{{ openCount }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-success">
+            <p class="text-sm text-gray-600 font-medium">Demandes cloturees</p>
+            <p class="text-2xl font-bold text-gray-800 mt-1">{{ closedCount }}</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <p class="text-sm font-medium text-gray-700">{{ totalCount }} demandes trouvees</p>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numero
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priorite
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Site
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Creation
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for demande in demandes %}
+                    {% set prioriteClass = 'bg-gray-100 text-gray-800' %}
+                    {% if demande.priorite %}
+                        {% if demande.priorite.value == 'p1_URGENTE' %}
+                            {% set prioriteClass = 'bg-red-100 text-red-800' %}
+                        {% elseif demande.priorite.value == 'p2_HAUTE' %}
+                            {% set prioriteClass = 'bg-orange-100 text-orange-800' %}
+                        {% elseif demande.priorite.value == 'p3_NORMALE' %}
+                            {% set prioriteClass = 'bg-blue-100 text-blue-800' %}
+                        {% elseif demande.priorite.value == 'p4_BASSE' %}
+                            {% set prioriteClass = 'bg-gray-100 text-gray-800' %}
+                        {% endif %}
+                    {% endif %}
+
+                    {% set statutClass = 'bg-gray-100 text-gray-800' %}
+                    {% if demande.statut %}
+                        {% if demande.statut.value == 'EN_COURS' %}
+                            {% set statutClass = 'bg-blue-100 text-blue-800' %}
+                        {% elseif demande.statut.value == 'PLANIFIE' or demande.statut.value == 'A_QUALIFIER' or demande.statut.value == 'QUALIFIE' %}
+                            {% set statutClass = 'bg-yellow-100 text-yellow-800' %}
+                        {% elseif demande.statut.value == 'CLOTURE' %}
+                            {% set statutClass = 'bg-green-100 text-green-800' %}
+                        {% elseif demande.statut.value == 'REJETEE' %}
+                            {% set statutClass = 'bg-red-100 text-red-800' %}
+                        {% endif %}
+                    {% endif %}
+
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ demande.numero ?: ('DEM-' ~ demande.id) }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-medium text-gray-900">{{ demande.titre }}</div>
+                            <div class="text-xs text-gray-500">
+                                {% if demande.description %}
+                                    {{ demande.description|length > 70 ? demande.description|slice(0, 70) ~ '...' : demande.description }}
+                                {% else %}
+                                    Aucune description
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ prioriteClass }}">
+                                {{ demande.priorite ? demande.priorite.label() : '-' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ statutClass }}">
+                                {{ demande.statut ? demande.statut.label() : '-' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ demande.site ? demande.site.nom : '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ demande.createdAt ? demande.createdAt|date('d/m/Y H:i') : '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex items-center gap-4">
+                                <a href="{{ path('app_demande_show', {'id': demande.id}) }}"
+                                   class="text-primary hover:text-primary/80">Voir</a>
+                                <a href="{{ path('app_demande_edit', {'id': demande.id}) }}"
+                                   class="text-gray-700 hover:text-gray-900">Modifier</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-10 text-center text-gray-500">Aucune demande trouvee.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

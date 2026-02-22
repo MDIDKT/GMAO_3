@@ -53,3 +53,14 @@ il passe bien dans mon controlleur puis je l'affiche
 j'ai mis un numero aleatoire mais je doit mettre en place la recherche du dernier numero de demande en bdd vie le
 repository
 le recuperer dans le service demande
+
+22-02-26
+j'ai fini de mettre en place le numero de demande avec la date et le prefixe
+j'ai fini de mettre en place le service demande qui fait le numero de demande avec le prefixe et la date
+j'ai fini de mettre en place le repository demande qui fait la recherche du dernier numero de demande en bdd vie le
+repository
+j'ai fini de mettre en place le controller demande qui fait le recuperer dans le service demande
+jour 9 tout est ok
+
+jour 10 : Objectif : Permettre d'ajouter des photos lors de la creation ou edition d'une demande.
+
