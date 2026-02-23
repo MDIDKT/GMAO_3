@@ -6,6 +6,8 @@ use App\Enum\Priorite;
 use App\Enum\StatutDemande;
 use App\Repository\DemandeRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -61,9 +63,16 @@ class Demande
     #[ORM\Column(length: 255)]
     private ?string $numero = null;
 
+    /**
+     * @var Collection<int, Photo>
+     */
+    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'demande')]
+    private Collection $photos;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
+        $this->photos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -218,5 +227,35 @@ class Demande
     public function onPreUpdate(): void
     {
         $this->updatedAt = new DateTimeImmutable();
+    }
+
+    /**
+     * @return Collection<int, Photo>
+     */
+    public function getPhotos(): Collection
+    {
+        return $this->photos;
+    }
+
+    public function addPhoto(Photo $photo): static
+    {
+        if (!$this->photos->contains($photo)) {
+            $this->photos->add($photo);
+            $photo->setDemande($this);
+        }
+
+        return $this;
+    }
+
+    public function removePhoto(Photo $photo): static
+    {
+        if ($this->photos->removeElement($photo)) {
+            // set the owning side to null (unless already changed)
+            if ($photo->getDemande() === $this) {
+                $photo->setDemande(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -34,7 +34,8 @@ class DemandeType extends AbstractType
                 'class' => Equipement::class,
                 'choice_label' => 'nom',
                 'required' => false,
-            ]);
+            ])
+            ->add('photo', TextType::class, ['label' => 'URL de la photo (optionnelle']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

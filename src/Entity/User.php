@@ -66,9 +66,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Demande::class, mappedBy: 'user')]
     private Collection $demandes;
 
+    /**
+     * @var Collection<int, Photo>
+     */
+    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'uploadPar', orphanRemoval: true)]
+    private Collection $photos;
+
     public function __construct()
     {
         $this->demandes = new ArrayCollection();
+        $this->photos = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -299,6 +306,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($demande->getUser() === $this) {
                 $demande->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Photo>
+     */
+    public function getPhotos(): Collection
+    {
+        return $this->photos;
+    }
+
+    public function addPhoto(Photo $photo): static
+    {
+        if (!$this->photos->contains($photo)) {
+            $this->photos->add($photo);
+            $photo->setUploadPar($this);
+        }
+
+        return $this;
+    }
+
+    public function removePhoto(Photo $photo): static
+    {
+        if ($this->photos->removeElement($photo)) {
+            // set the owning side to null (unless already changed)
+            if ($photo->getUploadPar() === $this) {
+                $photo->setUploadPar(null);
             }
         }
 

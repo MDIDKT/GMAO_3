@@ -64,3 +64,8 @@ jour 9 tout est ok
 
 jour 10 : Objectif : Permettre d'ajouter des photos lors de la creation ou edition d'une demande.
 
+23-02-26
+debut jour 10
+mise en place de l'entité photo
+mise en place du controller photo
+verification a faire et verifier la remonté des images
