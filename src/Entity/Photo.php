@@ -7,6 +7,7 @@ use App\Repository\PhotoRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PhotoRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Photo
 {
     #[ORM\Id]
@@ -41,6 +42,11 @@ class Photo
 
     #[ORM\Column(enumType: TypePhoto::class)]
     private ?TypePhoto $typePhoto = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -143,6 +149,14 @@ class Photo
         return $this;
     }
 
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
+    }
+
     public function getTypePhoto(): ?TypePhoto
     {
         return $this->typePhoto;
@@ -153,9 +167,5 @@ class Photo
         $this->typePhoto = $typePhoto;
 
         return $this;
-    }
-    
-    public function setType(TypePhoto $type)
-    {
     }
 }

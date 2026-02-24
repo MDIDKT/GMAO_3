@@ -31,8 +31,8 @@ class Equipement
     #[ORM\Column(enumType: StatutEquipement::class)]
     private ?StatutEquipement $statut = null;
 
-    #[ORM\Column]
-    private ?bool $actif = null;
+    #[ORM\Column(options: ['default' => true])]
+    private bool $actif = true;
 
     #[ORM\ManyToOne(inversedBy: 'equipements')]
     private ?Site $site = null;
@@ -122,7 +122,7 @@ class Equipement
         return $this;
     }
 
-    public function isActif(): ?bool
+    public function isActif(): bool
     {
         return $this->actif;
     }

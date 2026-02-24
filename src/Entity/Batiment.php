@@ -21,8 +21,8 @@ class Batiment
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $etage = null;
 
-    #[ORM\Column]
-    private ?bool $actif = null;
+    #[ORM\Column(options: ['default' => true])]
+    private bool $actif = true;
 
     #[ORM\ManyToOne(inversedBy: 'batiments')]
     private ?Site $site = null;
@@ -75,7 +75,7 @@ class Batiment
         return $this;
     }
 
-    public function isActif(): ?bool
+    public function isActif(): bool
     {
         return $this->actif;
     }

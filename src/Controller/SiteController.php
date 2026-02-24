@@ -44,7 +44,13 @@ final class SiteController extends AbstractController
     #[Route('/new', name: 'app_site_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+        if (!$user instanceof User || $user->getOrganisation() === null) {
+            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+        }
+
         $site = new Site();
+        $site->setOrganisation($user->getOrganisation());
         $form = $this->createForm(SiteType::class, $site);
         $form->handleRequest($request);
 

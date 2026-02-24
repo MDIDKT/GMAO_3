@@ -69,3 +69,10 @@ debut jour 10
 mise en place de l'entité photo
 mise en place du controller photo
 verification a faire et verifier la remonté des images
+
+24-02-26
+jour 10 finalisé
+upload des photos OK sur la creation et l'edition d'une demande
+affichage des images OK dans le detail de la demande (route photo_show)
+correction des erreurs sur le fichier temporaire et created_at
+jour 10 tout est ok

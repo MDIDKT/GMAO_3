@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Demande;
+use App\Entity\Organisation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -30,6 +31,19 @@ class DemandeRepository extends ServiceEntityRepository
     //            ->getResult()
     //        ;
     //    }
+
+    /**
+     * @return Demande[]
+     */
+    public function findByOrganisation(Organisation $organisation): array
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.organisation = :org')
+            ->setParameter('org', $organisation)
+            ->orderBy('d.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 
     public function findLastNumeroForPrefixAndYear(string $prefix, int $year): ?string
     {

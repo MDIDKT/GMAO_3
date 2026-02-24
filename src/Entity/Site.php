@@ -34,8 +34,8 @@ class Site
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $email = null;
 
-    #[ORM\Column]
-    private ?bool $actif = null;
+    #[ORM\Column(options: ['default' => true])]
+    private bool $actif = true;
 
     #[ORM\ManyToOne(inversedBy: 'sites')]
     private ?Organisation $organisation = null;
@@ -142,7 +142,7 @@ class Site
         return $this;
     }
 
-    public function isActif(): ?bool
+    public function isActif(): bool
     {
         return $this->actif;
     }

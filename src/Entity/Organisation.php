@@ -153,7 +153,10 @@ class Organisation
 
     public function addUser(User $user): static
     {
-        $user->setOrganisation($this);
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setOrganisation($this);
+        }
 
         return $this;
     }

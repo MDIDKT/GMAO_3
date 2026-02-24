@@ -8,6 +8,7 @@ use App\Entity\Equipement;
 use App\Entity\Site;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,7 +36,13 @@ class DemandeType extends AbstractType
                 'choice_label' => 'nom',
                 'required' => false,
             ])
-            ->add('photo', TextType::class, ['label' => 'URL de la photo (optionnelle']);
+            ->add('photos', FileType::class, [
+                'label' => 'Photos (JPEG, PNG, max 5Mo)',
+                'multiple' => true,
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -94,6 +94,20 @@
                     <p class="text-sm font-medium text-gray-500 mb-1">Organisation</p>
                     <p class="text-gray-800">{{ demande.organisation ? demande.organisation.nom : '-' }}</p>
                 </div>
+                {% if demande.photos|length > 0 %}
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-2">Photos</p>
+                        <div class="flex flex-wrap gap-5">
+                            {% for photo in demande.photos %}
+                                <a href="{{ path('photo_show', {'id': photo.id}) }}" target="_blank">
+                                    <img src="{{ path('photo_show', {'id': photo.id}) }}"
+                                         alt="{{ photo.originalName ?: 'Photo' }}"
+                                         class="h-56 w-56 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition">
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
 
