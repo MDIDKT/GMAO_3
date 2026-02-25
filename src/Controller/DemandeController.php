@@ -5,10 +5,12 @@
     use App\Entity\Demande;
     use App\Entity\Photo;
     use App\Entity\User;
+    use App\Enum\Priorite;
     use App\Enum\StatutDemande;
     use App\Enum\TypePhoto;
     use App\Form\DemandeType;
     use App\Repository\DemandeRepository;
+    use App\Repository\SiteRepository;
     use App\Service\FileUploadService;
     use App\Service\NumberingService;
     use Doctrine\ORM\EntityManagerInterface;
@@ -29,15 +31,31 @@
         }
 
         #[Route(name: 'app_demande_index', methods: ['GET'])]
-        public function index(DemandeRepository $demandeRepository): Response
+        public function index(DemandeRepository $demandeRepository, Request $request, SiteRepository $siteRepository): Response
         {
             $currentUser = $this->getUser();
             if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
                 throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
             }
 
+            $findByFilters = $request->query->get('demande');
+            $organisation = $currentUser->getOrganisation();
+            $priorite = $request->query->get('priorite');
+            $statut = $request->query->get('statut');
+            $site = $request->query->get('site');
+            $search = $request->query->get('search');
+
+            $statut = is_string($statut) ? StatutDemande::tryFrom($statut) : null;
+            $priorite = is_string($priorite) ? Priorite::tryFrom($priorite) : null;
+            if (is_string($site) && ctype_digit($site)) {
+                $site = $siteRepository->findOneBy([
+                    'id' => (int)$site,
+                    'organisation' => $organisation,
+                ]);
+            }
             return $this->render('demande/index.html.twig', [
-                'demandes' => $demandeRepository->findByOrganisation($currentUser->getOrganisation())
+                'demandes' => $demandeRepository->findByOrganisation($currentUser->getOrganisation()),
+                'demandeFilter' => $demandeRepository->findByFilters($organisation, $site, $statut, $priorite, $search)
             ]);
         }
 

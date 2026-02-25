@@ -76,3 +76,12 @@ upload des photos OK sur la creation et l'edition d'une demande
 affichage des images OK dans le detail de la demande (route photo_show)
 correction des erreurs sur le fichier temporaire et created_at
 jour 10 tout est ok
+
+25-02-26
+jour 11 - correction et amélioration du DemandeController et DemandeRepository
+suppression du $site = null qui écrasait la variable
+suppression du $_GET dans le repository remplacé par un paramètre $search
+réécriture de findByFilters() avec des if séparés pour chaque filtre
+conversion des strings en Enums avec tryFrom() pour statut et priorite
+conversion du $site string en entité Site avec findOneBy() et SiteRepository
+signature de la méthode index() nettoyée (suppression Organisation et int $siteFilter)
