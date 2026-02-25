@@ -45,7 +45,7 @@
             $search = $request->query->get('search');
 
             $page = $request->query->getInt('page', 1);
-            $limit = 10;
+            $limit = 3;
             $pagination = $demandeRepository->paginateDemandes($page, $limit);
 
             $statut = is_string($statut) ? StatutDemande::tryFrom($statut) : null;

@@ -101,6 +101,7 @@ jour 11 - nettoyage et pagination des demandes
 * récupération du Site via SiteRepository
 * mise en place de la pagination KnpPaginator
 * controller nettoyé (variables inutiles supprimées)
+* correction de la valeur de limit de 10 a 3 car j'ai moins de 10 demandes donc la pagination ne s'affiche pas
   jour 11 tout est ok
 
 
