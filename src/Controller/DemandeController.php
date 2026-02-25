@@ -38,12 +38,15 @@
                 throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
             }
 
-            $findByFilters = $request->query->get('demande');
             $organisation = $currentUser->getOrganisation();
             $priorite = $request->query->get('priorite');
             $statut = $request->query->get('statut');
             $site = $request->query->get('site');
             $search = $request->query->get('search');
+
+            $page = $request->query->getInt('page', 1);
+            $limit = 10;
+            $pagination = $demandeRepository->paginateDemandes($page, $limit);
 
             $statut = is_string($statut) ? StatutDemande::tryFrom($statut) : null;
             $priorite = is_string($priorite) ? Priorite::tryFrom($priorite) : null;
@@ -55,7 +58,7 @@
             }
             return $this->render('demande/index.html.twig', [
                 'demandes' => $demandeRepository->findByOrganisation($currentUser->getOrganisation()),
-                'demandeFilter' => $demandeRepository->findByFilters($organisation, $site, $statut, $priorite, $search)
+                'pagination' => $pagination
             ]);
         }
 

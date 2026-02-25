@@ -9,32 +9,18 @@
     use App\Enum\StatutDemande;
     use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
     use Doctrine\Persistence\ManagerRegistry;
+    use Knp\Component\Pager\Pagination\PaginationInterface;
+    use Knp\Component\Pager\PaginatorInterface;
 
     /**
      * @extends ServiceEntityRepository<Demande>
      */
     class DemandeRepository extends ServiceEntityRepository
     {
-        public function __construct(ManagerRegistry $registry)
+        public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
         {
             parent::__construct($registry, Demande::class);
         }
-
-        //    /**
-        //     * @return Demande[] Returns an array of Demande objects
-        //     */
-        //    public function findByExampleField($value): array
-        //    {
-        //        return $this->createQueryBuilder('d')
-        //            ->andWhere('d.exampleField = :val')
-        //            ->setParameter('val', $value)
-        //            ->orderBy('d.id', 'ASC')
-        //            ->setMaxResults(10)
-        //            ->getQuery()
-        //            ->getResult()
-        //        ;
-        //    }
-
         /**
          * @return Demande[]
          */
@@ -101,5 +87,14 @@
                     ->setParameter('search', '%' . $search . '%');
             }
             return $qb->getQuery()->getResult();
+        }
+
+        public function paginateDemandes(int $page, int $limit): PaginationInterface
+        {
+            return $this->paginator->paginate(
+                $this->createQueryBuilder('d'),
+                $page,
+                $limit
+            );
         }
     }
