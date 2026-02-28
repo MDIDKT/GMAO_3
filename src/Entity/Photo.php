@@ -43,6 +43,9 @@ class Photo
     #[ORM\Column(enumType: TypePhoto::class)]
     private ?TypePhoto $typePhoto = null;
 
+    #[ORM\ManyToOne(inversedBy: 'photos')]
+    private ?Intervention $intervention = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -165,6 +168,18 @@ class Photo
     public function setTypePhoto(TypePhoto $typePhoto): static
     {
         $this->typePhoto = $typePhoto;
+
+        return $this;
+    }
+
+    public function getIntervention(): ?Intervention
+    {
+        return $this->intervention;
+    }
+
+    public function setIntervention(?Intervention $intervention): static
+    {
+        $this->intervention = $intervention;
 
         return $this;
     }

@@ -61,6 +61,12 @@ class Organisation
     #[ORM\OneToMany(targetEntity: Demande::class, mappedBy: 'organisation')]
     private Collection $demandes;
 
+    /**
+     * @var Collection<int, Intervention>
+     */
+    #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'organisation', orphanRemoval: true)]
+    private Collection $interventions;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -68,6 +74,7 @@ class Organisation
         $this->categorieEquipements = new ArrayCollection();
         $this->equipements = new ArrayCollection();
         $this->demandes = new ArrayCollection();
+        $this->interventions = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -286,6 +293,36 @@ class Organisation
             // set the owning side to null (unless already changed)
             if ($demande->getOrganisation() === $this) {
                 $demande->setOrganisation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Intervention>
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
+    public function addIntervention(Intervention $intervention): static
+    {
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->setOrganisation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntervention(Intervention $intervention): static
+    {
+        if ($this->interventions->removeElement($intervention)) {
+            // set the owning side to null (unless already changed)
+            if ($intervention->getOrganisation() === $this) {
+                $intervention->setOrganisation(null);
             }
         }
 

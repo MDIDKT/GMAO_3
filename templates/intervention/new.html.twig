@@ -1,0 +1,18 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block page_title %}Nouvelle intervention{% endblock %}
+{% block page_subtitle %}Planification d'une intervention de maintenance{% endblock %}
+
+{% block page_content %}
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-xl shadow-md">
+            <div class="px-8 py-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">Informations de l'intervention</h3>
+                <p class="text-sm text-gray-600 mt-1">Renseignez les informations principales</p>
+            </div>
+            <div class="p-8">
+                {{ include('intervention/_form.html.twig', {'button_label': 'Enregistrer l\'intervention', 'cancel_path': path('app_intervention_index')}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

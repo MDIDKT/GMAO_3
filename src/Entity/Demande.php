@@ -69,10 +69,17 @@ class Demande
     #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'demande')]
     private Collection $photos;
 
+    /**
+     * @var Collection<int, Intervention>
+     */
+    #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'demande')]
+    private Collection $interventions;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
         $this->photos = new ArrayCollection();
+        $this->interventions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -253,6 +260,36 @@ class Demande
             // set the owning side to null (unless already changed)
             if ($photo->getDemande() === $this) {
                 $photo->setDemande(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Intervention>
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
+    public function addIntervention(Intervention $intervention): static
+    {
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->setDemande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntervention(Intervention $intervention): static
+    {
+        if ($this->interventions->removeElement($intervention)) {
+            // set the owning side to null (unless already changed)
+            if ($intervention->getDemande() === $this) {
+                $intervention->setDemande(null);
             }
         }
 

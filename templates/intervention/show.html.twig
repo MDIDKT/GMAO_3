@@ -1,0 +1,151 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block page_title %}{{ intervention.numero ?: ('INT-' ~ intervention.id) }}{% endblock %}
+{% block page_subtitle %}Detail de l'intervention{% endblock %}
+
+{% block page_actions %}
+    <a href="{{ path('app_intervention_edit', {'id': intervention.id}) }}"
+       class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+        Modifier
+    </a>
+{% endblock %}
+
+{% block page_content %}
+    {% set statutClass = 'bg-gray-100 text-gray-800' %}
+    {% if intervention.statut %}
+        {% if intervention.statut.value == 'A_PLANIFIER' %}
+            {% set statutClass = 'bg-gray-100 text-gray-800' %}
+        {% elseif intervention.statut.value == 'PLANIFIE' %}
+            {% set statutClass = 'bg-yellow-100 text-yellow-800' %}
+        {% elseif intervention.statut.value == 'EN_COURS' %}
+            {% set statutClass = 'bg-blue-100 text-blue-800' %}
+        {% elseif intervention.statut.value == 'TERMINEE' %}
+            {% set statutClass = 'bg-green-100 text-green-800' %}
+        {% elseif intervention.statut.value == 'VALIDEE' %}
+            {% set statutClass = 'bg-emerald-100 text-emerald-800' %}
+        {% endif %}
+    {% endif %}
+
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+            <div class="flex items-start justify-between mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Informations de l'intervention</h3>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="px-3 py-1 text-sm font-semibold rounded-full {{ statutClass }}">
+                            {{ intervention.statut ? intervention.statut.label() : 'Statut non defini' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Numero</p>
+                    <p class="text-gray-800">{{ intervention.numero ?: '-' }}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Demande associee</p>
+                    <p class="text-gray-800">
+                        {% if intervention.demande %}
+                            <a href="{{ path('app_demande_show', {'id': intervention.demande.id}) }}" class="text-primary hover:text-primary/80">
+                                {{ intervention.demande.numero ?: ('DEM-' ~ intervention.demande.id) }} — {{ intervention.demande.titre }}
+                            </a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Technicien</p>
+                        <p class="text-gray-800">
+                            {% if intervention.technicien %}
+                                {{ intervention.technicien.prenom }} {{ intervention.technicien.nom }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Planificateur</p>
+                        <p class="text-gray-800">
+                            {% if intervention.planificateur %}
+                                {{ intervention.planificateur.prenom }} {{ intervention.planificateur.nom }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Date planifiee</p>
+                        <p class="text-gray-800">{{ intervention.datePlanifiee ? intervention.datePlanifiee|date('d/m/Y H:i') : '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Date debut</p>
+                        <p class="text-gray-800">{{ intervention.dateDebut ? intervention.dateDebut|date('d/m/Y H:i') : '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Date fin</p>
+                        <p class="text-gray-800">{{ intervention.dateFin ? intervention.dateFin|date('d/m/Y H:i') : '-' }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Duree</p>
+                        <p class="text-gray-800">{{ intervention.dureeMinutes ? intervention.dureeMinutes ~ ' minutes' : '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Organisation</p>
+                        <p class="text-gray-800">{{ intervention.organisation ? intervention.organisation.nom : '-' }}</p>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Compte rendu</p>
+                    <p class="text-gray-800 whitespace-pre-line">{{ intervention.compteRendu ?: '-' }}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Notes</p>
+                    <p class="text-gray-800 whitespace-pre-line">{{ intervention.notes ?: '-' }}</p>
+                </div>
+                {% if intervention.photos|length > 0 %}
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-2">Photos</p>
+                        <div class="flex flex-wrap gap-5">
+                            {% for photo in intervention.photos %}
+                                <a href="{{ path('photo_show', {'id': photo.id}) }}" target="_blank">
+                                    <img src="{{ path('photo_show', {'id': photo.id}) }}"
+                                         alt="{{ photo.originalName ?: 'Photo' }}"
+                                         class="h-56 w-56 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition">
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
+                <p class="text-sm text-gray-600 font-medium">ID intervention</p>
+                <p class="text-3xl font-bold text-gray-800 mt-1">{{ intervention.id }}</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-secondary">
+                <p class="text-sm text-gray-600 font-medium">Creee le</p>
+                <p class="text-lg font-semibold text-gray-800 mt-1">{{ intervention.createdAt ? intervention.createdAt|date('d/m/Y H:i') : '-' }}</p>
+                <p class="text-sm text-gray-500 mt-2">Maj: {{ intervention.updatedAt ? intervention.updatedAt|date('d/m/Y H:i') : '-' }}</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex flex-col gap-3">
+                    <a href="{{ path('app_intervention_index') }}"
+                       class="text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                        Retour a la liste
+                    </a>
+                    {{ include('intervention/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

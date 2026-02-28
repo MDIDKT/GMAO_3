@@ -3,10 +3,11 @@
     namespace App\Service;
 
     use App\Repository\DemandeRepository;
+    use App\Repository\InterventionRepository;
 
     readonly class NumberingService
     {
-        public function __construct(private DemandeRepository $demandeRepository)
+        public function __construct(private DemandeRepository $demandeRepository, private InterventionRepository $interventionRepository)
         {
         }
 
@@ -17,7 +18,7 @@
         public function generateNumero(string $prefix): string
         {
             $year = (int) date('Y');
-            $lastNumero = $this->demandeRepository->findLastNumeroForPrefixAndYear($prefix, $year);
+            $lastNumero = $this->demandeRepository->findLastNumeroForPrefixAndYear($prefix, $year) ?? $this->interventionRepository->findLastNumeroForPrefixAndYear($prefix, $year);
             $nextSequence = 1;
 
             if ($lastNumero !== null) {
@@ -28,7 +29,7 @@
             do {
                 $numero = sprintf('%s-%d-%04d', $prefix, $year, $nextSequence);
                 ++$nextSequence;
-            } while ($this->demandeRepository->numeroExists($numero));
+            } while ($this->demandeRepository->numeroExists($numero) || $this->interventionRepository->numeroExists($numero));
 
             return $numero;
         }

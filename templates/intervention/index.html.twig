@@ -1,0 +1,129 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block page_title %}Interventions{% endblock %}
+{% block page_subtitle %}Gestion des interventions de maintenance{% endblock %}
+
+{% block page_actions %}
+    <a href="{{ path('app_intervention_new') }}"
+       class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition flex items-center space-x-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        <span>Nouvelle intervention</span>
+    </a>
+{% endblock %}
+
+{% block page_content %}
+    {% set totalCount = interventions|length %}
+    {% set aPlanifierCount = 0 %}
+    {% set enCoursCount = 0 %}
+    {% set termineeCount = 0 %}
+
+    {% for intervention in interventions %}
+        {% if intervention.statut and intervention.statut.value == 'A_PLANIFIER' %}
+            {% set aPlanifierCount = aPlanifierCount + 1 %}
+        {% elseif intervention.statut and intervention.statut.value == 'EN_COURS' %}
+            {% set enCoursCount = enCoursCount + 1 %}
+        {% elseif intervention.statut and (intervention.statut.value == 'TERMINEE' or intervention.statut.value == 'VALIDEE') %}
+            {% set termineeCount = termineeCount + 1 %}
+        {% endif %}
+    {% endfor %}
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-danger">
+            <p class="text-sm text-gray-600 font-medium">A planifier</p>
+            <p class="text-2xl font-bold text-gray-800 mt-1">{{ aPlanifierCount }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-warning">
+            <p class="text-sm text-gray-600 font-medium">En cours</p>
+            <p class="text-2xl font-bold text-gray-800 mt-1">{{ enCoursCount }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-success">
+            <p class="text-sm text-gray-600 font-medium">Terminees / Validees</p>
+            <p class="text-2xl font-bold text-gray-800 mt-1">{{ termineeCount }}</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <p class="text-sm font-medium text-gray-700">{{ totalCount }} interventions trouvees</p>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numero</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Demande</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Technicien</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date planifiee</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duree</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for intervention in interventions %}
+                    {% set statutClass = 'bg-gray-100 text-gray-800' %}
+                    {% if intervention.statut %}
+                        {% if intervention.statut.value == 'A_PLANIFIER' %}
+                            {% set statutClass = 'bg-gray-100 text-gray-800' %}
+                        {% elseif intervention.statut.value == 'PLANIFIE' %}
+                            {% set statutClass = 'bg-yellow-100 text-yellow-800' %}
+                        {% elseif intervention.statut.value == 'EN_COURS' %}
+                            {% set statutClass = 'bg-blue-100 text-blue-800' %}
+                        {% elseif intervention.statut.value == 'TERMINEE' %}
+                            {% set statutClass = 'bg-green-100 text-green-800' %}
+                        {% elseif intervention.statut.value == 'VALIDEE' %}
+                            {% set statutClass = 'bg-emerald-100 text-emerald-800' %}
+                        {% endif %}
+                    {% endif %}
+
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ intervention.numero ?: ('INT-' ~ intervention.id) }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {% if intervention.demande %}
+                                <div class="text-sm font-medium text-gray-900">{{ intervention.demande.titre }}</div>
+                                <div class="text-xs text-gray-500">{{ intervention.demande.numero ?: ('DEM-' ~ intervention.demande.id) }}</div>
+                            {% else %}
+                                <span class="text-sm text-gray-500">-</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {% if intervention.technicien %}
+                                {{ intervention.technicien.prenom }} {{ intervention.technicien.nom }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {{ intervention.datePlanifiee ? intervention.datePlanifiee|date('d/m/Y H:i') : '-' }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {{ intervention.dureeMinutes ? intervention.dureeMinutes ~ ' min' : '-' }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ statutClass }}">
+                                {{ intervention.statut ? intervention.statut.label() : '-' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex items-center gap-4">
+                                <a href="{{ path('app_intervention_show', {'id': intervention.id}) }}"
+                                   class="text-primary hover:text-primary/80">Voir</a>
+                                <a href="{{ path('app_intervention_edit', {'id': intervention.id}) }}"
+                                   class="text-gray-700 hover:text-gray-900">Modifier</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-10 text-center text-gray-500">Aucune intervention trouvee.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

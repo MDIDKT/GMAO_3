@@ -104,4 +104,16 @@ jour 11 - nettoyage et pagination des demandes
 * correction de la valeur de limit de 10 a 3 car j'ai moins de 10 demandes donc la pagination ne s'affiche pas
   jour 11 tout est ok
 
+28-02-26
+jour 12 - Module Intervention
+
+* creation de l'entite Intervention (relations Demande, User technicien/planificateur, Organisation, Photo)
+* enum StatutIntervention (A_PLANIFIER, PLANIFIE, EN_COURS, TERMINEE, VALIDEE)
+* controller CRUD avec filtrage par organisation
+* NumberingService etendu pour generer les numeros INT-YYYY-NNNN
+* correction NumberingService (or → ?? et ||)
+* formulaire avec query_builder pour filtrer demandes et users par organisation
+* templates stylises Tailwind/Flowbite (index avec compteurs, show 2 colonnes, form avec champs individuels)
+* lien Interventions actif dans la sidebar
+* jour 12 tout est ok
 
