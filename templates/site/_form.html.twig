@@ -42,12 +42,6 @@
     </div>
 
     <div>
-        {{ form_label(form.organisation, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.organisation, {'attr': {'class': inputClass}}) }}
-        {{ form_errors(form.organisation) }}
-    </div>
-
-    <div>
         <label class="{{ labelClass }}">Statut</label>
         <div class="flex items-center gap-2">
             {{ form_widget(form.actif, {'attr': {'class': 'h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary'}}) }}
