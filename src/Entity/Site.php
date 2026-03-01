@@ -38,6 +38,7 @@ class Site
     private bool $actif = true;
 
     #[ORM\ManyToOne(inversedBy: 'sites')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Organisation $organisation = null;
 
     /**

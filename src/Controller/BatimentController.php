@@ -41,8 +41,14 @@ final class BatimentController extends AbstractController
     #[Route('/new', name: 'app_batiment_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $currentUser = $this->getUser();
+        if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
+            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+        }
+
+        $organisation = $currentUser->getOrganisation();
         $batiment = new Batiment();
-        $form = $this->createForm(BatimentType::class, $batiment);
+        $form = $this->createForm(BatimentType::class, $batiment, ['organisation' => $organisation]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -69,7 +75,12 @@ final class BatimentController extends AbstractController
     #[Route('/{id}/edit', name: 'app_batiment_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Batiment $batiment, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(BatimentType::class, $batiment);
+        $currentUser = $this->getUser();
+        if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
+            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+        }
+
+        $form = $this->createForm(BatimentType::class, $batiment, ['organisation' => $currentUser->getOrganisation()]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

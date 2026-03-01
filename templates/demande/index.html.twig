@@ -14,6 +14,46 @@
 {% endblock %}
 
 {% block page_content %}
+    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+            <div>
+                <label for="site" class="block text-sm font-medium text-gray-700 mb-1">Site</label>
+                <select id="site" name="site" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary focus:border-primary">
+                    <option value="">Tous les sites</option>
+                    {% for s in sites %}
+                        <option value="{{ s.id }}" {{ site and site.id == s.id ? 'selected' : '' }}>{{ s.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="priorite" class="block text-sm font-medium text-gray-700 mb-1">Priorité</label>
+                <select id="priorite" name="priorite" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary focus:border-primary">
+                    <option value="">Toutes les priorités</option>
+                    {% for p in priorites %}
+                        <option value="{{ p.value }}" {{ priorite and priorite.value == p.value ? 'selected' : '' }}>{{ p.label() }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="statut" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
+                <select id="statut" name="statut" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary focus:border-primary">
+                    <option value="">Tous les statuts</option>
+                    {% for st in statuts %}
+                        <option value="{{ st.value }}" {{ statut and statut.value == st.value ? 'selected' : '' }}>{{ st.label() }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Recherche</label>
+                <input type="text" id="search" name="search" value="{{ search }}" placeholder="Titre ou description..." class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary focus:border-primary">
+            </div>
+            <div class="md:col-span-2 lg:col-span-4 flex justify-end gap-3">
+                <a href="{{ path('app_demande_index') }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">Réinitialiser</a>
+                <button type="submit" class="px-6 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition">Filtrer</button>
+            </div>
+        </form>
+    </div>
+
     {% set totalCount = demandes|length %}
     {% set urgentCount = 0 %}
     {% set openCount = 0 %}

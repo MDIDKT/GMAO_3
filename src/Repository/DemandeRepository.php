@@ -8,6 +8,7 @@
     use App\Enum\Priorite;
     use App\Enum\StatutDemande;
     use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+    use Doctrine\ORM\QueryBuilder;
     use Doctrine\Persistence\ManagerRegistry;
     use Knp\Component\Pager\Pagination\PaginationInterface;
     use Knp\Component\Pager\PaginatorInterface;
@@ -60,9 +61,15 @@
                     ->getSingleScalarResult() > 0;
         }
 
-        public function findByFilters(?Organisation $organisation, ?Site $site, ?StatutDemande $statut, ?Priorite $priorite, $search): array
+        public function getQueryBuilderByFilters(?Organisation $organisation, ?Site $site, ?StatutDemande $statut, ?Priorite $priorite, ?string $search): QueryBuilder
         {
             $qb = $this->createQueryBuilder('d');
+
+            if ($organisation !== null) {
+                $qb->andWhere('d.organisation = :organisation')
+                    ->setParameter('organisation', $organisation);
+            }
+
             if ($priorite !== null) {
                 $qb->andWhere('d.priorite = :priorite')
                     ->setParameter('priorite', $priorite);
@@ -77,24 +84,26 @@
                 $qb->andWhere('d.statut = :statut')
                     ->setParameter('statut', $statut);
             }
-            if ($organisation !== null) {
-                $qb->andWhere('d.organisation = :organisation')
-                    ->setParameter('organisation', $organisation);
-            }
 
-            if ($search !== null) {
+            if ($search !== null && $search !== '') {
                 $qb->andWhere('d.titre LIKE :search OR d.description LIKE :search')
                     ->setParameter('search', '%' . $search . '%');
             }
-            return $qb->getQuery()->getResult();
+
+            $qb->orderBy('d.createdAt', 'DESC');
+
+            return $qb;
         }
 
-        public function paginateDemandes(int $page, int $limit): PaginationInterface
+        public function findByFilters(?Organisation $organisation, ?Site $site, ?StatutDemande $statut, ?Priorite $priorite, ?string $search): array
         {
-            return $this->paginator->paginate(
-                $this->createQueryBuilder('d'),
-                $page,
-                $limit
-            );
+            return $this->getQueryBuilderByFilters($organisation, $site, $statut, $priorite, $search)
+                ->getQuery()
+                ->getResult();
+        }
+
+        public function paginateDemandes(QueryBuilder $qb, int $page, int $limit): PaginationInterface
+        {
+            return $this->paginator->paginate($qb, $page, $limit);
         }
     }

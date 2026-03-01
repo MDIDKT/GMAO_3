@@ -2,9 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Organisation;
 use App\Entity\Site;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,10 +19,6 @@ class SiteType extends AbstractType
             ->add('telephone')
             ->add('email')
             ->add('actif')
-            ->add('organisation', EntityType::class, [
-                'class' => Organisation::class,
-                'choice_label' => 'id',
-            ])
         ;
     }
 

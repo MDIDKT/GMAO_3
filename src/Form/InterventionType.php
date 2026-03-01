@@ -2,11 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\Demande;
 use App\Entity\Intervention;
-use App\Entity\Organisation;
 use App\Entity\User;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,25 +16,6 @@ class InterventionType extends AbstractType
         $organisation = $options['organisation'];
 
         $builder
-            ->add('datePlanifiee')
-            ->add('dateDebut')
-            ->add('dateFin')
-            ->add('compteRendu')
-            ->add('dureeMinutes')
-            ->add('notes')
-            ->add('statut')
-            ->add('demande', EntityType::class, [
-                'class' => Demande::class,
-                'choice_label' => 'numero',
-                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($organisation) {
-                    $qb = $er->createQueryBuilder('d');
-                    if ($organisation) {
-                        $qb->andWhere('d.organisation = :organisation')
-                            ->setParameter('organisation', $organisation);
-                    }
-                    return $qb;
-                },
-            ])
             ->add('technicien', EntityType::class, [
                 'class' => User::class,
                 'required' => false,
@@ -50,9 +28,12 @@ class InterventionType extends AbstractType
                         $qb->andWhere('u.organisation = :organisation')
                             ->setParameter('organisation', $organisation);
                     }
+                    $qb->andWhere('u.roles LIKE :role')
+                        ->setParameter('role', '%"ROLE_TECHNICIEN"%');
                     return $qb;
                 },
             ])
+            ->add('datePlanifiee')
             ->add('planificateur', EntityType::class, [
                 'class' => User::class,
                 'required' => false,
@@ -65,12 +46,10 @@ class InterventionType extends AbstractType
                         $qb->andWhere('u.organisation = :organisation')
                             ->setParameter('organisation', $organisation);
                     }
+                    $qb->andWhere('u.roles LIKE :role')
+                        ->setParameter('role', '%"ROLE_PLANIFICATEUR"%');
                     return $qb;
                 },
-            ])
-            ->add('organisation', EntityType::class, [
-                'class' => Organisation::class,
-                'choice_label' => 'nom',
             ])
         ;
     }

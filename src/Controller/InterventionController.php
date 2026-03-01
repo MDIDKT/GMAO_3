@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Demande;
 use App\Entity\Intervention;
 use App\Entity\User;
+use App\Enum\StatutDemande;
 use App\Enum\StatutIntervention;
 use App\Form\InterventionType;
 use App\Repository\InterventionRepository;
+use App\Service\InterventionService;
 use App\Service\NumberingService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,9 +20,11 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/intervention')]
 final class InterventionController extends AbstractController
 {
-    public function __construct(private readonly NumberingService $numberingService)
+    public function __construct(
+        private readonly NumberingService    $numberingService,
+        private readonly InterventionService $interventionService
+    )
     {
-
     }
     #[Route(name: 'app_intervention_index', methods: ['GET'])]
     public function index(InterventionRepository $interventionRepository, Request $request): Response
@@ -28,16 +33,26 @@ final class InterventionController extends AbstractController
         if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
             throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
         }
-        $statut = $request->query->get('statut');
-        $statut = is_string($statut) ? StatutIntervention::tryFrom($statut) : null;
+
+        $organisation = $currentUser->getOrganisation();
+        $statutParam = $request->query->get('statut');
+        $statut = is_string($statutParam) ? StatutIntervention::tryFrom($statutParam) : null;
+
+        $page = $request->query->getInt('page', 1);
+        $limit = 3;
+        $qb = $interventionRepository->getQueryBuilderByFilters($organisation, null, $statut);
+        $pagination = $interventionRepository->paginateInterventions($qb, $page, $limit);
+
         return $this->render('intervention/index.html.twig', [
-            'interventions' => $interventionRepository->findByFilters($currentUser->getOrganisation(), $currentUser->getUserIdentifier()),
+            'interventions' => $interventionRepository->findByFilters($organisation, null, $statut),
+            'pagination' => $pagination,
             'statut' => $statut,
+            'statuts' => StatutIntervention::cases(),
         ]);
     }
 
-    #[Route('/new', name: 'app_intervention_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{demande}', name: 'app_intervention_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, Demande $demande, EntityManagerInterface $entityManager): Response
     {
         $currentUser = $this->getUser();
         if (!$currentUser instanceof User) {
@@ -49,26 +64,34 @@ final class InterventionController extends AbstractController
             throw $this->createAccessDeniedException('Aucune organisation associee a cet utilisateur.');
         }
 
+        // Sécurité multi-tenant
+        if ($demande->getOrganisation() !== $organisation) {
+            throw $this->createAccessDeniedException('Cette demande ne vous appartient pas.');
+        }
+
+        // Sécurité métier Jour 12
+        if ($demande->getStatut() === StatutDemande::CLOTURE || $demande->getStatut() === StatutDemande::REJETEE) {
+            $this->addFlash('danger', 'Impossible de planifier une intervention sur une demande clôturée ou rejetée.');
+            return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
+        }
+
         $intervention = new Intervention();
+        $intervention->setDemande($demande);
+        $intervention->setOrganisation($organisation);
+
         $form = $this->createForm(InterventionType::class, $intervention, ['organisation' => $organisation]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $number = $this->numberingService->generateNumero('INT');
-            $intervention->setNumero($number);
-            $intervention->setStatut(StatutIntervention::A_PLANIFIER);
-            $intervention->setTechnicien($currentUser);
-            $intervention->setPlanificateur($currentUser);
-            $intervention->setOrganisation($organisation);
-            $entityManager->persist($intervention);
-            $entityManager->flush();
+            $this->interventionService->createIntervention($intervention);
 
-            return $this->redirectToRoute('app_intervention_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('intervention/new.html.twig', [
             'intervention' => $intervention,
             'form' => $form,
+            'demande' => $demande,
         ]);
     }
 

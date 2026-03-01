@@ -60,6 +60,9 @@ class Demande
     #[ORM\JoinColumn(nullable: false)]
     private ?Organisation $organisation = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $motifRejet = null;
+
     #[ORM\Column(length: 255)]
     private ?string $numero = null;
 
@@ -208,6 +211,18 @@ class Demande
     public function setOrganisation(?Organisation $organisation): static
     {
         $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    public function getMotifRejet(): ?string
+    {
+        return $this->motifRejet;
+    }
+
+    public function setMotifRejet(?string $motifRejet): static
+    {
+        $this->motifRejet = $motifRejet;
 
         return $this;
     }

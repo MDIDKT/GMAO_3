@@ -55,6 +55,7 @@ security:
         - { path: ^/batiment, roles: ROLE_ADMIN }
         - { path: ^/equipement, roles: ROLE_ADMIN }
         - { path: ^/demande, roles: [ROLE_DEMANDEUR, ROLE_PLANIFICATEUR, ROLE_ADMIN] }
+        - { path: ^/intervention, roles: [ROLE_PLANIFICATEUR, ROLE_ADMIN] }
         - { path: ^/, roles: ROLE_USER }
 
 when@test:

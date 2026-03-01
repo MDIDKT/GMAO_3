@@ -84,8 +84,15 @@
         #[Route('/new', name: 'app_equipement_new', methods: ['GET', 'POST'])]
         public function new(Request $request, EntityManagerInterface $entityManager): Response
         {
+            $currentUser = $this->getUser();
+            if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
+                throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+            }
+
+            $organisation = $currentUser->getOrganisation();
             $equipement = new Equipement();
-            $form = $this->createForm(EquipementType::class, $equipement);
+            $equipement->setOrganisation($organisation);
+            $form = $this->createForm(EquipementType::class, $equipement, ['organisation' => $organisation]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -112,7 +119,12 @@
         #[Route('/{id}/edit', name: 'app_equipement_edit', methods: ['GET', 'POST'])]
         public function edit(Request $request, Equipement $equipement, EntityManagerInterface $entityManager): Response
         {
-            $form = $this->createForm(EquipementType::class, $equipement);
+            $currentUser = $this->getUser();
+            if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
+                throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+            }
+
+            $form = $this->createForm(EquipementType::class, $equipement, ['organisation' => $currentUser->getOrganisation()]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {

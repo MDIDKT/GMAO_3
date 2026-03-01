@@ -13,13 +13,25 @@ class BatimentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $organisation = $options['organisation'] ?? null;
+
         $builder
             ->add('nom')
             ->add('etage')
             ->add('actif')
             ->add('site', EntityType::class, [
                 'class' => Site::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom',
+                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($organisation) {
+                    $qb = $er->createQueryBuilder('s');
+                    if ($organisation) {
+                        $qb->andWhere('s.organisation = :organisation')
+                            ->setParameter('organisation', $organisation);
+                    }
+                    $qb->andWhere('s.actif = :actif')
+                        ->setParameter('actif', true);
+                    return $qb;
+                },
             ])
         ;
     }
@@ -28,6 +40,7 @@ class BatimentType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Batiment::class,
+            'organisation' => null,
         ]);
     }
 }

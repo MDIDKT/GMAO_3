@@ -39,26 +39,39 @@
             }
 
             $organisation = $currentUser->getOrganisation();
-            $priorite = $request->query->get('priorite');
-            $statut = $request->query->get('statut');
-            $site = $request->query->get('site');
+            $prioriteParam = $request->query->get('priorite');
+            $statutParam = $request->query->get('statut');
+            $siteParam = $request->query->get('site');
             $search = $request->query->get('search');
 
-            $page = $request->query->getInt('page', 1);
-            $limit = 3;
-            $pagination = $demandeRepository->paginateDemandes($page, $limit);
-
-            $statut = is_string($statut) ? StatutDemande::tryFrom($statut) : null;
-            $priorite = is_string($priorite) ? Priorite::tryFrom($priorite) : null;
-            if (is_string($site) && ctype_digit($site)) {
+            $statut = is_string($statutParam) ? StatutDemande::tryFrom($statutParam) : null;
+            $priorite = is_string($prioriteParam) ? Priorite::tryFrom($prioriteParam) : null;
+            $site = null;
+            if (is_string($siteParam) && ctype_digit($siteParam)) {
                 $site = $siteRepository->findOneBy([
-                    'id' => (int)$site,
+                    'id' => (int)$siteParam,
                     'organisation' => $organisation,
                 ]);
             }
+
+            $page = $request->query->getInt('page', 1);
+            $limit = 3;
+            $qb = $demandeRepository->getQueryBuilderByFilters($organisation, $site, $statut, $priorite, $search);
+            $pagination = $demandeRepository->paginateDemandes($qb, $page, $limit);
+
+            // Pour les widgets, on récupère tous les résultats filtrés sans pagination
+            $filteredDemandes = $demandeRepository->findByFilters($organisation, $site, $statut, $priorite, $search);
+
             return $this->render('demande/index.html.twig', [
-                'demandes' => $demandeRepository->findByOrganisation($currentUser->getOrganisation()),
-                'pagination' => $pagination
+                'demandes' => $filteredDemandes,
+                'pagination' => $pagination,
+                'priorite' => $priorite,
+                'statut' => $statut,
+                'site' => $site,
+                'search' => $search,
+                'sites' => $siteRepository->findBy(['organisation' => $organisation, 'actif' => true], ['nom' => 'ASC']),
+                'priorites' => Priorite::cases(),
+                'statuts' => StatutDemande::cases(),
             ]);
         }
 
@@ -76,7 +89,7 @@
             }
 
             $demande = new Demande();
-            $form = $this->createForm(DemandeType::class, $demande);
+            $form = $this->createForm(DemandeType::class, $demande, ['organisation' => $organisation]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $photoFiles = $form->get('photos')->getData() ?? [];
@@ -165,7 +178,7 @@
                 throw $this->createAccessDeniedException('Utilisateur non authentifie.');
             }
 
-            $form = $this->createForm(DemandeType::class, $demande);
+            $form = $this->createForm(DemandeType::class, $demande, ['organisation' => $currentUser->getOrganisation()]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
