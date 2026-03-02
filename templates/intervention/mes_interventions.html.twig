@@ -1,0 +1,134 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block page_subtitle %}
+    Mes interventions
+{% endblock %}
+
+{% block page_content %}
+    <div class="mb-6">
+        <ul class="flex flex-wrap gap-2 border-b border-gray-200">
+            <li>
+                <a href="{{ path('app_intervention_mes_interventions') }}"
+                   class="inline-block px-4 py-2 rounded-t-lg {{ statut is null ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-gray-900' }}">
+                    Toutes
+                </a>
+            </li>
+            {% for s in statuts %}
+                <li>
+                    <a href="{{ path('app_intervention_mes_interventions', {statut: s.value}) }}"
+                       class="inline-block px-4 py-2 rounded-t-lg {{ statut == s ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-gray-900' }}">
+                        {{ s.label }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% if interventions is empty %}
+        <div class="bg-white rounded-lg shadow p-8 text-center">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">Aucune intervention</h3>
+            <p class="mt-1 text-sm text-gray-500">Vous n'avez pas encore d'intervention assignée.</p>
+        </div>
+    {% else %}
+        <div class="grid gap-4">
+            {% for intervention in pagination.items %}
+                {% set statutClass = 'bg-gray-100 text-gray-800' %}
+                {% if intervention.statut %}
+                    {% if intervention.statut.value == 'planifiee' %}
+                        {% set statutClass = 'bg-blue-100 text-blue-800' %}
+                    {% elseif intervention.statut.value == 'en_cours' %}
+                        {% set statutClass = 'bg-yellow-100 text-yellow-800' %}
+                    {% elseif intervention.statut.value == 'terminee' %}
+                        {% set statutClass = 'bg-green-100 text-green-800' %}
+                    {% elseif intervention.statut.value == 'annulee' %}
+                        {% set statutClass = 'bg-red-100 text-red-800' %}
+                    {% endif %}
+                {% endif %}
+
+                <div class="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                Intervention #{{ intervention.numero }}
+                            </h3>
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ statutClass }}">
+                                {{ intervention.statut ? intervention.statut.label : 'Non défini' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 text-sm text-gray-600 mb-4">
+                        <div class="flex items-center">
+                            <svg class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <span>Date prévue: {{ intervention.datePlanifiee ? intervention.datePlanifiee|date('d/m/Y') : 'Non définie' }}</span>
+                        </div>
+                        {% if intervention.demande %}
+                            <div class="flex items-center">
+                                <svg class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                <span>Demande: #{{ intervention.demande.numero }}</span>
+                            </div>
+                        {% endif %}
+                        {% if intervention.technicien %}
+                            <div class="flex items-center">
+                                <svg class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                                <span>Technicien: {{ intervention.technicien.nom }} {{ intervention.technicien.prenom }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="flex gap-2">
+                        <a href="{{ path('app_intervention_show', {id: intervention.id}) }}"
+                           class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Voir détails
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if pagination.pageCount > 1 %}
+            <div class="mt-6 flex justify-center">
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    {% if pagination.currentPage > 1 %}
+                        <a href="{{ path('app_intervention_mes_interventions', {page: pagination.currentPage - 1, statut: statut ? statut.value : null}) }}"
+                           class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            Précédent
+                        </a>
+                    {% endif %}
+
+                    {% for page in 1..pagination.pageCount %}
+                        <a href="{{ path('app_intervention_mes_interventions', {page: page, statut: statut ? statut.value : null}) }}"
+                           class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium {{ page == pagination.currentPage ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50' }}">
+                            {{ page }}
+                        </a>
+                    {% endfor %}
+
+                    {% if pagination.currentPage < pagination.pageCount %}
+                        <a href="{{ path('app_intervention_mes_interventions', {page: pagination.currentPage + 1, statut: statut ? statut.value : null}) }}"
+                           class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            Suivant
+                        </a>
+                    {% endif %}
+                </nav>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+

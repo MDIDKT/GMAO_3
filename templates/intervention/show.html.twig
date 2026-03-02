@@ -143,6 +143,27 @@
                        class="text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
                         Retour a la liste
                     </a>
+
+                    {% if intervention.statut.value == 'PLANIFIE' %}
+                        <form method="post" action="{{ path('app_intervention_demarrer', {'id': intervention.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('demarrer' ~ intervention.id) }}">
+                            <button type="submit"
+                                    class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-medium">
+                                Démarrer
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    {% if intervention.statut.value == 'EN_COURS' %}
+                        <form method="post" action="{{ path('app_intervention_terminer', {'id': intervention.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('terminer' ~ intervention.id) }}">
+                            <button type="submit"
+                                    class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition font-medium">
+                                Terminer
+                            </button>
+                        </form>
+                    {% endif %}
+
                     {{ include('intervention/_delete_form.html.twig') }}
                 </div>
             </div>

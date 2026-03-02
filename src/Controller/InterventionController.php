@@ -12,6 +12,7 @@ use App\Repository\InterventionRepository;
 use App\Service\InterventionService;
 use App\Service\NumberingService;
 use Doctrine\ORM\EntityManagerInterface;
+use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +22,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class InterventionController extends AbstractController
 {
     public function __construct(
-        private readonly NumberingService    $numberingService,
+        private readonly NumberingService $numberingService,
         private readonly InterventionService $interventionService
     )
     {
@@ -64,12 +65,10 @@ final class InterventionController extends AbstractController
             throw $this->createAccessDeniedException('Aucune organisation associee a cet utilisateur.');
         }
 
-        // Sécurité multi-tenant
         if ($demande->getOrganisation() !== $organisation) {
             throw $this->createAccessDeniedException('Cette demande ne vous appartient pas.');
         }
 
-        // Sécurité métier Jour 12
         if ($demande->getStatut() === StatutDemande::CLOTURE || $demande->getStatut() === StatutDemande::REJETEE) {
             $this->addFlash('danger', 'Impossible de planifier une intervention sur une demande clôturée ou rejetée.');
             return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
@@ -129,11 +128,40 @@ final class InterventionController extends AbstractController
     #[Route('/{id}', name: 'app_intervention_delete', methods: ['POST'])]
     public function delete(Request $request, Intervention $intervention, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$intervention->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $intervention->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($intervention);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_intervention_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/{id}/demarrer', name: 'app_intervention_demarrer', methods: ['POST'])]
+    public function demarrer(Request $request, Intervention $intervention): Response
+    {
+        if ($this->isCsrfTokenValid('demarrer' . $intervention->getId(), $request->getPayload()->getString('_token'))) {
+            $demande = $intervention->getDemande();
+            try {
+                $this->interventionService->demarrerIntervention($intervention, $demande);
+            } catch (LogicException $e) {
+                $this->addFlash('danger', $e->getMessage());
+            }
+        }
+        return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);
+    }
+
+    #[Route('/{id}/terminer', name: 'app_intervention_terminer', methods: ['POST'])]
+    public function terminer(Request $request, Intervention $intervention): Response
+    {
+        if ($this->isCsrfTokenValid('terminer' . $intervention->getId(), $request->getPayload()->getString('_token'))) {
+            $demande = $intervention->getDemande();
+            try {
+                $this->interventionService->terminerIntervention($intervention, $demande);
+            } catch (LogicException $e) {
+                $this->addFlash('danger', $e->getMessage());
+            }
+        }
+        return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);
+    }
+
 }

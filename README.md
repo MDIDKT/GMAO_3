@@ -117,3 +117,36 @@ jour 12 - Module Intervention
 * lien Interventions actif dans la sidebar
 * jour 12 tout est ok
 
+02-03-26
+Audit complet Jour 0-12 + corrections CDC + Jour 13
+
+Audit et corrections Jour 0-12 :
+* ajout motifRejet (TEXT nullable) sur entite Demande (manquant MLD §5.2)
+* correction contrainte File dans DemandeType : passage aux named arguments Symfony 8 (plus d'array de config)
+* nettoyage InterventionType : suppression des 8 champs hors perimetre (dateDebut, dateFin, compteRendu, dureeMinutes, notes, statut, demande, organisation)
+* ajout access_control security.yaml pour /intervention (ROLE_PLANIFICATEUR, ROLE_ADMIN)
+* correction SiteType : suppression champ organisation (deja set par le controller)
+* correction EquipementType : ajout option organisation, query_builder filtre par organisation, choice_label nom
+* correction EquipementController : setOrganisation() + passage organisation au form
+* correction BatimentType : ajout option organisation, query_builder filtre sites actifs par organisation, choice_label nom
+* correction BatimentController : passage organisation au form
+* ajout JoinColumn nullable: false sur Site.organisation
+* migration : motif_rejet + organisation_id NOT NULL
+* correction templates site/_form et equipement/_form : suppression bloc form.organisation (erreur Twig apres nettoyage FormType)
+* creation PLAN-TEST-MANUEL.md
+
+Jour 13 - Workflow intervention (Démarrer / Terminer) :
+* InterventionService : demarrerIntervention() PLANIFIE→EN_COURS + dateDebut + cascade demande EN_COURS
+* InterventionService : terminerIntervention() EN_COURS→TERMINEE + compteRendu obligatoire + dateFin + dureeMinutes + cascade demande CLOTURE
+* InterventionController : actions demarrer et terminer (POST, CSRF, flash LogicException)
+* MesInterventionsController : liste des interventions du technicien connecte
+* show.html.twig : ajout bouton Demarrer (visible si PLANIFIE) et bouton Terminer (visible si EN_COURS)
+* InterventionType : ajout champ compteRendu (TextareaType, required: false)
+* jour 13 tout est ok
+
+02-03-26 (pause)
+Jour 14 - Photos intervention (AVANT / APRES / COMPLEMENT) : en cours
+* a reprendre : InterventionPhotoType (FileType + EnumType typePhoto AVANT/APRES/COMPLEMENT)
+* a reprendre : action ajouterPhotos dans InterventionController (verification EN_COURS + technicien assigne)
+* a reprendre : galerie groupee par type dans show.html.twig
+

@@ -6,8 +6,12 @@ use App\Entity\Intervention;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\All;
+use Symfony\Component\Validator\Constraints\File;
 
 class InterventionType extends AbstractType
 {
@@ -51,7 +55,30 @@ class InterventionType extends AbstractType
                     return $qb;
                 },
             ])
-        ;
+            ->add('compteRendu', TextareaType::class, [
+                'required' => false,
+                'label' => 'Compte rendu',
+            ])
+            ->add('photos', FileType::class, [
+                'label' => 'Photos (JPEG, PNG, max 5Mo)',
+                'multiple' => true,
+                'choiceType' => 'image',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new All([
+                        new File(
+                            maxSize: '5M',
+                            mimeTypes: [
+                                'image/jpeg',
+                                'image/png',
+                                'image/webp',
+                            ],
+                            mimeTypesMessage: 'Seuls les formats JPEG, PNG et WebP sont acceptes.',
+                        ),
+                    ]),
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
