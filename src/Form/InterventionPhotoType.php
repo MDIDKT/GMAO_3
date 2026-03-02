@@ -35,15 +35,12 @@ class InterventionPhotoType extends AbstractType
                     ]),
                 ],
             ])
-        ->add('typePhoto', EnumType::class,[
+        ->add('typePhoto', EnumType::class, [
             'class' => TypePhoto::class,
-                'choice_label' => 'label',
-                'expanded' => true,
-                'multiple' => true,
-                'required' => true,
-                'label' => 'Type de photo',
-            ]
-    )
+            'label' => 'Type de photo',
+            'choices' => [TypePhoto::AVANT, TypePhoto::APRES, TypePhoto::COMPLEMENT],
+            'choice_label' => fn($choice) => $choice->label(),
+        ])
         ;
     }
 

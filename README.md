@@ -144,9 +144,10 @@ Jour 13 - Workflow intervention (Démarrer / Terminer) :
 * InterventionType : ajout champ compteRendu (TextareaType, required: false)
 * jour 13 tout est ok
 
-02-03-26 (pause)
-Jour 14 - Photos intervention (AVANT / APRES / COMPLEMENT) : en cours
-* a reprendre : InterventionPhotoType (FileType + EnumType typePhoto AVANT/APRES/COMPLEMENT)
-* a reprendre : action ajouterPhotos dans InterventionController (verification EN_COURS + technicien assigne)
-* a reprendre : galerie groupee par type dans show.html.twig
+Jour 14 - Photos intervention (AVANT / APRES / COMPLEMENT) :
+* InterventionPhotoType : FileType multiple + EnumType typePhoto (AVANT/APRES/COMPLEMENT, SIGNALEMENT exclu)
+* InterventionController : action ajouterPhotos (POST /{id}/photos, verification EN_COURS + technicien assigne)
+* show.html.twig : galerie groupee par type (toujours visible) + formulaire upload (EN_COURS + technicien uniquement)
+* correction currentPage → currentPageNumber dans mes_interventions (KnpPaginator)
+* jour 14 tout est ok
 

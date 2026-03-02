@@ -110,18 +110,44 @@
                     <p class="text-sm font-medium text-gray-500 mb-1">Notes</p>
                     <p class="text-gray-800 whitespace-pre-line">{{ intervention.notes ?: '-' }}</p>
                 </div>
+                {# Galerie groupée par type — toujours visible #}
+                {% set photosAvant = intervention.photos|filter(p => p.typePhoto.value == 'AVANT') %}
+                {% set photosApres = intervention.photos|filter(p => p.typePhoto.value == 'APRES') %}
+                {% set photosComplement = intervention.photos|filter(p => p.typePhoto.value == 'COMPLEMENT') %}
+
                 {% if intervention.photos|length > 0 %}
-                    <div>
-                        <p class="text-sm font-medium text-gray-500 mb-2">Photos</p>
-                        <div class="flex flex-wrap gap-5">
-                            {% for photo in intervention.photos %}
-                                <a href="{{ path('photo_show', {'id': photo.id}) }}" target="_blank">
-                                    <img src="{{ path('photo_show', {'id': photo.id}) }}"
-                                         alt="{{ photo.originalName ?: 'Photo' }}"
-                                         class="h-56 w-56 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition">
-                                </a>
-                            {% endfor %}
-                        </div>
+                    <div class="mt-2 space-y-4">
+                        <p class="text-sm font-medium text-gray-500">Photos</p>
+                        {% for label, photoGroup in {'Avant': photosAvant, 'Après': photosApres, 'Complément': photosComplement} %}
+                            {% if photoGroup|length > 0 %}
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">{{ label }}</p>
+                                    <div class="flex flex-wrap gap-3">
+                                        {% for photo in photoGroup %}
+                                            <a href="{{ path('photo_show', {'id': photo.id}) }}" target="_blank">
+                                                <img src="{{ path('photo_show', {'id': photo.id}) }}"
+                                                     alt="{{ photo.originalName ?: 'Photo' }}"
+                                                     class="h-24 w-24 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition">
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {# Formulaire upload — visible uniquement si EN_COURS ET technicien assigné #}
+                {% if intervention.statut.value == 'EN_COURS' and app.user == intervention.technicien %}
+                    <div class="mt-4 border-t border-gray-200 pt-4">
+                        <p class="text-sm font-medium text-gray-500 mb-3">Ajouter des photos</p>
+                        {{ form_start(photoForm, {'attr': {'enctype': 'multipart/form-data', 'class': 'space-y-3'}}) }}
+                            {{ form_row(photoForm.typePhoto) }}
+                            {{ form_row(photoForm.photos) }}
+                            <button type="submit" class="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg transition font-medium text-sm">
+                                Envoyer
+                            </button>
+                        {{ form_end(photoForm) }}
                     </div>
                 {% endif %}
             </div>

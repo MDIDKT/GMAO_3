@@ -7,12 +7,17 @@ use App\Entity\Intervention;
 use App\Entity\User;
 use App\Enum\StatutDemande;
 use App\Enum\StatutIntervention;
+use App\Entity\Photo;
+use App\Enum\TypePhoto;
+use App\Form\InterventionPhotoType;
 use App\Form\InterventionType;
 use App\Repository\InterventionRepository;
+use App\Service\FileUploadService;
 use App\Service\InterventionService;
 use App\Service\NumberingService;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -97,9 +102,67 @@ final class InterventionController extends AbstractController
     #[Route('/{id}', name: 'app_intervention_show', methods: ['GET'])]
     public function show(Intervention $intervention): Response
     {
+        $photoForm = $this->createForm(InterventionPhotoType::class, null, [
+            'action' => $this->generateUrl('app_intervention_ajouter_photos', ['id' => $intervention->getId()]),
+            'method' => 'POST',
+        ]);
+
         return $this->render('intervention/show.html.twig', [
             'intervention' => $intervention,
+            'photoForm' => $photoForm,
         ]);
+    }
+
+    #[Route('/{id}/photos', name: 'app_intervention_ajouter_photos', methods: ['POST'])]
+    public function ajouterPhotos(Request $request, Intervention $intervention, FileUploadService $fileUploadService, EntityManagerInterface $entityManager): Response
+    {
+        $currentUser = $this->getUser();
+        if (!$currentUser instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if ($intervention->getStatut() !== StatutIntervention::EN_COURS) {
+            $this->addFlash('danger', 'Upload autorisé uniquement si l\'intervention est EN_COURS.');
+            return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);
+        }
+
+        if ($intervention->getTechnicien() !== $currentUser) {
+            $this->addFlash('danger', 'Seul le technicien assigné peut ajouter des photos.');
+            return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);
+        }
+
+        $form = $this->createForm(InterventionPhotoType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $photoFiles = $form->get('photos')->getData() ?? [];
+            if (!is_array($photoFiles)) {
+                $photoFiles = [$photoFiles];
+            }
+            $typePhoto = $form->get('typePhoto')->getData();
+
+            foreach ($photoFiles as $photoFile) {
+                if (!$photoFile instanceof UploadedFile || !$photoFile->isValid()) {
+                    continue;
+                }
+
+                $filename = $fileUploadService->upload($photoFile);
+                $photo = new Photo();
+                $photo->setFileName($filename);
+                $photo->setOriginalName($photoFile->getClientOriginalName());
+                $photo->setMimeType($photoFile->getMimeType() ?? $photoFile->getClientMimeType());
+                $photo->setTaille((int)($photoFile->getSize() ?? 0));
+                $photo->setTypePhoto($typePhoto);
+                $photo->setIntervention($intervention);
+                $photo->setUploadPar($currentUser);
+                $entityManager->persist($photo);
+            }
+
+            $entityManager->flush();
+            $this->addFlash('success', 'Photos ajoutées avec succès.');
+        }
+
+        return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);
     }
 
     #[Route('/{id}/edit', name: 'app_intervention_edit', methods: ['GET', 'POST'])]
