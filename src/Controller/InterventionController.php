@@ -4,11 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Demande;
 use App\Entity\Intervention;
+use App\Entity\Photo;
 use App\Entity\User;
 use App\Enum\StatutDemande;
 use App\Enum\StatutIntervention;
-use App\Entity\Photo;
-use App\Enum\TypePhoto;
 use App\Form\InterventionPhotoType;
 use App\Form\InterventionType;
 use App\Repository\InterventionRepository;
@@ -17,8 +16,8 @@ use App\Service\InterventionService;
 use App\Service\NumberingService;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -102,6 +101,7 @@ final class InterventionController extends AbstractController
     #[Route('/{id}', name: 'app_intervention_show', methods: ['GET'])]
     public function show(Intervention $intervention): Response
     {
+        $this->denyAccessUnlessGranted('INTERVENTION_VIEW', $intervention);
         $photoForm = $this->createForm(InterventionPhotoType::class, null, [
             'action' => $this->generateUrl('app_intervention_ajouter_photos', ['id' => $intervention->getId()]),
             'method' => 'POST',
@@ -116,6 +116,7 @@ final class InterventionController extends AbstractController
     #[Route('/{id}/photos', name: 'app_intervention_ajouter_photos', methods: ['POST'])]
     public function ajouterPhotos(Request $request, Intervention $intervention, FileUploadService $fileUploadService, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('INTERVENTION_AJOUTER_PHOTO', $intervention);
         $currentUser = $this->getUser();
         if (!$currentUser instanceof User) {
             throw $this->createAccessDeniedException();
@@ -125,12 +126,7 @@ final class InterventionController extends AbstractController
             $this->addFlash('danger', 'Upload autorisé uniquement si l\'intervention est EN_COURS.');
             return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);
         }
-
-        if ($intervention->getTechnicien() !== $currentUser) {
-            $this->addFlash('danger', 'Seul le technicien assigné peut ajouter des photos.');
-            return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);
-        }
-
+        
         $form = $this->createForm(InterventionPhotoType::class);
         $form->handleRequest($request);
 
@@ -168,6 +164,7 @@ final class InterventionController extends AbstractController
     #[Route('/{id}/edit', name: 'app_intervention_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Intervention $intervention, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('INTERVENTION_EDIT', $intervention);
         $currentUser = $this->getUser();
         if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
             throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
@@ -191,6 +188,7 @@ final class InterventionController extends AbstractController
     #[Route('/{id}', name: 'app_intervention_delete', methods: ['POST'])]
     public function delete(Request $request, Intervention $intervention, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('INTERVENTION_DELETE', $intervention);
         if ($this->isCsrfTokenValid('delete' . $intervention->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($intervention);
             $entityManager->flush();
@@ -202,6 +200,7 @@ final class InterventionController extends AbstractController
     #[Route('/{id}/demarrer', name: 'app_intervention_demarrer', methods: ['POST'])]
     public function demarrer(Request $request, Intervention $intervention): Response
     {
+        $this->denyAccessUnlessGranted('INTERVENTION_DEMARRER', $intervention);
         if ($this->isCsrfTokenValid('demarrer' . $intervention->getId(), $request->getPayload()->getString('_token'))) {
             $demande = $intervention->getDemande();
             try {
@@ -216,6 +215,7 @@ final class InterventionController extends AbstractController
     #[Route('/{id}/terminer', name: 'app_intervention_terminer', methods: ['POST'])]
     public function terminer(Request $request, Intervention $intervention): Response
     {
+        $this->denyAccessUnlessGranted('INTERVENTION_TERMINER', $intervention);
         if ($this->isCsrfTokenValid('terminer' . $intervention->getId(), $request->getPayload()->getString('_token'))) {
             $demande = $intervention->getDemande();
             try {

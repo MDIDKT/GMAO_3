@@ -151,3 +151,10 @@ Jour 14 - Photos intervention (AVANT / APRES / COMPLEMENT) :
 * correction currentPage → currentPageNumber dans mes_interventions (KnpPaginator)
 * jour 14 tout est ok
 
+Jour 15 - Voters (protection anti-IDOR) :
+* InterventionVoter : attributs VIEW, EDIT, DEMARRER, TERMINER, AJOUTER_PHOTO, DELETE
+* security.yaml : ROLE_TECHNICIEN autorise sur /intervention
+* denyAccessUnlessGranted sur toutes les actions du controller
+* suppression verification manuelle redondante dans ajouterPhotos
+* jour 15 tout est ok
+
