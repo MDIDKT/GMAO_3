@@ -1,0 +1,18 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block page_title %}Nouvelle categorie{% endblock %}
+{% block page_subtitle %}Creation d'une categorie d'equipement{% endblock %}
+
+{% block page_content %}
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-xl shadow-md">
+            <div class="px-8 py-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">Informations de la categorie</h3>
+                <p class="text-sm text-gray-600 mt-1">Renseignez les informations de la categorie</p>
+            </div>
+            <div class="p-8">
+                {{ include('categorie_equipement/_form.html.twig', {'button_label': 'Enregistrer la categorie'}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

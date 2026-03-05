@@ -2,49 +2,49 @@
 
     namespace App\Security\Voter;
 
-    use App\Entity\Intervention;
+    use App\Entity\Demande;
     use Symfony\Bundle\SecurityBundle\Security;
     use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
     use Symfony\Component\Security\Core\Authorization\Voter\Vote;
     use Symfony\Component\Security\Core\Authorization\Voter\Voter;
     use Symfony\Component\Security\Core\User\UserInterface;
 
-    final class InterventionVoter extends Voter
+    final class DemandeVoter extends Voter
     {
-        public function __construct (private readonly Security $security)
+        public function __construct(private readonly Security $security)
         {
 
         }
 
-        public const string EDIT = 'INTERVENTION_EDIT';
-        public const string VIEW = 'INTERVENTION_VIEW';
+        public const string EDIT = 'DEMANDE_EDIT';
+        public const string VIEW = 'DEMANDE_VIEW';
 
-        public const string DEMARRER = 'INTERVENTION_DEMARRER';
+        public const string DEMARRER = 'DEMANDE_DEMARRER';
 
-        public const string TERMINER = 'INTERVENTION_TERMINER';
+        public const string TERMINER = 'DEMANDE_TERMINER';
 
-        public const string AJOUTER_PHOTO = 'INTERVENTION_AJOUTER_PHOTO';
+        public const string AJOUTER_PHOTO = 'DEMANDE_AJOUTER_PHOTO';
 
-        public const string DELETE = 'INTERVENTION_DELETE';
+        public const string DELETE = 'DEMANDE_DELETE';
 
-        public const string VALIDER = 'INTERVENTION_VALIDER';
+        public const string VALIDER = 'DEMANDE_VALIDER';
 
         protected function supports(string $attribute, mixed $subject): bool
         {
             return in_array($attribute, [self::EDIT, self::VIEW, self::DEMARRER, self::TERMINER, self::AJOUTER_PHOTO, self::DELETE, self::VALIDER])
-                && $subject instanceof Intervention;
+                && $subject instanceof Demande;
         }
 
         protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
         {
             $user = $token->getUser();
-            $intervention = $subject;
+            $Demande = $subject;
 
             if (!$user instanceof UserInterface) {
                 return false;
             }
 
-            if ($intervention->getOrganisation() !== $user->getOrganisation()) {
+            if ($Demande->getOrganisation() !== $user->getOrganisation()) {
                 return false;
             }
 
@@ -52,7 +52,7 @@
                 return true;
             }
 
-            return $intervention->getTechnicien() === $user;
+            return $Demande->getTechnicien() === $user;
 
         }
     }

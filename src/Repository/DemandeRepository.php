@@ -5,6 +5,7 @@
     use App\Entity\Demande;
     use App\Entity\Organisation;
     use App\Entity\Site;
+    use App\Entity\User;
     use App\Enum\Priorite;
     use App\Enum\StatutDemande;
     use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -61,13 +62,18 @@
                     ->getSingleScalarResult() > 0;
         }
 
-        public function getQueryBuilderByFilters(?Organisation $organisation, ?Site $site, ?StatutDemande $statut, ?Priorite $priorite, ?string $search): QueryBuilder
+        public function getQueryBuilderByFilters(?Organisation $organisation, ?Site $site, ?StatutDemande $statut, ?Priorite $priorite, ?string $search, ?User $user = null): QueryBuilder
         {
             $qb = $this->createQueryBuilder('d');
 
             if ($organisation !== null) {
                 $qb->andWhere('d.organisation = :organisation')
                     ->setParameter('organisation', $organisation);
+            }
+
+            if ($user !== null) {
+                $qb->andWhere('d.user = :user')
+                    ->setParameter('user', $user);
             }
 
             if ($priorite !== null) {
@@ -95,9 +101,9 @@
             return $qb;
         }
 
-        public function findByFilters(?Organisation $organisation, ?Site $site, ?StatutDemande $statut, ?Priorite $priorite, ?string $search): array
+        public function findByFilters(?Organisation $organisation, ?Site $site, ?StatutDemande $statut, ?Priorite $priorite, ?string $search, ?User $user = null): array
         {
-            return $this->getQueryBuilderByFilters($organisation, $site, $statut, $priorite, $search)
+            return $this->getQueryBuilderByFilters($organisation, $site, $statut, $priorite, $search, $user)
                 ->getQuery()
                 ->getResult();
         }

@@ -1,0 +1,101 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\CategorieEquipement;
+use App\Entity\User;
+use App\Form\CategorieEquipementType;
+use App\Repository\CategorieEquipementRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+#[Route('/admin/categories-equipement')]
+#[IsGranted('ROLE_ADMIN')]
+final class CategorieEquipementController extends AbstractController
+{
+    #[Route(name: 'app_categorie_equipement_index', methods: ['GET'])]
+    public function index(CategorieEquipementRepository $categorieEquipementRepository): Response
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User || $user->getOrganisation() === null) {
+            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+        }
+
+        return $this->render('categorie_equipement/index.html.twig', [
+            'categories' => $categorieEquipementRepository->findByOrganisation($user->getOrganisation()),
+        ]);
+    }
+
+    #[Route('/new', name: 'app_categorie_equipement_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User || $user->getOrganisation() === null) {
+            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+        }
+
+        $categorie = new CategorieEquipement();
+        $categorie->setOrganisation($user->getOrganisation());
+        $form = $this->createForm(CategorieEquipementType::class, $categorie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($categorie);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Categorie creee avec succes.');
+
+            return $this->redirectToRoute('app_categorie_equipement_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('categorie_equipement/new.html.twig', [
+            'categorie' => $categorie,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_categorie_equipement_show', methods: ['GET'])]
+    public function show(CategorieEquipement $categorie): Response
+    {
+        return $this->render('categorie_equipement/show.html.twig', [
+            'categorie' => $categorie,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_categorie_equipement_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, CategorieEquipement $categorie, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(CategorieEquipementType::class, $categorie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Categorie mise a jour.');
+
+            return $this->redirectToRoute('app_categorie_equipement_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('categorie_equipement/edit.html.twig', [
+            'categorie' => $categorie,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_categorie_equipement_delete', methods: ['POST'])]
+    public function delete(Request $request, CategorieEquipement $categorie, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $categorie->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($categorie);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Categorie supprimee.');
+        }
+
+        return $this->redirectToRoute('app_categorie_equipement_index', [], Response::HTTP_SEE_OTHER);
+    }
+}

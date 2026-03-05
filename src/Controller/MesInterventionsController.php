@@ -9,7 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted("ROLE_TECHNICIEN")]
 final class MesInterventionsController extends AbstractController
 {
     #[Route('/mes-interventions', name: 'app_intervention_mes_interventions', methods: ['GET'])]

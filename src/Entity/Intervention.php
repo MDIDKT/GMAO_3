@@ -47,7 +47,7 @@ class Intervention
     #[ORM\ManyToOne(inversedBy: 'interventions')]
     private ?User $technicien = null;
 
-    #[ORM\ManyToOne(inversedBy: 'interventions')]
+    #[ORM\ManyToOne]
     private ?User $planificateur = null;
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]

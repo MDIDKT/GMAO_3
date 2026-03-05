@@ -170,6 +170,61 @@
             return $response;
         }
 
+        #[Route('/{id}/qualifier', name: 'app_demande_qualifier', methods: ['POST'])]
+        public function qualifier(Request $request, Demande $demande, EntityManagerInterface $entityManager): Response
+        {
+            if (!$this->isGranted('ROLE_PLANIFICATEUR') && !$this->isGranted('ROLE_ADMIN')) {
+                throw $this->createAccessDeniedException('Seul un planificateur ou admin peut qualifier une demande.');
+            }
+
+            if (!$this->isCsrfTokenValid('qualifier' . $demande->getId(), $request->getPayload()->getString('_token'))) {
+                $this->addFlash('danger', 'Token CSRF invalide.');
+                return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
+            }
+
+            if ($demande->getStatut() !== StatutDemande::A_QUALIFIER) {
+                $this->addFlash('danger', 'Cette demande ne peut pas etre qualifiee (statut actuel : ' . $demande->getStatut()->label() . ').');
+                return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
+            }
+
+            $demande->setStatut(StatutDemande::QUALIFIE);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Demande qualifiee avec succes.');
+            return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
+        }
+
+        #[Route('/{id}/rejeter', name: 'app_demande_rejeter', methods: ['POST'])]
+        public function rejeter(Request $request, Demande $demande, EntityManagerInterface $entityManager): Response
+        {
+            if (!$this->isGranted('ROLE_PLANIFICATEUR') && !$this->isGranted('ROLE_ADMIN')) {
+                throw $this->createAccessDeniedException('Seul un planificateur ou admin peut rejeter une demande.');
+            }
+
+            if (!$this->isCsrfTokenValid('rejeter' . $demande->getId(), $request->getPayload()->getString('_token'))) {
+                $this->addFlash('danger', 'Token CSRF invalide.');
+                return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
+            }
+
+            if ($demande->getStatut() !== StatutDemande::A_QUALIFIER && $demande->getStatut() !== StatutDemande::QUALIFIE) {
+                $this->addFlash('danger', 'Cette demande ne peut pas etre rejetee (statut actuel : ' . $demande->getStatut()->label() . ').');
+                return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
+            }
+
+            $motifRejet = trim((string) $request->request->get('motif_rejet', ''));
+            if ($motifRejet === '') {
+                $this->addFlash('danger', 'Le motif de rejet est obligatoire.');
+                return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
+            }
+
+            $demande->setMotifRejet($motifRejet);
+            $demande->setStatut(StatutDemande::REJETEE);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Demande rejetee.');
+            return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
+        }
+
         #[Route('/{id}/edit', name: 'app_demande_edit', methods: ['GET', 'POST'])]
         public function edit(Request $request, Demande $demande, EntityManagerInterface $entityManager, FileUploadService $fileUploadService): Response
         {

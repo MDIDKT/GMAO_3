@@ -17,9 +17,11 @@ use App\Service\NumberingService;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/intervention')]
@@ -113,6 +115,33 @@ final class InterventionController extends AbstractController
         ]);
     }
 
+    #[Route('/photo/{id}', name: 'app_intervention_photo_show', methods: ['GET'])]
+    public function showPhoto(Photo $photo): BinaryFileResponse
+    {
+        $filename = $photo->getFileName();
+        if ($filename === null || $filename === '') {
+            throw $this->createNotFoundException('Fichier photo introuvable.');
+        }
+
+        $filePath = rtrim((string)$this->getParameter('upload_directory'), '/') . '/' . $filename;
+        if (!is_file($filePath) || !is_readable($filePath)) {
+            throw $this->createNotFoundException('Fichier photo introuvable sur le serveur.');
+        }
+
+        $response = new BinaryFileResponse($filePath);
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_INLINE,
+            $photo->getOriginalName() ?: basename($filePath)
+        );
+
+        $mimeType = $photo->getMimeType();
+        if ($mimeType !== null && $mimeType !== '') {
+            $response->headers->set('Content-Type', $mimeType);
+        }
+
+        return $response;
+    }
+
     #[Route('/{id}/photos', name: 'app_intervention_ajouter_photos', methods: ['POST'])]
     public function ajouterPhotos(Request $request, Intervention $intervention, FileUploadService $fileUploadService, EntityManagerInterface $entityManager): Response
     {
@@ -142,12 +171,17 @@ final class InterventionController extends AbstractController
                     continue;
                 }
 
+                // Collecter les métadonnées AVANT upload() qui déplace le fichier temp
+                $originalName = $photoFile->getClientOriginalName();
+                $mimeType = $photoFile->getMimeType() ?? $photoFile->getClientMimeType();
+                $taille = (int)($photoFile->getSize() ?? 0);
+
                 $filename = $fileUploadService->upload($photoFile);
                 $photo = new Photo();
                 $photo->setFileName($filename);
-                $photo->setOriginalName($photoFile->getClientOriginalName());
-                $photo->setMimeType($photoFile->getMimeType() ?? $photoFile->getClientMimeType());
-                $photo->setTaille((int)($photoFile->getSize() ?? 0));
+                $photo->setOriginalName($originalName);
+                $photo->setMimeType($mimeType);
+                $photo->setTaille($taille);
                 $photo->setTypePhoto($typePhoto);
                 $photo->setIntervention($intervention);
                 $photo->setUploadPar($currentUser);
@@ -224,6 +258,30 @@ final class InterventionController extends AbstractController
                 $this->addFlash('danger', $e->getMessage());
             }
         }
+        return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);
+    }
+
+    #[Route('/{id}/valider', name: 'app_intervention_valider', methods: ['POST'])]
+    public function valider(Request $request, Intervention $intervention, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('INTERVENTION_VALIDER', $intervention);
+
+        if (!$this->isGranted('ROLE_PLANIFICATEUR') && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Seul un planificateur ou admin peut valider une intervention.');
+        }
+
+        if ($this->isCsrfTokenValid('valider' . $intervention->getId(), $request->getPayload()->getString('_token'))) {
+            if ($intervention->getStatut() !== StatutIntervention::TERMINEE) {
+                $this->addFlash('danger', 'Impossible de valider : l\'intervention n\'est pas terminee (statut actuel : ' . $intervention->getStatut()->label() . ').');
+                return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);
+            }
+
+            $intervention->setStatut(StatutIntervention::VALIDEE);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Intervention validee avec succes.');
+        }
+
         return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);
     }
 

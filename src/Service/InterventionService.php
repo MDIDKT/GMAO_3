@@ -83,6 +83,9 @@
             }
 
             $intervention->setStatut(StatutIntervention::TERMINEE);
+            if ($intervention->getDateDebut() === null) {
+                $intervention->setDateDebut(new DateTime());
+            }
             $intervention->setDateFin(new DateTime());
             $debut = $intervention->getDateDebut()->getTimestamp();
             $fin = $intervention->getDateFin()->getTimestamp();

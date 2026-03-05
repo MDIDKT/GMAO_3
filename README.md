@@ -158,3 +158,29 @@ Jour 15 - Voters (protection anti-IDOR) :
 * suppression verification manuelle redondante dans ajouterPhotos
 * jour 15 tout est ok
 
+03-03-26
+Corrections post-audit + Début Jour 16
+
+Corrections post-audit :
+* fix Doctrine mapping Intervention#planificateur : suppression inversedBy incohérent
+* fix User extends Site (erreur linter) : rétabli implements UserInterface
+* fix terminerIntervention : guard null sur dateDebut
+* fix DemandeRepository : ajout paramètre ?User $user à getQueryBuilderByFilters() et findByFilters()
+* fix MesDemandesController : passage $currentUser via repository au lieu de inline query
+* fix mes_demandes/index.html.twig : remplacement champs Intervention par champs Demande (createdAt, site, priorite) + statuts corrigés
+* création CategorieEquipement CRUD complet (/admin/categories-equipement)
+* ajout actions qualifier et rejeter sur Demande (avec motifRejet)
+* ajout action valider sur Intervention (TERMINEE → VALIDEE) + attribut VALIDER dans InterventionVoter
+
+Début Jour 16 - Dashboard adapté par rôle :
+* création DemandeVoter (copie du pattern InterventionVoter adapté pour Demande)
+* création HomeController route / avec redirection par rôle (admin/planif → dashboard, tech → mes-interventions, demandeur → mes-demandes)
+
+Reste à faire Jour 16 :
+* corriger security.yaml default_target_path → app_home
+* widgets dashboard planif/admin (countP1Ouvertes, countAQualifier, countEnRetard, countDuJour)
+* méthodes repository dédiées pour les KPIs
+* restructurer /mes-interventions en 3 sections (Aujourd'hui, En retard, 7 prochains jours)
+* filtrer sidebar avec is_granted() selon le rôle
+* wirer le template dashboard avec les vraies données
+

@@ -1,0 +1,26 @@
+{% set inputClass = 'block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition' %}
+{% set labelClass = 'block text-sm font-medium text-gray-700 mb-2' %}
+{% set cancelPath = cancel_path|default(path('app_categorie_equipement_index')) %}
+
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+    <div>
+        {{ form_label(form.nom, null, {'label_attr': {'class': labelClass}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': inputClass, 'placeholder': 'Ex: Climatisation'}}) }}
+        {{ form_errors(form.nom) }}
+    </div>
+
+    <div>
+        {{ form_label(form.description, null, {'label_attr': {'class': labelClass}}) }}
+        {{ form_widget(form.description, {'attr': {'class': inputClass, 'rows': 3, 'placeholder': 'Description de la categorie (optionnel)'}}) }}
+        {{ form_errors(form.description) }}
+    </div>
+
+    <div class="border-t border-gray-200 pt-6 flex items-center justify-between">
+        <a href="{{ cancelPath }}" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+            Annuler
+        </a>
+        <button class="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg transition font-medium">
+            {{ button_label|default('Enregistrer') }}
+        </button>
+    </div>
+{{ form_end(form) }}
