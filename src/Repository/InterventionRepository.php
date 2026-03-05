@@ -7,6 +7,7 @@ use App\Entity\Organisation;
 use App\Entity\User;
 use App\Enum\StatutIntervention;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -162,6 +163,35 @@ class InterventionRepository extends ServiceEntityRepository
             ->setParameter('organisation', $organisation)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * KPI 3 : Interventions groupées par technicien (filtré par période).
+     * @return array<array{technicienNom: string, total: int}>
+     */
+    public function countByTechnicien(Organisation $organisation, ?DateTimeImmutable $dateDebut = null, ?DateTimeImmutable $dateFin = null): array
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->select('u.nom AS nom, u.prenom AS prenom, COUNT(i.id) AS total')
+            ->join('i.technicien', 'u')
+            ->andWhere('i.organisation = :org')
+            ->setParameter('org', $organisation)
+            ->groupBy('u.id, u.nom, u.prenom')
+            ->orderBy('total', 'DESC');
+
+        if ($dateDebut !== null) {
+            $qb->andWhere('i.createdAt >= :dateDebut')->setParameter('dateDebut', $dateDebut);
+        }
+        if ($dateFin !== null) {
+            $qb->andWhere('i.createdAt <= :dateFin')->setParameter('dateFin', $dateFin);
+        }
+
+        $rows = $qb->getQuery()->getResult();
+
+        return array_map(static fn (array $row) => [
+            'technicienNom' => $row['prenom'] . ' ' . $row['nom'],
+            'total' => (int) $row['total'],
+        ], $rows);
     }
 
 }

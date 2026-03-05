@@ -212,3 +212,15 @@ Refonte des fixtures :
 * creation InterventionFixtures : 12 interventions par org, tous statuts, comptes rendus, durees, dates planifiees/debut/fin
 * Users inchanges (6 users)
 * chargement verifie : 4 org / 20 sites / 60 bat / 32 cat / 100 equip / 40 demandes / 24 interventions
+
+Jour 17 - Reporting (4 KPI) :
+* creation ReportingController route /reporting (PLANIFICATEUR + ADMIN)
+* filtres : site (select) + periode (date debut / date fin)
+* KPI 1 : demandes par statut (compteurs colores par statut)
+* KPI 2 : delai moyen de traitement (heures/jours, base sur demandes CLOTURE)
+* KPI 3 : interventions par technicien (tableau avec total par tech)
+* KPI 4 : demandes par site et priorite (tableau croise sites x priorites)
+* methodes repository dediees : countByStatut(), delaiMoyenTraitement(), countBySiteAndPriorite(), countByTechnicien()
+* access_control /reporting dans security.yaml
+* lien Reporting dans la sidebar (ADMIN + PLANIFICATEUR)
+* jour 17 tout est ok

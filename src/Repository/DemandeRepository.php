@@ -13,6 +13,7 @@
     use Doctrine\Persistence\ManagerRegistry;
     use Knp\Component\Pager\Pagination\PaginationInterface;
     use Knp\Component\Pager\PaginatorInterface;
+    use DateTimeImmutable;
 
     /**
      * @extends ServiceEntityRepository<Demande>
@@ -194,5 +195,104 @@
                 ->setParameter('organisation', $organisation)
                 ->getQuery()
                 ->getSingleScalarResult();
+        }
+
+        /**
+         * KPI 1 : Demandes groupées par statut (filtré par site + période).
+         * @return array<array{statut: string, total: int}>
+         */
+        public function countByStatut(Organisation $organisation, ?Site $site = null, ?DateTimeImmutable $dateDebut = null, ?DateTimeImmutable $dateFin = null): array
+        {
+            $qb = $this->createQueryBuilder('d')
+                ->select('d.statut AS statut, COUNT(d.id) AS total')
+                ->andWhere('d.organisation = :org')
+                ->setParameter('org', $organisation)
+                ->groupBy('d.statut');
+
+            if ($site !== null) {
+                $qb->andWhere('d.site = :site')->setParameter('site', $site);
+            }
+            if ($dateDebut !== null) {
+                $qb->andWhere('d.createdAt >= :dateDebut')->setParameter('dateDebut', $dateDebut);
+            }
+            if ($dateFin !== null) {
+                $qb->andWhere('d.createdAt <= :dateFin')->setParameter('dateFin', $dateFin);
+            }
+
+            return $qb->getQuery()->getResult();
+        }
+
+        /**
+         * KPI 2 : Délai moyen de traitement (en heures) pour les demandes CLOTURE.
+         */
+        public function delaiMoyenTraitement(Organisation $organisation, ?Site $site = null, ?DateTimeImmutable $dateDebut = null, ?DateTimeImmutable $dateFin = null): ?float
+        {
+            $qb = $this->createQueryBuilder('d')
+                ->select('AVG(TIMESTAMPDIFF(HOUR, d.createdAt, d.updatedAt)) AS delaiMoyen')
+                ->andWhere('d.organisation = :org')
+                ->setParameter('org', $organisation)
+                ->andWhere('d.statut = :statut')
+                ->setParameter('statut', StatutDemande::CLOTURE);
+
+            if ($site !== null) {
+                $qb->andWhere('d.site = :site')->setParameter('site', $site);
+            }
+            if ($dateDebut !== null) {
+                $qb->andWhere('d.createdAt >= :dateDebut')->setParameter('dateDebut', $dateDebut);
+            }
+            if ($dateFin !== null) {
+                $qb->andWhere('d.createdAt <= :dateFin')->setParameter('dateFin', $dateFin);
+            }
+
+            $result = $qb->getQuery()->getSingleScalarResult();
+
+            return $result !== null ? round((float) $result, 1) : null;
+        }
+
+        /**
+         * KPI 4 : Demandes par site et priorité (tableau croisé).
+         * @return array<array{siteNom: string, siteId: int, P1_URGENTE: int, P2_HAUTE: int, P3_NORMALE: int, P4_BASSE: int}>
+         */
+        public function countBySiteAndPriorite(Organisation $organisation, ?DateTimeImmutable $dateDebut = null, ?DateTimeImmutable $dateFin = null): array
+        {
+            $qb = $this->createQueryBuilder('d')
+                ->select('s.id AS siteId, s.nom AS siteNom, d.priorite AS priorite, COUNT(d.id) AS total')
+                ->join('d.site', 's')
+                ->andWhere('d.organisation = :org')
+                ->setParameter('org', $organisation)
+                ->groupBy('s.id, s.nom, d.priorite')
+                ->orderBy('s.nom', 'ASC');
+
+            if ($dateDebut !== null) {
+                $qb->andWhere('d.createdAt >= :dateDebut')->setParameter('dateDebut', $dateDebut);
+            }
+            if ($dateFin !== null) {
+                $qb->andWhere('d.createdAt <= :dateFin')->setParameter('dateFin', $dateFin);
+            }
+
+            $rows = $qb->getQuery()->getResult();
+
+            // Pivoter en tableau croisé
+            $result = [];
+            foreach ($rows as $row) {
+                $siteNom = $row['siteNom'];
+                if (!isset($result[$siteNom])) {
+                    $result[$siteNom] = [
+                        'siteNom' => $siteNom,
+                        'P1_URGENTE' => 0,
+                        'P2_HAUTE' => 0,
+                        'P3_NORMALE' => 0,
+                        'P4_BASSE' => 0,
+                        'total' => 0,
+                    ];
+                }
+                $prioriteKey = $row['priorite'] instanceof Priorite ? $row['priorite']->name : (string) $row['priorite'];
+                if (isset($result[$siteNom][$prioriteKey])) {
+                    $result[$siteNom][$prioriteKey] += (int) $row['total'];
+                }
+                $result[$siteNom]['total'] += (int) $row['total'];
+            }
+
+            return array_values($result);
         }
     }
