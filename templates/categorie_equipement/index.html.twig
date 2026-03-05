@@ -17,13 +17,13 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div class="bg-white rounded-lg shadow p-4 border-l-4 border-primary">
             <p class="text-sm text-gray-600 font-medium">Total categories</p>
-            <p class="text-2xl font-bold text-gray-800 mt-1">{{ categories|length }}</p>
+            <p class="text-2xl font-bold text-gray-800 mt-1">{{ pagination.totalItemCount }}</p>
         </div>
     </div>
 
     <div class="bg-white rounded-xl shadow-md overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <p class="text-sm font-medium text-gray-700">{{ categories|length }} categories trouvees</p>
+            <p class="text-sm font-medium text-gray-700">{{ pagination.totalItemCount }} categories trouvees</p>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -36,7 +36,7 @@
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                {% for categorie in categories %}
+                {% for categorie in pagination %}
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900">{{ categorie.nom }}</div>
@@ -61,4 +61,29 @@
             </table>
         </div>
     </div>
+
+    {% if pagination.pageCount > 1 %}
+        <div class="mt-6 flex justify-center">
+            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                {% if pagination.currentPageNumber > 1 %}
+                    <a href="{{ path('app_categorie_equipement_index', {page: pagination.currentPageNumber - 1}) }}"
+                       class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        Precedent
+                    </a>
+                {% endif %}
+                {% for page in 1..pagination.pageCount %}
+                    <a href="{{ path('app_categorie_equipement_index', {page: page}) }}"
+                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50' }}">
+                        {{ page }}
+                    </a>
+                {% endfor %}
+                {% if pagination.currentPageNumber < pagination.pageCount %}
+                    <a href="{{ path('app_categorie_equipement_index', {page: pagination.currentPageNumber + 1}) }}"
+                       class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        Suivant
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    {% endif %}
 {% endblock %}

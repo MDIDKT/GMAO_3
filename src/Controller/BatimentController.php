@@ -25,6 +25,7 @@ final class BatimentController extends AbstractController
             throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
         }
 
+        $organisation = $user->getOrganisation();
         $actifFilter = $request->query->get('actif');
         $actif = match ($actifFilter) {
             '1' => true,
@@ -32,8 +33,13 @@ final class BatimentController extends AbstractController
             default => null,
         };
 
+        $qb = $batimentRepository->getQueryBuilderByOrganisation($organisation, $actif);
+        $pagination = $batimentRepository->paginateBatiments($qb, $request->query->getInt('page', 1), 5);
+
         return $this->render('batiment/index.html.twig', [
-            'batiments' => $batimentRepository->findBatiments($user->getOrganisation(), $actif),
+            'pagination' => $pagination,
+            'activeCount' => $batimentRepository->countActive($organisation),
+            'totalCount' => $batimentRepository->countTotal($organisation),
             'selectedActif' => $actifFilter === '0' || $actifFilter === '1' ? $actifFilter : '',
         ]);
     }

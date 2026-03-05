@@ -6,6 +6,7 @@ use App\Entity\Intervention;
 use App\Entity\Organisation;
 use App\Entity\User;
 use App\Enum\StatutIntervention;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -82,6 +83,85 @@ class InterventionRepository extends ServiceEntityRepository
     public function paginateInterventions(QueryBuilder $qb, int $page, int $limit): PaginationInterface
     {
         return $this->paginator->paginate($qb, $page, $limit);
+    }
+
+    public function countInterventionsDuJour(Organisation $organisation)
+    {
+        $qb = $this->createQueryBuilder('i');
+
+        if ($organisation !== null) {
+            $qb->andWhere('i.organisation = :organisation')
+                ->setParameter('organisation', $organisation);
+        }
+
+        $qb->select('COUNT(i.id)');
+        $qb->andWhere('i.datePlanifiee >= :dateToday')
+            ->setParameter('dateToday', new DateTime('today'));
+        $qb->andWhere('i.datePlanifiee < :dateTomorrow')
+            ->setParameter('dateTomorrow', new DateTime('tomorrow'));
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function countInterventionsEnRetard(Organisation $organisation)
+    {
+        $qb = $this->createQueryBuilder('i');
+        if ($organisation !== null) {
+            $qb->andWhere('i.organisation = :organisation')
+                ->setParameter('organisation', $organisation);
+        }
+        $qb->select('COUNT(i.id)');
+        $qb->andWhere('i.datePlanifiee < :dateToday')
+            ->setParameter('dateToday', new DateTime('today'));
+        $qb->andWhere('i.statut NOT IN (:exclus)')
+            ->setParameter('exclus', [StatutIntervention::TERMINEE, StatutIntervention::VALIDEE]);
+        return $qb->getQuery()->getSingleScalarResult();
+
+    }
+
+    public function countAPlanifier(Organisation $organisation): int
+    {
+        return (int) $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->andWhere('i.organisation = :organisation')
+            ->setParameter('organisation', $organisation)
+            ->andWhere('i.statut = :statut')
+            ->setParameter('statut', StatutIntervention::A_PLANIFIER)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countEnCours(Organisation $organisation): int
+    {
+        return (int) $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->andWhere('i.organisation = :organisation')
+            ->setParameter('organisation', $organisation)
+            ->andWhere('i.statut = :statut')
+            ->setParameter('statut', StatutIntervention::EN_COURS)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countTerminees(Organisation $organisation): int
+    {
+        return (int) $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->andWhere('i.organisation = :organisation')
+            ->setParameter('organisation', $organisation)
+            ->andWhere('i.statut IN (:statuts)')
+            ->setParameter('statuts', [StatutIntervention::TERMINEE, StatutIntervention::VALIDEE])
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countTotal(Organisation $organisation): int
+    {
+        return (int) $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->andWhere('i.organisation = :organisation')
+            ->setParameter('organisation', $organisation)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 }

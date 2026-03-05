@@ -23,6 +23,7 @@
         {
             parent::__construct($registry, Demande::class);
         }
+
         /**
          * @return Demande[]
          */
@@ -60,6 +61,13 @@
                     ->setParameter('numero', $numero)
                     ->getQuery()
                     ->getSingleScalarResult() > 0;
+        }
+
+        public function findByFilters(?Organisation $organisation, ?Site $site, ?StatutDemande $statut, ?Priorite $priorite, ?string $search, ?User $user = null): array
+        {
+            return $this->getQueryBuilderByFilters($organisation, $site, $statut, $priorite, $search, $user)
+                ->getQuery()
+                ->getResult();
         }
 
         public function getQueryBuilderByFilters(?Organisation $organisation, ?Site $site, ?StatutDemande $statut, ?Priorite $priorite, ?string $search, ?User $user = null): QueryBuilder
@@ -101,15 +109,90 @@
             return $qb;
         }
 
-        public function findByFilters(?Organisation $organisation, ?Site $site, ?StatutDemande $statut, ?Priorite $priorite, ?string $search, ?User $user = null): array
-        {
-            return $this->getQueryBuilderByFilters($organisation, $site, $statut, $priorite, $search, $user)
-                ->getQuery()
-                ->getResult();
-        }
-
         public function paginateDemandes(QueryBuilder $qb, int $page, int $limit): PaginationInterface
         {
             return $this->paginator->paginate($qb, $page, $limit);
+        }
+
+        public function countP1Ouvertes(Organisation $organisation)
+        {
+
+            $qb = $this->createQueryBuilder('d');
+            if ($organisation !== null) {
+                $qb->andWhere('d.organisation = :organisation')
+                    ->setParameter('organisation', $organisation);
+            }
+
+            $qb->select('COUNT(d.id)');
+            $qb->andWhere('d.priorite = :priorite')
+                ->setParameter('priorite', Priorite::P1_URGENTE);
+            $qb->andWhere('d.statut NOT IN (:exclus)')
+                ->setParameter('exclus', [StatutDemande::CLOTURE, StatutDemande::REJETEE]);
+
+            return $qb->getQuery()->getSingleScalarResult();
+        }
+
+        public function countAQualifier(Organisation $organisation): int
+        {
+            $qb = $this->createQueryBuilder('d');
+            if ($organisation !== null) {
+                $qb->andWhere('d.organisation = :organisation')
+                    ->setParameter('organisation', $organisation);
+            }
+
+            $qb->select('COUNT(d.id)');
+            $qb->andWhere('d.statut = :statut')
+                ->setParameter('statut', StatutDemande::A_QUALIFIER);
+
+            return $qb->getQuery()->getSingleScalarResult();
+
+        }
+
+        public function countUrgent(Organisation $organisation): int
+        {
+            return (int) $this->createQueryBuilder('d')
+                ->select('COUNT(d.id)')
+                ->andWhere('d.organisation = :organisation')
+                ->setParameter('organisation', $organisation)
+                ->andWhere('d.priorite = :priorite')
+                ->setParameter('priorite', Priorite::P1_URGENTE)
+                ->andWhere('d.statut NOT IN (:exclus)')
+                ->setParameter('exclus', [StatutDemande::CLOTURE, StatutDemande::REJETEE])
+                ->getQuery()
+                ->getSingleScalarResult();
+        }
+
+        public function countOpen(Organisation $organisation): int
+        {
+            return (int) $this->createQueryBuilder('d')
+                ->select('COUNT(d.id)')
+                ->andWhere('d.organisation = :organisation')
+                ->setParameter('organisation', $organisation)
+                ->andWhere('d.statut NOT IN (:exclus)')
+                ->setParameter('exclus', [StatutDemande::CLOTURE, StatutDemande::REJETEE])
+                ->getQuery()
+                ->getSingleScalarResult();
+        }
+
+        public function countClosed(Organisation $organisation): int
+        {
+            return (int) $this->createQueryBuilder('d')
+                ->select('COUNT(d.id)')
+                ->andWhere('d.organisation = :organisation')
+                ->setParameter('organisation', $organisation)
+                ->andWhere('d.statut IN (:statuts)')
+                ->setParameter('statuts', [StatutDemande::CLOTURE, StatutDemande::REJETEE])
+                ->getQuery()
+                ->getSingleScalarResult();
+        }
+
+        public function countTotal(Organisation $organisation): int
+        {
+            return (int) $this->createQueryBuilder('d')
+                ->select('COUNT(d.id)')
+                ->andWhere('d.organisation = :organisation')
+                ->setParameter('organisation', $organisation)
+                ->getQuery()
+                ->getSingleScalarResult();
         }
     }

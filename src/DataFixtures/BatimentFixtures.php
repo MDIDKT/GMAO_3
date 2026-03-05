@@ -11,87 +11,74 @@ use Doctrine\Persistence\ObjectManager;
 
 class BatimentFixtures extends Fixture implements DependentFixtureInterface
 {
+    /** @var list<array{nom: string, etage: string}> */
+    private const BATIMENTS_POOL = [
+        ['nom' => 'Batiment A - Administration', 'etage' => 'R+2'],
+        ['nom' => 'Batiment B - Production', 'etage' => 'RDC'],
+        ['nom' => 'Batiment C - Logistique', 'etage' => 'R+1'],
+        ['nom' => 'Hall Technique', 'etage' => 'RDC'],
+        ['nom' => 'Aile Nord - Bureaux', 'etage' => 'R+3'],
+        ['nom' => 'Aile Sud - Ateliers', 'etage' => 'RDC'],
+        ['nom' => 'Entrepot Principal', 'etage' => 'RDC'],
+        ['nom' => 'Annexe Maintenance', 'etage' => 'R+1'],
+        ['nom' => 'Batiment D - Accueil', 'etage' => 'RDC'],
+        ['nom' => 'Local Technique', 'etage' => 'Sous-sol'],
+        ['nom' => 'Batiment E - R&D', 'etage' => 'R+2'],
+        ['nom' => 'Parking Couvert', 'etage' => 'RDC'],
+        ['nom' => 'Salle Serveurs', 'etage' => 'R+1'],
+        ['nom' => 'Pavillon Formation', 'etage' => 'RDC'],
+        ['nom' => 'Batiment F - Stockage', 'etage' => 'RDC'],
+    ];
+
     public function load(ObjectManager $manager): void
     {
-        $organisations = $manager->getRepository(Organisation::class)->findBy([], ['id' => 'ASC']);
+        $organisations = $manager->getRepository(Organisation::class)->findAll();
 
         foreach ($organisations as $organisation) {
-            $this->ensureBatiments($manager, $organisation);
+            $sites = $manager->getRepository(Site::class)->findBy(
+                ['organisation' => $organisation],
+                ['id' => 'ASC']
+            );
+
+            if ($sites === []) {
+                continue;
+            }
+
+            $poolIndex = 0;
+
+            foreach ($sites as $site) {
+                // 3 batiments par site
+                for ($i = 0; $i < 3; $i++) {
+                    $data = self::BATIMENTS_POOL[$poolIndex % count(self::BATIMENTS_POOL)];
+
+                    $existing = $manager->getRepository(Batiment::class)->findOneBy([
+                        'site' => $site,
+                        'nom' => $data['nom'],
+                    ]);
+
+                    if ($existing instanceof Batiment) {
+                        $poolIndex++;
+                        continue;
+                    }
+
+                    $batiment = (new Batiment())
+                        ->setNom($data['nom'])
+                        ->setEtage($data['etage'])
+                        ->setActif($poolIndex % 5 !== 4) // 1 inactif sur 5
+                        ->setSite($site);
+
+                    $manager->persist($batiment);
+                    $poolIndex++;
+                }
+            }
         }
 
         $manager->flush();
     }
 
-    /**
-     * @return list<class-string>
-     */
+    /** @return list<class-string> */
     public function getDependencies(): array
     {
         return [SiteFixtures::class];
-    }
-
-    private function ensureBatiments(ObjectManager $manager, Organisation $organisation): void
-    {
-        $sites = $manager->getRepository(Site::class)->findBy(
-            ['organisation' => $organisation],
-            ['id' => 'ASC']
-        );
-
-        if ($sites === []) {
-            return;
-        }
-
-        $existingBatiments = $manager->createQuery(
-            'SELECT b
-             FROM App\Entity\Batiment b
-             INNER JOIN b.site s
-             WHERE s.organisation = :organisation
-             ORDER BY b.id ASC'
-        )
-            ->setParameter('organisation', $organisation)
-            ->getResult();
-
-        foreach ($existingBatiments as $index => $batiment) {
-            $label = $index + 1;
-            $defaultSite = $sites[$index % count($sites)];
-
-            if ($batiment->getNom() === null || trim($batiment->getNom()) === '') {
-                $batiment->setNom(sprintf('Batiment %d', $label));
-            }
-
-            if ($batiment->getEtage() === null || trim($batiment->getEtage()) === '') {
-                $batiment->setEtage($label % 2 === 0 ? 'R+1' : 'RDC');
-            }
-
-            if ($batiment->isActif() === null) {
-                $batiment->setActif(true);
-            }
-
-            if ($batiment->getSite() === null) {
-                $batiment->setSite($defaultSite);
-            }
-
-            $manager->persist($batiment);
-        }
-
-        if (count($existingBatiments) >= 6) {
-            return;
-        }
-
-        $toCreate = 6 - count($existingBatiments);
-        $startNumber = count($existingBatiments) + 1;
-
-        for ($i = 0; $i < $toCreate; $i++) {
-            $batimentNumber = $startNumber + $i;
-            $site = $sites[$i % count($sites)];
-
-            $batiment = (new Batiment())
-                ->setNom(sprintf('Batiment %d', $batimentNumber))
-                ->setEtage($batimentNumber % 2 === 0 ? 'R+1' : 'RDC')
-                ->setActif($batimentNumber % 2 !== 0)
-                ->setSite($site);
-
-            $manager->persist($batiment);
-        }
     }
 }

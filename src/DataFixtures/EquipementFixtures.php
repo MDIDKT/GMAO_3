@@ -14,172 +14,104 @@ use Doctrine\Persistence\ObjectManager;
 
 class EquipementFixtures extends Fixture implements DependentFixtureInterface
 {
+    /** @var list<array{nom: string, marque: string, modele: string, categorie: string}> */
+    private const EQUIPEMENTS_POOL = [
+        ['nom' => 'Chaudiere gaz condensation', 'marque' => 'De Dietrich', 'modele' => 'MCR-34', 'categorie' => 'Chauffage'],
+        ['nom' => 'Radiateur fonte Hall', 'marque' => 'Acova', 'modele' => 'VUELTA-2000', 'categorie' => 'Chauffage'],
+        ['nom' => 'Plancher chauffant Bureaux', 'marque' => 'Rehau', 'modele' => 'RAUTHERM-S', 'categorie' => 'Chauffage'],
+        ['nom' => 'Climatiseur split Bureau Direction', 'marque' => 'Daikin', 'modele' => 'FTXM-35R', 'categorie' => 'Climatisation'],
+        ['nom' => 'CTA Double flux', 'marque' => 'France Air', 'modele' => 'COCOON-2', 'categorie' => 'Climatisation'],
+        ['nom' => 'Ventilo-convecteur Salle reunion', 'marque' => 'Carrier', 'modele' => '42N-06', 'categorie' => 'Climatisation'],
+        ['nom' => 'Tableau electrique TGBT', 'marque' => 'Schneider', 'modele' => 'PRISMA-P', 'categorie' => 'Electricite'],
+        ['nom' => 'Eclairage LED Open Space', 'marque' => 'Philips', 'modele' => 'CoreLine-RC132V', 'categorie' => 'Electricite'],
+        ['nom' => 'Onduleur Salle serveurs', 'marque' => 'APC', 'modele' => 'SRT-5000', 'categorie' => 'Electricite'],
+        ['nom' => 'Camera IP Parking', 'marque' => 'Hikvision', 'modele' => 'DS-2CD2143', 'categorie' => 'Securite'],
+        ['nom' => 'Controle d\'acces Entree', 'marque' => 'Honeywell', 'modele' => 'MB-SECURE', 'categorie' => 'Securite'],
+        ['nom' => 'Alarme intrusion', 'marque' => 'Siemens', 'modele' => 'SPC-6350', 'categorie' => 'Securite'],
+        ['nom' => 'Chauffe-eau thermodynamique', 'marque' => 'Atlantic', 'modele' => 'CALYPSO-250', 'categorie' => 'Plomberie'],
+        ['nom' => 'Surpresseur eau', 'marque' => 'Grundfos', 'modele' => 'CME-3-5', 'categorie' => 'Plomberie'],
+        ['nom' => 'Ascenseur passagers', 'marque' => 'Otis', 'modele' => 'GEN2-COMFORT', 'categorie' => 'Ascenseurs'],
+        ['nom' => 'Monte-charge Entrepot', 'marque' => 'Schindler', 'modele' => '2600-MC', 'categorie' => 'Ascenseurs'],
+        ['nom' => 'Extincteur CO2 5kg', 'marque' => 'Desautel', 'modele' => 'EC5-A', 'categorie' => 'Incendie'],
+        ['nom' => 'Detecteur de fumee optique', 'marque' => 'Esser', 'modele' => 'OTG-HB', 'categorie' => 'Incendie'],
+        ['nom' => 'RIA DN25 Hall', 'marque' => 'Desautel', 'modele' => 'RIA-30M', 'categorie' => 'Incendie'],
+        ['nom' => 'Porte coupe-feu EI60', 'marque' => 'Malerba', 'modele' => 'RF-60', 'categorie' => 'Menuiserie'],
+        ['nom' => 'Fenetre aluminium Bureaux', 'marque' => 'Technal', 'modele' => 'SOLEAL-65', 'categorie' => 'Menuiserie'],
+        ['nom' => 'Store interieur motorise', 'marque' => 'Somfy', 'modele' => 'SONESSE-30', 'categorie' => 'Menuiserie'],
+        ['nom' => 'Pompe a chaleur air/eau', 'marque' => 'Mitsubishi', 'modele' => 'ERSC-MEC', 'categorie' => 'Chauffage'],
+        ['nom' => 'Groupe electrogene secours', 'marque' => 'SDMO', 'modele' => 'J130K', 'categorie' => 'Electricite'],
+        ['nom' => 'Centrale detection incendie', 'marque' => 'Siemens', 'modele' => 'FC-2060', 'categorie' => 'Incendie'],
+    ];
+
     public function load(ObjectManager $manager): void
     {
-        $organisations = $manager->getRepository(Organisation::class)->findBy([], ['id' => 'ASC']);
+        $organisations = $manager->getRepository(Organisation::class)->findAll();
+        $statuts = StatutEquipement::cases();
 
         foreach ($organisations as $organisation) {
-            $this->ensureEquipements($manager, $organisation);
+            $batiments = $manager->createQuery(
+                'SELECT b FROM App\Entity\Batiment b
+                 INNER JOIN b.site s
+                 WHERE s.organisation = :org
+                 ORDER BY b.id ASC'
+            )
+                ->setParameter('org', $organisation)
+                ->getResult();
+
+            $categories = $manager->getRepository(CategorieEquipement::class)->findBy(
+                ['organisation' => $organisation],
+                ['id' => 'ASC']
+            );
+
+            if ($batiments === [] || $categories === []) {
+                continue;
+            }
+
+            $sites = $manager->getRepository(Site::class)->findBy(
+                ['organisation' => $organisation],
+                ['id' => 'ASC']
+            );
+
+            // Index categories par nom pour le mapping
+            $categoriesByName = [];
+            foreach ($categories as $cat) {
+                $categoriesByName[$cat->getNom()] = $cat;
+            }
+
+            $serialNum = 1;
+
+            foreach (self::EQUIPEMENTS_POOL as $index => $data) {
+                $batiment = $batiments[$index % count($batiments)];
+                $site = $batiment->getSite() ?? $sites[$index % count($sites)];
+                $categorie = $categoriesByName[$data['categorie']] ?? $categories[0];
+                $statut = $statuts[$index % count($statuts)];
+
+                $equipement = (new Equipement())
+                    ->setNom($data['nom'])
+                    ->setMarque($data['marque'])
+                    ->setModele($data['modele'])
+                    ->setNumeroDeSerie(sprintf('SN-%s-%04d', strtoupper(substr($organisation->getNom(), 0, 3)), $serialNum))
+                    ->setStatut($statut)
+                    ->setActif($index % 6 !== 5) // 1 inactif sur 6
+                    ->setSite($site)
+                    ->setBatiment($batiment)
+                    ->setCategorie($categorie)
+                    ->setOrganisation($organisation);
+
+                $manager->persist($equipement);
+                $serialNum++;
+            }
         }
 
         $manager->flush();
     }
 
-    /**
-     * @return list<class-string>
-     */
+    /** @return list<class-string> */
     public function getDependencies(): array
     {
         return [
             BatimentFixtures::class,
             CategorieEquipementFixtures::class,
         ];
-    }
-
-    private function ensureEquipements(ObjectManager $manager, Organisation $organisation): void
-    {
-        $batiments = $manager->createQuery(
-            'SELECT b
-             FROM App\Entity\Batiment b
-             INNER JOIN b.site s
-             WHERE s.organisation = :organisation
-             ORDER BY b.id ASC'
-        )
-            ->setParameter('organisation', $organisation)
-            ->getResult();
-
-        $categories = $manager->getRepository(CategorieEquipement::class)->findBy(
-            ['organisation' => $organisation],
-            ['id' => 'ASC']
-        );
-
-        if ($batiments === [] || $categories === []) {
-            return;
-        }
-
-        $sites = $manager->getRepository(Site::class)->findBy(
-            ['organisation' => $organisation],
-            ['id' => 'ASC']
-        );
-
-        $existingEquipements = $manager->getRepository(Equipement::class)->findBy(
-            ['organisation' => $organisation],
-            ['id' => 'ASC']
-        );
-
-        $statuts = StatutEquipement::cases();
-        $marques = ['Daikin', 'Siemens', 'Schneider', 'Mitsubishi'];
-
-        foreach ($existingEquipements as $index => $equipement) {
-            $label = $index + 1;
-            $batiment = $this->resolveBatimentForEquipement($equipement, $batiments, $index);
-            $site = $this->resolveSiteForEquipement($equipement, $batiment, $sites, $index);
-            $categorie = $equipement->getCategorie() ?? $categories[$index % count($categories)];
-            $statut = $equipement->getStatut() ?? $statuts[$index % count($statuts)];
-            $marque = $equipement->getMarque() ?? $marques[$index % count($marques)];
-
-            if ($equipement->getNom() === null || trim($equipement->getNom()) === '') {
-                $equipement->setNom(sprintf('Equipement %02d', $label));
-            }
-
-            if ($equipement->getMarque() === null || trim($equipement->getMarque()) === '') {
-                $equipement->setMarque($marque);
-            }
-
-            if ($equipement->getModele() === null || trim($equipement->getModele()) === '') {
-                $equipement->setModele(sprintf('%s-%03d', strtoupper(substr($marque, 0, 3)), $label));
-            }
-
-            if ($equipement->getNumeroDeSerie() === null || trim($equipement->getNumeroDeSerie()) === '') {
-                $equipement->setNumeroDeSerie(sprintf('SN-%06d', $label));
-            }
-
-            if ($equipement->getStatut() === null) {
-                $equipement->setStatut($statut);
-            }
-
-            if ($equipement->isActif() === null) {
-                $equipement->setActif(true);
-            }
-
-            if ($equipement->getBatiment() === null) {
-                $equipement->setBatiment($batiment);
-            }
-
-            if ($equipement->getSite() === null && $site !== null) {
-                $equipement->setSite($site);
-            }
-
-            if ($equipement->getCategorie() === null) {
-                $equipement->setCategorie($categorie);
-            }
-
-            if ($equipement->getOrganisation() === null) {
-                $equipement->setOrganisation($organisation);
-            }
-
-            $manager->persist($equipement);
-        }
-
-        if (count($existingEquipements) >= 12) {
-            return;
-        }
-
-        $toCreate = 12 - count($existingEquipements);
-
-        for ($i = 0; $i < $toCreate; $i++) {
-            $index = count($existingEquipements) + $i;
-            $batiment = $batiments[$index % count($batiments)];
-            $site = $batiment->getSite();
-            $categorie = $categories[$index % count($categories)];
-            $statut = $statuts[$index % count($statuts)];
-            $marque = $marques[$index % count($marques)];
-
-            $equipement = (new Equipement())
-                ->setNom(sprintf('Equipement %02d', $index + 1))
-                ->setMarque($marque)
-                ->setModele(sprintf('%s-%03d', strtoupper(substr($marque, 0, 3)), $index + 1))
-                ->setNumeroDeSerie(sprintf('SN-%06d', $index + 1))
-                ->setStatut($statut)
-                ->setActif($index % 2 === 0)
-                ->setSite($site)
-                ->setBatiment($batiment)
-                ->setCategorie($categorie)
-                ->setOrganisation($organisation);
-
-            $manager->persist($equipement);
-        }
-    }
-
-    /**
-     * @param list<Batiment> $batiments
-     */
-    private function resolveBatimentForEquipement(Equipement $equipement, array $batiments, int $index): Batiment
-    {
-        return $equipement->getBatiment() ?? $batiments[$index % count($batiments)];
-    }
-
-    /**
-     * @param list<Site> $sites
-     */
-    private function resolveSiteForEquipement(
-        Equipement $equipement,
-        Batiment $batiment,
-        array $sites,
-        int $index
-    ): ?Site {
-        if ($equipement->getSite() !== null) {
-            return $equipement->getSite();
-        }
-
-        if ($batiment->getSite() !== null) {
-            return $batiment->getSite();
-        }
-
-        if ($sites === []) {
-            return null;
-        }
-
-        return $sites[$index % count($sites)];
     }
 }

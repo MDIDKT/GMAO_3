@@ -14,13 +14,6 @@
 {% endblock %}
 
 {% block page_content %}
-    {% set activeCount = 0 %}
-    {% for site in sites %}
-        {% if site.actif %}
-            {% set activeCount = activeCount + 1 %}
-        {% endif %}
-    {% endfor %}
-    {% set totalCount = sites|length %}
     {% set inactiveCount = totalCount - activeCount %}
 
     <div class="bg-white rounded-xl shadow-md p-6 mb-6">
@@ -87,7 +80,7 @@
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                {% for site in sites %}
+                {% for site in pagination %}
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900">{{ site.nom }}</div>
@@ -120,4 +113,29 @@
             </table>
         </div>
     </div>
+
+    {% if pagination.pageCount > 1 %}
+        <div class="mt-6 flex justify-center">
+            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                {% if pagination.currentPageNumber > 1 %}
+                    <a href="{{ path('app_site_index', {page: pagination.currentPageNumber - 1, actif: selectedActif}) }}"
+                       class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        Precedent
+                    </a>
+                {% endif %}
+                {% for page in 1..pagination.pageCount %}
+                    <a href="{{ path('app_site_index', {page: page, actif: selectedActif}) }}"
+                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50' }}">
+                        {{ page }}
+                    </a>
+                {% endfor %}
+                {% if pagination.currentPageNumber < pagination.pageCount %}
+                    <a href="{{ path('app_site_index', {page: pagination.currentPageNumber + 1, actif: selectedActif}) }}"
+                       class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        Suivant
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    {% endif %}
 {% endblock %}

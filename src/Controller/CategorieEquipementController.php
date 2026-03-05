@@ -18,15 +18,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class CategorieEquipementController extends AbstractController
 {
     #[Route(name: 'app_categorie_equipement_index', methods: ['GET'])]
-    public function index(CategorieEquipementRepository $categorieEquipementRepository): Response
+    public function index(Request $request, CategorieEquipementRepository $categorieEquipementRepository): Response
     {
         $user = $this->getUser();
         if (!$user instanceof User || $user->getOrganisation() === null) {
             throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
         }
 
+        $organisation = $user->getOrganisation();
+        $qb = $categorieEquipementRepository->getQueryBuilderByOrganisation($organisation);
+        $pagination = $categorieEquipementRepository->paginateCategories($qb, $request->query->getInt('page', 1), 5);
+
         return $this->render('categorie_equipement/index.html.twig', [
-            'categories' => $categorieEquipementRepository->findByOrganisation($user->getOrganisation()),
+            'pagination' => $pagination,
         ]);
     }
 

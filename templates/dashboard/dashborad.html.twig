@@ -16,22 +16,22 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-danger">
             <p class="text-gray-600 text-sm font-medium mb-1">Demandes P1 ouvertes</p>
-            <p class="text-3xl font-bold text-gray-800">3</p>
+            <p class="text-3xl font-bold text-gray-800">{{ countP1Ouvertes }}</p>
             <p class="text-xs text-gray-500 mt-2">Necessitent une attention immediate</p>
         </div>
         <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-warning">
             <p class="text-gray-600 text-sm font-medium mb-1">A qualifier</p>
-            <p class="text-3xl font-bold text-gray-800">7</p>
+            <p class="text-3xl font-bold text-gray-800">{{ countAQualifier }}</p>
             <p class="text-xs text-gray-500 mt-2">Demandes en attente</p>
         </div>
         <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
             <p class="text-gray-600 text-sm font-medium mb-1">Interventions aujourd'hui</p>
-            <p class="text-3xl font-bold text-gray-800">5</p>
+            <p class="text-3xl font-bold text-gray-800">{{ countInterventionsDuJour }}</p>
             <p class="text-xs text-gray-500 mt-2">Planifiees pour aujourd'hui</p>
         </div>
         <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-success">
             <p class="text-gray-600 text-sm font-medium mb-1">En retard</p>
-            <p class="text-3xl font-bold text-gray-800">2</p>
+            <p class="text-3xl font-bold text-gray-800">{{ countInterventionsEnRetard }}</p>
             <p class="text-xs text-gray-500 mt-2">Interventions non cloturees</p>
         </div>
     </div>
@@ -40,34 +40,20 @@
         <div class="bg-white rounded-xl shadow-md">
             <div class="p-6 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-800">Demandes prioritaires</h3>
-                <a href="#" class="text-sm text-primary hover:text-primary/80 font-medium">Voir tout →</a>
+                <a href="{{ path('app_demande_index', {priorite: 'P1_URGENTE'}) }}" class="text-sm text-primary hover:text-primary/80 font-medium">Voir tout &rarr;</a>
             </div>
-            <div class="divide-y divide-gray-200">
-                <div class="p-4">
-                    <p class="font-medium text-gray-800">Camera IP Hall A HS</p>
-                    <p class="text-sm text-gray-600 mt-1">Batiment Principal - Hall A</p>
-                </div>
-                <div class="p-4">
-                    <p class="font-medium text-gray-800">Controle d'acces bloque</p>
-                    <p class="text-sm text-gray-600 mt-1">Site Est - Entree principale</p>
-                </div>
+            <div class="p-6 text-center text-gray-500 text-sm">
+                {{ countP1Ouvertes }} demande(s) P1 en attente
             </div>
         </div>
 
         <div class="bg-white rounded-xl shadow-md">
             <div class="p-6 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-800">Interventions du jour</h3>
-                <a href="#" class="text-sm text-primary hover:text-primary/80 font-medium">Voir tout →</a>
+                <a href="{{ path('app_intervention_index') }}" class="text-sm text-primary hover:text-primary/80 font-medium">Voir tout &rarr;</a>
             </div>
-            <div class="divide-y divide-gray-200">
-                <div class="p-4">
-                    <p class="font-medium text-gray-800">Maintenance preventive cameras</p>
-                    <p class="text-sm text-gray-600 mt-1">09:00 - Site Nord</p>
-                </div>
-                <div class="p-4">
-                    <p class="font-medium text-gray-800">Reparation badge acces</p>
-                    <p class="text-sm text-gray-600 mt-1">10:30 - Batiment Principal</p>
-                </div>
+            <div class="p-6 text-center text-gray-500 text-sm">
+                {{ countInterventionsDuJour }} intervention(s) planifiee(s) aujourd'hui
             </div>
         </div>
     </div>

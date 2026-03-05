@@ -29,7 +29,7 @@ final class MesDemandesController extends AbstractController
         $statut = is_string($statutInter) ? StatutDemande::tryFrom($statutInter) : null;
 
         $qb = $demandeRepository->getQueryBuilderByFilters($organisation, null, $statut, null, $search, $currentUser);
-        $pagination = $demandeRepository->paginateDemandes($qb, $request->query->getInt('page', 1), 10);
+        $pagination = $demandeRepository->paginateDemandes($qb, $request->query->getInt('page', 1), 5);
         return $this->render('mes_demandes/index.html.twig', [
             'pagination' => $pagination,
             'statut' => $statut,

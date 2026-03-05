@@ -55,20 +55,24 @@
             }
 
             $page = $request->query->getInt('page', 1);
-            $limit = 3;
+            $limit = 5;
             $qb = $demandeRepository->getQueryBuilderByFilters($organisation, $site, $statut, $priorite, $search);
             $pagination = $demandeRepository->paginateDemandes($qb, $page, $limit);
 
-            // Pour les widgets, on récupère tous les résultats filtrés sans pagination
-            $filteredDemandes = $demandeRepository->findByFilters($organisation, $site, $statut, $priorite, $search);
-
             return $this->render('demande/index.html.twig', [
-                'demandes' => $filteredDemandes,
                 'pagination' => $pagination,
+                'urgentCount' => $demandeRepository->countUrgent($organisation),
+                'openCount' => $demandeRepository->countOpen($organisation),
+                'closedCount' => $demandeRepository->countClosed($organisation),
+                'totalCount' => $demandeRepository->countTotal($organisation),
                 'priorite' => $priorite,
                 'statut' => $statut,
                 'site' => $site,
                 'search' => $search,
+                'selectedSite' => $site?->getId(),
+                'selectedPriorite' => $priorite?->value ?? '',
+                'selectedStatut' => $statut?->value ?? '',
+                'selectedSearch' => $search ?? '',
                 'sites' => $siteRepository->findBy(['organisation' => $organisation, 'actif' => true], ['nom' => 'ASC']),
                 'priorites' => Priorite::cases(),
                 'statuts' => StatutDemande::cases(),
@@ -138,6 +142,7 @@
         #[Route('/{id}', name: 'app_demande_show', methods: ['GET'])]
         public function show(Demande $demande): Response
         {
+            $this->denyAccessUnlessGranted('DEMANDE_VIEW', $demande);
             return $this->render('demande/show.html.twig', [
                 'demande' => $demande,
             ]);
@@ -228,6 +233,7 @@
         #[Route('/{id}/edit', name: 'app_demande_edit', methods: ['GET', 'POST'])]
         public function edit(Request $request, Demande $demande, EntityManagerInterface $entityManager, FileUploadService $fileUploadService): Response
         {
+            $this->denyAccessUnlessGranted('DEMANDE_EDIT', $demande);
             $currentUser = $this->getUser();
             if (!$currentUser instanceof User) {
                 throw $this->createAccessDeniedException('Utilisateur non authentifie.');
@@ -277,6 +283,7 @@
         #[Route('/{id}', name: 'app_demande_delete', methods: ['POST'])]
         public function delete(Request $request, Demande $demande, EntityManagerInterface $entityManager): Response
         {
+            $this->denyAccessUnlessGranted('DEMANDE_DELETE', $demande);
             if ($this->isCsrfTokenValid('delete' . $demande->getId(), $request->getPayload()->getString('_token'))) {
                 $entityManager->remove($demande);
                 $entityManager->flush();

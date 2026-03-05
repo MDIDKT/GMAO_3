@@ -46,14 +46,18 @@ final class InterventionController extends AbstractController
         $statut = is_string($statutParam) ? StatutIntervention::tryFrom($statutParam) : null;
 
         $page = $request->query->getInt('page', 1);
-        $limit = 3;
+        $limit = 5;
         $qb = $interventionRepository->getQueryBuilderByFilters($organisation, null, $statut);
         $pagination = $interventionRepository->paginateInterventions($qb, $page, $limit);
 
         return $this->render('intervention/index.html.twig', [
-            'interventions' => $interventionRepository->findByFilters($organisation, null, $statut),
             'pagination' => $pagination,
+            'aPlanifierCount' => $interventionRepository->countAPlanifier($organisation),
+            'enCoursCount' => $interventionRepository->countEnCours($organisation),
+            'termineeCount' => $interventionRepository->countTerminees($organisation),
+            'totalCount' => $interventionRepository->countTotal($organisation),
             'statut' => $statut,
+            'selectedStatut' => $statut?->value ?? '',
             'statuts' => StatutIntervention::cases(),
         ]);
     }

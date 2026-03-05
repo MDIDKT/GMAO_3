@@ -25,6 +25,7 @@ final class SiteController extends AbstractController
             throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
         }
 
+        $organisation = $user->getOrganisation();
         $actifFilter = $request->query->get('actif');
         $actif = match ($actifFilter) {
             '1' => true,
@@ -32,11 +33,13 @@ final class SiteController extends AbstractController
             default => null,
         };
 
+        $qb = $siteRepository->getQueryBuilderByOrganisation($organisation, $actif);
+        $pagination = $siteRepository->paginateSites($qb, $request->query->getInt('page', 1), 5);
+
         return $this->render('site/index.html.twig', [
-            'sites' => $siteRepository->findOrganisation(
-                $user->getOrganisation(),
-                $actif
-            ),
+            'pagination' => $pagination,
+            'activeCount' => $siteRepository->countActive($organisation),
+            'totalCount' => $siteRepository->countTotal($organisation),
             'selectedActif' => $actifFilter === '0' || $actifFilter === '1' ? $actifFilter : '',
         ]);
     }

@@ -31,21 +31,6 @@
         </form>
     </div>
 
-    {% set totalCount = interventions|length %}
-    {% set aPlanifierCount = 0 %}
-    {% set enCoursCount = 0 %}
-    {% set termineeCount = 0 %}
-
-    {% for intervention in interventions %}
-        {% if intervention.statut and intervention.statut.value == 'A_PLANIFIER' %}
-            {% set aPlanifierCount = aPlanifierCount + 1 %}
-        {% elseif intervention.statut and intervention.statut.value == 'EN_COURS' %}
-            {% set enCoursCount = enCoursCount + 1 %}
-        {% elseif intervention.statut and (intervention.statut.value == 'TERMINEE' or intervention.statut.value == 'VALIDEE') %}
-            {% set termineeCount = termineeCount + 1 %}
-        {% endif %}
-    {% endfor %}
-
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div class="bg-white rounded-lg shadow p-4 border-l-4 border-danger">
             <p class="text-sm text-gray-600 font-medium">A planifier</p>
@@ -142,8 +127,30 @@
                 </tbody>
             </table>
         </div>
-        <div class="px-6 py-4 border-t border-gray-200 flex justify-center">
-            {{ knp_pagination_render(pagination) }}
-        </div>
     </div>
+
+    {% if pagination.pageCount > 1 %}
+        <div class="mt-6 flex justify-center">
+            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                {% if pagination.currentPageNumber > 1 %}
+                    <a href="{{ path('app_intervention_index', {page: pagination.currentPageNumber - 1, statut: selectedStatut}) }}"
+                       class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        Precedent
+                    </a>
+                {% endif %}
+                {% for page in 1..pagination.pageCount %}
+                    <a href="{{ path('app_intervention_index', {page: page, statut: selectedStatut}) }}"
+                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50' }}">
+                        {{ page }}
+                    </a>
+                {% endfor %}
+                {% if pagination.currentPageNumber < pagination.pageCount %}
+                    <a href="{{ path('app_intervention_index', {page: pagination.currentPageNumber + 1, statut: selectedStatut}) }}"
+                       class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        Suivant
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    {% endif %}
 {% endblock %}

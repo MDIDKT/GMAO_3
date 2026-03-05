@@ -27,9 +27,8 @@ final class MesInterventionsController extends AbstractController
         $statut = is_string($statutInter) ? StatutIntervention::tryFrom($statutInter) : null;
 
         $qb = $interventionRepository->getQueryBuilderByFilters($organisation, $currentUser, $statut);
-        $pagination = $interventionRepository->paginateInterventions($qb, $request->query->getInt('page', 1), 3);
+        $pagination = $interventionRepository->paginateInterventions($qb, $request->query->getInt('page', 1), 5);
         return $this->render('mes_interventions/index.html.twig', [
-            'interventions' => $interventionRepository->findByFilters($organisation, $currentUser, $statut),
             'pagination' => $pagination,
             'statut' => $statut,
             'statuts' => StatutIntervention::cases(),

@@ -5,16 +5,27 @@ namespace App\Repository;
 use App\Entity\CategorieEquipement;
 use App\Entity\Organisation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<CategorieEquipement>
  */
 class CategorieEquipementRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private readonly PaginatorInterface $paginator)
     {
         parent::__construct($registry, CategorieEquipement::class);
+    }
+
+    public function getQueryBuilderByOrganisation(Organisation $organisation): QueryBuilder
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.organisation = :organisation')
+            ->setParameter('organisation', $organisation)
+            ->orderBy('c.nom', 'ASC');
     }
 
     /**
@@ -22,36 +33,13 @@ class CategorieEquipementRepository extends ServiceEntityRepository
      */
     public function findByOrganisation(Organisation $organisation): array
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.organisation = :organisation')
-            ->setParameter('organisation', $organisation)
-            ->orderBy('c.nom', 'ASC')
+        return $this->getQueryBuilderByOrganisation($organisation)
             ->getQuery()
             ->getResult();
     }
 
-    //    /**
-    //     * @return CategorieEquipement[] Returns an array of CategorieEquipement objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?CategorieEquipement
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function paginateCategories(QueryBuilder $qb, int $page, int $limit): PaginationInterface
+    {
+        return $this->paginator->paginate($qb, $page, $limit);
+    }
 }

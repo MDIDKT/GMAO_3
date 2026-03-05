@@ -176,11 +176,39 @@ Début Jour 16 - Dashboard adapté par rôle :
 * création DemandeVoter (copie du pattern InterventionVoter adapté pour Demande)
 * création HomeController route / avec redirection par rôle (admin/planif → dashboard, tech → mes-interventions, demandeur → mes-demandes)
 
-Reste à faire Jour 16 :
-* corriger security.yaml default_target_path → app_home
-* widgets dashboard planif/admin (countP1Ouvertes, countAQualifier, countEnRetard, countDuJour)
-* méthodes repository dédiées pour les KPIs
-* restructurer /mes-interventions en 3 sections (Aujourd'hui, En retard, 7 prochains jours)
-* filtrer sidebar avec is_granted() selon le rôle
-* wirer le template dashboard avec les vraies données
+05-03-26
+Jour 16 finalisé - Dashboard + KPI + Pagination uniforme
 
+Dashboard KPI :
+* DashboardController : injection DemandeRepository + InterventionRepository, denyAccessUnlessGranted ROLE_PLANIFICATEUR
+* DemandeRepository : countP1Ouvertes(), countAQualifier(), countUrgent(), countOpen(), countClosed(), countTotal()
+* InterventionRepository : countInterventionsDuJour(), countInterventionsEnRetard(), countAPlanifier(), countEnCours(), countTerminees(), countTotal()
+* template dashboard/dashborad.html.twig : remplacement des valeurs en dur par les variables du controller
+
+Pagination uniforme sur toutes les pages :
+* ajout pagination manuelle (Precedent/Suivant) sur : Site, Batiment, Equipement, CategorieEquipement
+* remplacement knp_pagination_render() par pagination manuelle sur : Demande, Intervention
+* suppression double requete sur Demande et Intervention (stats calculees par repository au lieu de boucle Twig)
+* repositories : ajout getQueryBuilder*(), paginate*(), countActive(), countTotal() sur Site, Batiment, Equipement, CategorieEquipement
+* limite pagination : 5 par page sur toutes les pages
+* liens de pagination preservent les filtres actifs (site, statut, priorite, search, actif)
+
+Corrections securite Jour 16 :
+* fix DemandeVoter : suppression getTechnicien() (n'existe pas sur Demande), remplace par getUser() pour DEMANDEUR
+* nettoyage attributs DemandeVoter : VIEW, EDIT, DELETE (suppression DEMARRER/TERMINER/AJOUTER_PHOTO/VALIDER qui n'ont pas de sens sur Demande)
+* DemandeController : ajout denyAccessUnlessGranted sur show, edit, delete (anti-IDOR)
+* sidebar filtree par role : Dashboard/Demandes/Interventions (ADMIN+PLANIF), Mes demandes (DEMANDEUR), Mes interventions (TECHNICIEN), Sites/Batiments/Equipements/Utilisateurs (ADMIN)
+* suppression double requete MesInterventionsController (meme fix que Demande/Intervention)
+* fix mes_interventions template : interventions is empty → pagination.items is empty
+* dashboard : suppression donnees fake, remplacement par compteurs dynamiques + liens vers pages filtrees
+* jour 16 tout est ok
+
+Refonte des fixtures :
+* CategorieEquipementFixtures : 4 → 8 categories par org (ajout Plomberie, Ascenseurs, Incendie, Menuiserie)
+* SiteFixtures : 3 → 5 sites par org (20 sites total, ajout Strasbourg, Toulouse, Montpellier, Aix, Caen, Saint-Malo, La Rochelle, Limoges)
+* BatimentFixtures : reecrit avec noms realistes (Batiment A - Administration, Hall Technique, Aile Nord - Bureaux…), 3 par site = 60 total
+* EquipementFixtures : reecrit avec noms/marques/modeles realistes (Daikin, Schneider, Otis, Siemens…), 25 par org = 100 total
+* creation DemandeFixtures : 20 demandes par org, tous statuts/priorites couverts, motifs de rejet inclus
+* creation InterventionFixtures : 12 interventions par org, tous statuts, comptes rendus, durees, dates planifiees/debut/fin
+* Users inchanges (6 users)
+* chargement verifie : 4 org / 20 sites / 60 bat / 32 cat / 100 equip / 40 demandes / 24 interventions

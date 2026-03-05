@@ -63,14 +63,13 @@
                 default => null,
             };
 
+            $qb = $equipementRepository->getQueryBuilderByFilters($organisation, $site, $categorie, $statut, $actif);
+            $pagination = $equipementRepository->paginateEquipements($qb, $request->query->getInt('page', 1), 5);
+
             return $this->render('equipement/index.html.twig', [
-                'equipements' => $equipementRepository->findByFilters(
-                    $organisation,
-                    $site,
-                    $categorie,
-                    $statut,
-                    $actif
-                ),
+                'pagination' => $pagination,
+                'activeCount' => $equipementRepository->countActive($organisation),
+                'totalCount' => $equipementRepository->countTotal($organisation),
                 'sites' => $siteRepository->findOrganisation($organisation),
                 'categories' => $categorieEquipementRepository->findByOrganisation($organisation),
                 'statuts' => StatutEquipement::cases(),

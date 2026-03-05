@@ -8,7 +8,10 @@ use App\Entity\Organisation;
 use App\Entity\Site;
 use App\Enum\StatutEquipement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Equipement>
@@ -16,7 +19,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class EquipementRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private readonly PaginatorInterface $paginator)
     {
         parent::__construct($registry, Equipement::class);
     }
@@ -79,16 +82,13 @@ class EquipementRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    /**
-     * @return Equipement[]
-     */
-    public function findByFilters(
+    public function getQueryBuilderByFilters(
         Organisation $organisation,
         ?Site $site = null,
         ?CategorieEquipement $categorie = null,
         ?StatutEquipement $statut = null,
         ?bool $actif = null
-    ): array {
+    ): QueryBuilder {
         $qb = $this->createQueryBuilder('e')
             ->innerJoin('e.batiment', 'b')
             ->innerJoin('b.site', 's')
@@ -117,31 +117,52 @@ class EquipementRepository extends ServiceEntityRepository
                 ->setParameter('actif', $actif);
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb;
     }
 
-    //    /**
-    //     * @return Equipement[] Returns an array of Equipement objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('e.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @return Equipement[]
+     */
+    public function findByFilters(
+        Organisation $organisation,
+        ?Site $site = null,
+        ?CategorieEquipement $categorie = null,
+        ?StatutEquipement $statut = null,
+        ?bool $actif = null
+    ): array {
+        return $this->getQueryBuilderByFilters($organisation, $site, $categorie, $statut, $actif)
+            ->getQuery()
+            ->getResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Equipement
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function paginateEquipements(QueryBuilder $qb, int $page, int $limit): PaginationInterface
+    {
+        return $this->paginator->paginate($qb, $page, $limit);
+    }
+
+    public function countActive(Organisation $organisation): int
+    {
+        return (int) $this->createQueryBuilder('e')
+            ->select('COUNT(e.id)')
+            ->innerJoin('e.batiment', 'b')
+            ->innerJoin('b.site', 's')
+            ->andWhere('s.organisation = :organisation')
+            ->setParameter('organisation', $organisation)
+            ->andWhere('e.actif = :actif')
+            ->setParameter('actif', true)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countTotal(Organisation $organisation): int
+    {
+        return (int) $this->createQueryBuilder('e')
+            ->select('COUNT(e.id)')
+            ->innerJoin('e.batiment', 'b')
+            ->innerJoin('b.site', 's')
+            ->andWhere('s.organisation = :organisation')
+            ->setParameter('organisation', $organisation)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
