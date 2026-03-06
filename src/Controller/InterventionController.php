@@ -159,7 +159,7 @@ final class InterventionController extends AbstractController
             $this->addFlash('danger', 'Upload autorisé uniquement si l\'intervention est EN_COURS.');
             return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);
         }
-        
+
         $form = $this->createForm(InterventionPhotoType::class);
         $form->handleRequest($request);
 
@@ -255,9 +255,13 @@ final class InterventionController extends AbstractController
     {
         $this->denyAccessUnlessGranted('INTERVENTION_TERMINER', $intervention);
         if ($this->isCsrfTokenValid('terminer' . $intervention->getId(), $request->getPayload()->getString('_token'))) {
+            $compteRendu = $request->request->get('compte_rendu', '');
+            $intervention->setCompteRendu($compteRendu);
+
             $demande = $intervention->getDemande();
             try {
                 $this->interventionService->terminerIntervention($intervention, $demande);
+                $this->addFlash('success', 'Intervention terminee. Duree : ' . $intervention->getDureeMinutes() . ' minutes.');
             } catch (LogicException $e) {
                 $this->addFlash('danger', $e->getMessage());
             }

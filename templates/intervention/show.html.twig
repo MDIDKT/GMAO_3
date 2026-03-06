@@ -183,6 +183,12 @@
                     {% if intervention.statut.value == 'EN_COURS' %}
                         <form method="post" action="{{ path('app_intervention_terminer', {'id': intervention.id}) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('terminer' ~ intervention.id) }}">
+                            <div class="mb-3">
+                                <label for="compteRendu" class="block text-sm font-medium text-gray-700 mb-1">Compte rendu *</label>
+                                <textarea id="compteRendu" name="compte_rendu" rows="3" required
+                                          class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 text-sm"
+                                          placeholder="Decrivez les travaux realises...">{{ intervention.compteRendu }}</textarea>
+                            </div>
                             <button type="submit"
                                     class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition font-medium">
                                 Terminer

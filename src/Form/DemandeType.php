@@ -6,8 +6,11 @@ use App\Entity\Batiment;
 use App\Entity\Demande;
 use App\Entity\Equipement;
 use App\Entity\Site;
+use App\Enum\Priorite;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -25,11 +28,14 @@ class DemandeType extends AbstractType
         $builder
             ->add('titre', TextType::class)
             ->add('description', TextareaType::class)
-            ->add('priorite')
+            ->add('priorite', EnumType::class, [
+                'class' => Priorite::class,
+                'choice_label' => fn (Priorite $choice) => $choice->label(),
+            ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nom',
-                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($organisation) {
+                'query_builder' => function (EntityRepository $er) use ($organisation) {
                     $qb = $er->createQueryBuilder('s');
                     if ($organisation) {
                         $qb->andWhere('s.organisation = :organisation')
@@ -44,7 +50,7 @@ class DemandeType extends AbstractType
                 'class' => Batiment::class,
                 'choice_label' => 'nom',
                 'required' => false,
-                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($organisation) {
+                'query_builder' => function (EntityRepository $er) use ($organisation) {
                     $qb = $er->createQueryBuilder('b');
                     $qb->join('b.site', 's');
                     if ($organisation) {
@@ -60,7 +66,7 @@ class DemandeType extends AbstractType
                 'class' => Equipement::class,
                 'choice_label' => 'nom',
                 'required' => false,
-                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($organisation) {
+                'query_builder' => function (EntityRepository $er) use ($organisation) {
                     $qb = $er->createQueryBuilder('e');
                     if ($organisation) {
                         $qb->andWhere('e.organisation = :organisation')

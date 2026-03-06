@@ -4,6 +4,16 @@
     Mes demandes
 {% endblock %}
 
+{% block page_actions %}
+    <a href="{{ path('app_demande_new') }}"
+       class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition flex items-center space-x-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        <span>Nouvelle demande</span>
+    </a>
+{% endblock %}
+
 {% block page_content %}
     <div class="mb-6">
         <ul class="flex flex-wrap gap-2 border-b border-gray-200">
