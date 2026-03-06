@@ -236,7 +236,7 @@ Fixtures (doctrine-fixtures-bundle) :
 * EquipementFixtures : 25 equipements par organisation (100 total) avec marques/modeles reels
 * DemandeFixtures : 20 demandes par organisation (40 total), tous statuts et priorites couverts
 * InterventionFixtures : 12 interventions par organisation (24 total), tous statuts couverts
-* Users crees via le flux d'invitation (non geres par fixtures)
+* UserFixtures : 15 utilisateurs repartis sur les 4 organisations (admin, planif, techniciens, demandeurs), mot de passe unique Test1234!
 * dependances entre fixtures respectees (DependentFixtureInterface)
 
 ---
@@ -272,31 +272,33 @@ symfony server:start
 
 ## Comptes de demo
 
+Mot de passe unique pour tous les comptes : `Test1234!`
+
 | Email                   | Role            | Organisation        |
 |-------------------------|-----------------|---------------------|
-| modi@modi.com           | ROLE_ADMIN      | GMAO Industries     |
-| admin2@gmao.fr          | ROLE_ADMIN      | Patrimoine Services |
+| admin@gmao.fr           | ROLE_ADMIN      | GMAO Industries     |
 | planificateur@gmao.fr   | ROLE_PLANIFICATEUR | GMAO Industries  |
-| planif2@gmao.fr         | ROLE_PLANIFICATEUR | GMAO Industries  |
-| tech@tech.fr            | ROLE_TECHNICIEN | GMAO Industries     |
-| demandeur@demandeur.fr  | ROLE_DEMANDEUR  | GMAO Industries     |
-
-> Les mots de passe ont ete definis lors de l'activation des comptes via le flux d'invitation.
+| tech1@gmao.fr           | ROLE_TECHNICIEN | GMAO Industries     |
+| tech2@gmao.fr           | ROLE_TECHNICIEN | GMAO Industries     |
+| demandeur@gmao.fr       | ROLE_DEMANDEUR  | GMAO Industries     |
+| admin@maintenance-sud.fr | ROLE_ADMIN     | Maintenance Sud     |
+| admin@patrimoine.fr     | ROLE_ADMIN      | Patrimoine Services |
+| admin@infra-ouest.fr    | ROLE_ADMIN      | Infra Support Ouest |
 
 ## Scenario de test nominal
 
-1. Se connecter en tant qu'ADMIN (modi@modi.com)
+1. Se connecter en tant qu'ADMIN (admin@gmao.fr / Test1234!)
 2. Verifier le Dashboard : KPI demandes + interventions
 3. Aller dans Demandes : filtrer par statut, site, priorite
 4. Creer une demande → verifier le numero auto (DEM-YYYY-NNNN)
 5. Qualifier la demande (statut A_QUALIFIER → QUALIFIE)
 6. Aller dans Interventions → creer une intervention liee a la demande
-7. Se connecter en tant que TECHNICIEN (tech@tech.fr)
+7. Se connecter en tant que TECHNICIEN (tech1@gmao.fr / Test1234!)
 8. Voir Mes interventions → Demarrer l'intervention
 9. Ajouter des photos (AVANT / APRES)
 10. Terminer l'intervention (compte rendu obligatoire)
 11. Se reconnecter en ADMIN → Valider l'intervention (TERMINEE → VALIDEE)
 12. Verifier le Reporting : les 4 KPI refletent les actions effectuees
-13. Se connecter en DEMANDEUR (demandeur@demandeur.fr) → voir Mes demandes uniquement
+13. Se connecter en DEMANDEUR (demandeur@gmao.fr / Test1234!) → voir Mes demandes uniquement
 
 * jour 18 tout est ok

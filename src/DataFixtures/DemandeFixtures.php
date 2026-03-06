@@ -227,6 +227,7 @@ class DemandeFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             EquipementFixtures::class,
+            UserFixtures::class,
         ];
     }
 }
