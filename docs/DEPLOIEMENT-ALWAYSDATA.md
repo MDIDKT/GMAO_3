@@ -107,24 +107,24 @@ Assure-toi que tous tes fichiers importants sont commités (ou prêts à être u
 
 ## 3. Configurer AlwaysData
 
-### 3.1 Créer la base de données PostgreSQL
+### 3.1 Créer la base de données MySQL
 
-**Pourquoi PostgreSQL et pas MySQL ?** Ton projet est configuré pour PostgreSQL (voir `compose.yaml`). Doctrine (l'ORM de Symfony) est configuré avec le driver `pdo_pgsql`.
+**Pourquoi MySQL ?** Tes migrations utilisent la syntaxe MySQL (`ALTER TABLE ... CHANGE ...`). Doctrine est configuré avec le driver `pdo_mysql`. C'est la base de données de ton projet.
 
 1. Connecte-toi sur [admin.alwaysdata.com](https://admin.alwaysdata.com)
-2. Menu **Bases de données → PostgreSQL**
+2. Menu **Bases de données → MySQL**
 3. Clique sur **Ajouter une base de données**
    - Nom : `gmao` (AlwaysData préfixe automatiquement avec ton identifiant, ça donnera `diakite_gmao`)
-4. Clique sur **Ajouter un utilisateur PostgreSQL**
+4. Clique sur **Ajouter un utilisateur MySQL**
    - Identifiant : `gmao_user` (deviendra `diakite_gmao_user`)
    - Mot de passe : génère-en un fort et note-le
    - Droits : **Tous les droits** sur la base `diakite_gmao`
 
-**L'hôte PostgreSQL AlwaysData** est toujours de la forme :
+**L'hôte MySQL AlwaysData** est toujours de la forme :
 ```
-postgresql-TONIDENTIFIANT.alwaysdata.net
+mysql-TONIDENTIFIANT.alwaysdata.net
 ```
-Ex: `postgresql-diakite.alwaysdata.net`
+Ex: `mysql-diakite.alwaysdata.net`
 
 > Ce n'est **pas** `localhost`. Sur un hébergement mutualisé, la base de données est sur un serveur séparé du serveur web.
 
@@ -141,6 +141,8 @@ Ex: `postgresql-diakite.alwaysdata.net`
 | **Version PHP** | **8.4** | Ton `composer.json` exige `>=8.4` |
 | **Dossier racine** | `www/gmao/GMAO/public` | ⚠️ Critique : pointe sur `/public` |
 | **Activer HTTPS** | Oui | Toujours activer SSL |
+
+> **Sur AlwaysData**, le champ s'appelle **"Répertoire racine"** et le chemin est relatif à `/home/diakite/`. Donc saisis juste `www/gmao/GMAO/public` sans le `/home/diakite/`.
 
 **Explication du dossier racine :**
 Sur AlwaysData, le dossier de base de ton compte est `/home/diakite/`. Le dossier `www/` est conventionnellement utilisé pour les sites web. On va cloner le projet dans `www/gmao/`, donc la structure sera :
@@ -160,7 +162,7 @@ Sur AlwaysData, le dossier de base de ton compte est `/home/diakite/`. Le dossie
 
 1. Menu **Web → Configuration PHP** (ou dans les paramètres du site)
 2. Vérifie/active ces extensions :
-   - `pdo_pgsql` — connexion PostgreSQL
+   - `pdo_mysql` — connexion MySQL
    - `intl` — internationalisation Symfony
    - `mbstring` — gestion des chaînes multi-octets
    - `opcache` — mise en cache du bytecode PHP (performances)
@@ -269,8 +271,8 @@ APP_DEBUG=0
 APP_SECRET=COLLE_TON_SECRET_ICI
 
 # ─── BASE DE DONNÉES ──────────────────────────────────────────────
-# Format : postgresql://USER:PASSWORD@HOST:PORT/DBNAME
-DATABASE_URL="postgresql://diakite_gmao_user:TON_MOT_DE_PASSE@postgresql-diakite.alwaysdata.net:5432/diakite_gmao"
+# Format : mysql://USER:PASSWORD@HOST:3306/DBNAME?serverVersion=8.0&charset=utf8mb4
+DATABASE_URL="mysql://diakite_gmao_user:TON_MOT_DE_PASSE@mysql-diakite.alwaysdata.net:3306/diakite_gmao?serverVersion=8.0&charset=utf8mb4"
 
 # ─── EMAIL ────────────────────────────────────────────────────────
 # Format Symfony Mailer DSN
@@ -474,6 +476,11 @@ Cherche `[critical]` ou `[error]`.
 ### "An exception occurred while executing a query"
 
 → Les migrations n'ont pas toutes été jouées, ou `DATABASE_URL` est incorrect.
+→ Vérifie aussi le `serverVersion` dans `DATABASE_URL`. Pour connaître la version MySQL d'AlwaysData :
+```bash
+mysql -h mysql-diakite.alwaysdata.net -u diakite_gmao_user -p -e "SELECT VERSION();"
+```
+Puis ajuste `?serverVersion=8.0` en conséquence.
 ```bash
 APP_ENV=prod php bin/console doctrine:migrations:status
 ```
