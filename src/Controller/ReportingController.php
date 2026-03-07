@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ReportingController extends AbstractController
 {
     #[Route('', name: 'app_reporting', methods: ['GET'])]
-    #[IsGranted('ROLE_PLANIFICATEUR')]
+    #[IsGranted("ROLE_PLANIFICATEUR")]
     public function index(
         Request $request,
         DemandeRepository $demandeRepository,
