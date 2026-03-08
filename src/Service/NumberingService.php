@@ -1,4 +1,5 @@
 <?php
+    declare(strict_types=1);
 
     namespace App\Service;
 
@@ -17,13 +18,13 @@
          */
         public function generateNumero(string $prefix): string
         {
-            $year = (int) date('Y');
+            $year = (int)date('Y');
             $lastNumero = $this->demandeRepository->findLastNumeroForPrefixAndYear($prefix, $year) ?? $this->interventionRepository->findLastNumeroForPrefixAndYear($prefix, $year);
             $nextSequence = 1;
 
             if ($lastNumero !== null) {
                 $parts = explode('-', $lastNumero);
-                $nextSequence = ((int) ($parts[2] ?? 0)) + 1;
+                $nextSequence = ((int)($parts[2] ?? 0)) + 1;
             }
 
             do {
