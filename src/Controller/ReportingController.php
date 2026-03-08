@@ -10,13 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/reporting')]
 class ReportingController extends AbstractController
 {
     #[Route('', name: 'app_reporting', methods: ['GET'])]
-    #[IsGranted("ROLE_PLANIFICATEUR")]
     public function index(
         Request $request,
         DemandeRepository $demandeRepository,
