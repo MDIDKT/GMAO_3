@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
     namespace App\Controller;
 
     use App\Entity\Demande;
@@ -151,6 +153,17 @@
         #[Route('/photos/{id}', name: 'photo_show', methods: ['GET'])]
         public function showPhoto(Photo $photo): BinaryFileResponse
         {
+            $demande = $photo->getDemande();
+            $intervention = $photo->getIntervention();
+
+            if ($demande !== null) {
+                $this->denyAccessUnlessGranted('DEMANDE_VIEW', $demande);
+            } elseif ($intervention !== null) {
+                $this->denyAccessUnlessGranted('INTERVENTION_VIEW', $intervention);
+            } else {
+                throw $this->createAccessDeniedException('Photo non associée à une entité accessible.');
+            }
+
             $filename = $photo->getFileName();
             if ($filename === null || $filename === '') {
                 throw $this->createNotFoundException('Fichier photo introuvable.');

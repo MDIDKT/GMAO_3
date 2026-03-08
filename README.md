@@ -8,8 +8,7 @@ Création de ma GMAO en MVP
 
 15-02-26
 
-* Activation du compte OK mais pas fait seul
-* fait avec chatgpt donc revoir comment c'est fait pour decortiqué et comprendre comment c'est fait
+* Activation du compte OK
 * prochainement terminer le jour 5 avec comprehension et faire le jour 6
 * templates/email/invitation.html.twig doit être complété avec un bouton et un message disant de valider mon compte dans
   les 48h puis renvoyer vers la page de validation du mdp
@@ -24,8 +23,6 @@ Création de ma GMAO en MVP
 17-02-26
 
 * Validation du mdp OK
-* correction réalisé avec l'aide de codex 100%
-* il a corriger et fait du copie coller le code fonctionne une verification reste a faire pour bien comprendre
 * je passe au jour 6
 * J'ai cree les entty et CRUD pour site et batiment
 
@@ -40,13 +37,12 @@ Création de ma GMAO en MVP
 19-02-26
 
 * J'ai fait les filtres et les ajouter dans le tableau des batiments 100%
-* corrections fait avec codex donc reste a comprendre ce qu'il fait et comment il fonctionne exactement
 * jour6 tout est ok
 * je passe au jour 7 avec les filtres a finir avant de passer au jour 8
 
 20_02_26
 
-* J'ai realisé le jours 7 avec codex mise en place des filtre comme demandé
+* J'ai realisé le jours 7 avec mise en place des filtre comme demandé
 * correction des different incoherence dans mon code.
 * Mise en place des fixture
 * modification des templates pour avoir la meme ui que sur GMAO_VISUEL

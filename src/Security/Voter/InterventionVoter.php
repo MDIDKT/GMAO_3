@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
     namespace App\Security\Voter;
 
     use App\Entity\Intervention;
+    use App\Entity\User;
     use Symfony\Bundle\SecurityBundle\Security;
     use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
     use Symfony\Component\Security\Core\Authorization\Voter\Vote;
     use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-    use Symfony\Component\Security\Core\User\UserInterface;
 
     final class InterventionVoter extends Voter
     {
@@ -40,7 +42,7 @@
             $user = $token->getUser();
             $intervention = $subject;
 
-            if (!$user instanceof UserInterface) {
+            if (!$user instanceof User) {
                 return false;
             }
 

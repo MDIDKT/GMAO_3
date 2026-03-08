@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
     namespace App\Service;
 
     use App\Entity\Demande;
@@ -90,6 +92,9 @@
             $debut = $intervention->getDateDebut()->getTimestamp();
             $fin = $intervention->getDateFin()->getTimestamp();
             $intervention->setDureeMinutes((int)(($fin - $debut) / 60));
+            // Dette technique : si la relation interventions n'est pas chargée via JOIN FETCH en amont,
+            // Doctrine déclenche une requête SQL séparée ici (lazy-loading). Acceptable avec peu d'interventions
+            // par demande, mais à surveiller si le volume augmente (optimiser avec un JOIN FETCH dans le controller).
             $toutes = $demande->getInterventions();
 
             $toutesTerminees = true;
