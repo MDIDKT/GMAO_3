@@ -16,7 +16,7 @@ declare(strict_types=1);
 
         public function upload(UploadedFile $file): string
         {
-            $newFilename = uniqid() . '.' . $file->guessExtension();
+            $newFilename = bin2hex(random_bytes(16)) . '.' . $file->guessExtension();
             $file->move($this->uploadDirectory, $newFilename);
             return $newFilename;
         }
