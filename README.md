@@ -311,3 +311,13 @@ Déploiement production sur AlwaysData
 * schéma créé via doctrine:schema:create + migrations marquées comme appliquées
 * guide de déploiement complet disponible dans docs/DEPLOIEMENT-ALWAYSDATA.md
 * application fonctionnelle en production
+
+08-03-26
+Audit de sécurité + corrections
+
+* `FileUploadService` : remplacement de `uniqid()` par `bin2hex(random_bytes(16))` (noms de fichiers cryptographiquement aléatoires, non devinables)
+* `AdminUserController` : suppression de l'email hardcodé `mdidkt@alwaysdata.net`, externalisé dans la variable d'environnement `MAILER_FROM` (`.env`)
+* `InterventionType` : suppression des requêtes `LIKE '%"ROLE_*"%'` sur la colonne JSON des rôles ; remplacement par `UserRepository::findByOrganisationAndRole()` avec filtrage PHP strict via `in_array()`
+* `security.yaml` : `always_remember_me: true` → `false` (cookie "se souvenir de moi" non forcé pour tous)
+* `DemandeController` : limite 1000 caractères sur le motif de rejet (`mb_strlen`)
+* `Intervention` entity + `InterventionService` + `InterventionFixtures` : `\DateTime` → `\DateTimeImmutable` sur `datePlanifiee`, `dateDebut`, `dateFin` (immuabilité + suppression des `clone` inutiles)

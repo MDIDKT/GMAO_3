@@ -14,6 +14,7 @@ declare(strict_types=1);
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Mailer\MailerInterface;
     use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+    use Symfony\Component\DependencyInjection\Attribute\Autowire;
     use Symfony\Component\Routing\Attribute\Route;
     use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
     use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -21,6 +22,11 @@ declare(strict_types=1);
     #[IsGranted('ROLE_ADMIN')]
     final class AdminUserController extends AbstractController
     {
+        public function __construct(
+            #[Autowire(env: 'MAILER_FROM')]
+            private string $mailerFrom,
+        ) {}
+
         /**
          * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
          * @throws \Random\RandomException
@@ -61,7 +67,7 @@ declare(strict_types=1);
 
                 // 5. Envoyer l'email d'invitation
                 $email = new TemplatedEmail()
-                    ->from('mdidkt@alwaysdata.net')
+                    ->from($this->mailerFrom)
                     ->to($user->getEmail())
                     ->subject('Invitation GMAO')
                     ->htmlTemplate('email/invitation.html.twig')

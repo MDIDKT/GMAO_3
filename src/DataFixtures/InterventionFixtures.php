@@ -131,7 +131,7 @@ class InterventionFixtures extends Fixture implements DependentFixtureInterface
                 $demandesEligibles = $demandes;
             }
 
-            $now = new \DateTime();
+            $now = new \DateTimeImmutable();
 
             foreach (self::INTERVENTIONS as $index => $data) {
                 $demande = $demandesEligibles[$index % count($demandesEligibles)];
@@ -160,18 +160,15 @@ class InterventionFixtures extends Fixture implements DependentFixtureInterface
 
                 // Dates selon statut
                 if ($data['statut'] !== StatutIntervention::A_PLANIFIER) {
-                    $datePlanifiee = (clone $now)->modify(sprintf('+%d days', $index + 1));
-                    $intervention->setDatePlanifiee($datePlanifiee);
+                    $intervention->setDatePlanifiee($now->modify(sprintf('+%d days', $index + 1)));
                 }
 
                 if (in_array($data['statut'], [StatutIntervention::EN_COURS, StatutIntervention::TERMINEE, StatutIntervention::VALIDEE], true)) {
-                    $dateDebut = (clone $now)->modify(sprintf('-%d days', 5 - ($index % 5)));
-                    $intervention->setDateDebut($dateDebut);
+                    $intervention->setDateDebut($now->modify(sprintf('-%d days', 5 - ($index % 5))));
                 }
 
                 if (in_array($data['statut'], [StatutIntervention::TERMINEE, StatutIntervention::VALIDEE], true)) {
-                    $dateFin = (clone $now)->modify(sprintf('-%d days', 3 - ($index % 3)));
-                    $intervention->setDateFin($dateFin);
+                    $intervention->setDateFin($now->modify(sprintf('-%d days', 3 - ($index % 3))));
                 }
 
                 $manager->persist($intervention);

@@ -234,6 +234,10 @@ declare(strict_types=1);
                 $this->addFlash('danger', 'Le motif de rejet est obligatoire.');
                 return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
             }
+            if (mb_strlen($motifRejet) > 1000) {
+                $this->addFlash('danger', 'Le motif de rejet ne peut pas dépasser 1000 caractères.');
+                return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
+            }
 
             $demande->setMotifRejet($motifRejet);
             $demande->setStatut(StatutDemande::REJETEE);

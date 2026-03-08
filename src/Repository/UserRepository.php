@@ -4,6 +4,7 @@ declare(strict_types=1);
 
     namespace App\Repository;
 
+    use App\Entity\Organisation;
     use App\Entity\User;
     use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
     use Doctrine\Persistence\ManagerRegistry;
@@ -59,4 +60,22 @@ declare(strict_types=1);
         //            ->getOneOrNullResult()
         //        ;
         //    }
+
+        /**
+         * @return User[]
+         */
+        public function findByOrganisationAndRole(?Organisation $organisation, string $role): array
+        {
+            $qb = $this->createQueryBuilder('u');
+            if ($organisation) {
+                $qb->andWhere('u.organisation = :organisation')
+                    ->setParameter('organisation', $organisation);
+            }
+            $users = $qb->getQuery()->getResult();
+
+            return array_values(array_filter(
+                $users,
+                fn(User $u) => in_array($role, $u->getRoles(), true)
+            ));
+        }
     }

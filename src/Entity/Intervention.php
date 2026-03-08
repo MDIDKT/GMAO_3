@@ -25,13 +25,13 @@ class Intervention
     private ?string $numero = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTime $datePlanifiee = null;
+    private ?\DateTimeImmutable $datePlanifiee = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTime $dateDebut = null;
+    private ?\DateTimeImmutable $dateDebut = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTime $dateFin = null;
+    private ?\DateTimeImmutable $dateFin = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $compteRendu = null;
@@ -94,36 +94,36 @@ class Intervention
         return $this;
     }
 
-    public function getDatePlanifiee(): ?\DateTime
+    public function getDatePlanifiee(): ?\DateTimeImmutable
     {
         return $this->datePlanifiee;
     }
 
-    public function setDatePlanifiee(?\DateTime $datePlanifiee): static
+    public function setDatePlanifiee(?\DateTimeImmutable $datePlanifiee): static
     {
         $this->datePlanifiee = $datePlanifiee;
 
         return $this;
     }
 
-    public function getDateDebut(): ?\DateTime
+    public function getDateDebut(): ?\DateTimeImmutable
     {
         return $this->dateDebut;
     }
 
-    public function setDateDebut(?\DateTime $dateDebut): static
+    public function setDateDebut(?\DateTimeImmutable $dateDebut): static
     {
         $this->dateDebut = $dateDebut;
 
         return $this;
     }
 
-    public function getDateFin(): ?\DateTime
+    public function getDateFin(): ?\DateTimeImmutable
     {
         return $this->dateFin;
     }
 
-    public function setDateFin(?\DateTime $dateFin): static
+    public function setDateFin(?\DateTimeImmutable $dateFin): static
     {
         $this->dateFin = $dateFin;
 

@@ -8,7 +8,7 @@ declare(strict_types=1);
     use App\Entity\Intervention;
     use App\Enum\StatutDemande;
     use App\Enum\StatutIntervention;
-    use DateTime;
+    use DateTimeImmutable;
     use Doctrine\ORM\EntityManagerInterface;
     use LogicException;
 
@@ -59,7 +59,7 @@ declare(strict_types=1);
             $intervention->setStatut(StatutIntervention::EN_COURS);
             $demande->setStatut(StatutDemande::EN_COURS);
             if ($intervention->getDateDebut() === null) {
-                $intervention->setDateDebut(new DateTime());
+                $intervention->setDateDebut(new DateTimeImmutable());
             }
 
             $this->entityManager->persist($intervention);
@@ -86,9 +86,9 @@ declare(strict_types=1);
 
             $intervention->setStatut(StatutIntervention::TERMINEE);
             if ($intervention->getDateDebut() === null) {
-                $intervention->setDateDebut(new DateTime());
+                $intervention->setDateDebut(new DateTimeImmutable());
             }
-            $intervention->setDateFin(new DateTime());
+            $intervention->setDateFin(new DateTimeImmutable());
             $debut = $intervention->getDateDebut()->getTimestamp();
             $fin = $intervention->getDateFin()->getTimestamp();
             $intervention->setDureeMinutes((int)(($fin - $debut) / 60));
