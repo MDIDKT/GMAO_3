@@ -59,7 +59,7 @@
 
                 // 5. Envoyer l'email d'invitation
                 $email = new TemplatedEmail()
-                    ->from('noreply@gmao.dev')
+                    ->from('mdidkt@alwaysdata.net')
                     ->to($user->getEmail())
                     ->subject('Invitation GMAO')
                     ->htmlTemplate('email/invitation.html.twig')
