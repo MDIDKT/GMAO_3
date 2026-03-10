@@ -350,3 +350,11 @@ Audit réalisé sur l'ensemble du projet (jours 0-18) :
 * étape 6 : Voters DemandeVoter/InterventionVoter — UserInterface → User (type-safe)
 * étape 7 : InterventionController::edit() — recalcul du statut (A_PLANIFIER ↔ PLANIFIE)
 * UserFixtures : noms et prénoms remplacés par des noms d'Afrique de l'Ouest
+
+Premiers tests unitaires PHPUnit :
+* création docs/PROCEDURE-TESTS-PHPUNIT.md — procédure détaillée 7 phases
+* création tests/Unit/Service/InterventionServiceTest.php — 5 tests unitaires
+* testDemarrerPasseLeStatutEnCours / testDemarrerLeveExceptionSiStatutInvalide
+* testTerminerVerifiePasseTerminer / testTerminerLeveExceptionSiStatutInvalide / testTerminerLeveExceptionSiCompteRenduVide
+* attribut #[CoversClass] ajouté sur la classe de test
+* désactivation xdebug incompatible arm64/x86_64 (99-xdebug.ini)
