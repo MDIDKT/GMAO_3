@@ -116,11 +116,11 @@ class InterventionFixtures extends Fixture implements DependentFixtureInterface
                 continue;
             }
 
-            // Filtrer demandes eligibles (PLANIFIE, EN_COURS, CLOTURE ou tout statut sauf NOUVEAU/REJETEE)
+            // Filtrer demandes eligibles (PLANIFIE, EN_COURS, CLOTURE ou tout statut sauf A_QUALIFIER/REJETEE)
             $demandesEligibles = array_values(array_filter(
                 $demandes,
                 static fn (Demande $d) => !in_array($d->getStatut(), [
-                    StatutDemande::NOUVEAU,
+                    StatutDemande::A_QUALIFIER,
                     StatutDemande::REJETEE,
                 ], true)
             ));

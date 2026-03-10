@@ -3,7 +3,6 @@
     namespace App\Enum;
     enum StatutDemande: string
     {
-        case NOUVEAU = 'NOUVEAU';
         case A_QUALIFIER = 'A_QUALIFIER';
         case QUALIFIE = 'QUALIFIE';
         case PLANIFIE = 'PLANIFIE';
@@ -14,7 +13,6 @@
         public function label(): string
         {
             return match ($this) {
-                self::NOUVEAU => 'Nouveau',
                 self::A_QUALIFIER => 'À qualifier',
                 self::QUALIFIE => 'Qualifié',
                 self::PLANIFIE => 'Planifié',

@@ -42,7 +42,7 @@ class DemandeFixtures extends Fixture implements DependentFixtureInterface
             'titre' => 'Porte coupe-feu bloquee 3eme etage',
             'description' => 'La porte coupe-feu du couloir principal au 3eme etage ne se ferme plus automatiquement. Probleme de securite.',
             'priorite' => Priorite::P1_URGENTE,
-            'statut' => StatutDemande::NOUVEAU,
+            'statut' => StatutDemande::A_QUALIFIER,
             'motifRejet' => null,
         ],
         [
@@ -77,7 +77,7 @@ class DemandeFixtures extends Fixture implements DependentFixtureInterface
             'titre' => 'Store motorise bloque position haute',
             'description' => 'Le store du bureau 105 est bloque en position haute. La telecommande ne repond plus.',
             'priorite' => Priorite::P4_BASSE,
-            'statut' => StatutDemande::NOUVEAU,
+            'statut' => StatutDemande::A_QUALIFIER,
             'motifRejet' => null,
         ],
         [
@@ -105,7 +105,7 @@ class DemandeFixtures extends Fixture implements DependentFixtureInterface
             'titre' => 'Robinet qui goutte cuisine 2eme',
             'description' => 'Le robinet de la cuisine du 2eme etage goutte en permanence, meme en position fermee.',
             'priorite' => Priorite::P4_BASSE,
-            'statut' => StatutDemande::NOUVEAU,
+            'statut' => StatutDemande::A_QUALIFIER,
             'motifRejet' => null,
         ],
         [

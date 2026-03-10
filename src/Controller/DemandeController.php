@@ -130,6 +130,7 @@
                 }
                 $entityManager->persist($demande);
                 $entityManager->flush();
+                $this->addFlash('success', 'Demande ' . $demande->getNumero() . ' créée avec succès.');
                 return $this->redirectToRoute('app_demande_index', [], Response::HTTP_SEE_OTHER);
             }
 
@@ -270,8 +271,9 @@
                 }
 
                 $entityManager->flush();
+                $this->addFlash('success', 'Demande ' . $demande->getNumero() . ' modifiée avec succès.');
 
-                return $this->redirectToRoute('app_demande_index', [], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()], Response::HTTP_SEE_OTHER);
             }
 
             return $this->render('demande/edit.html.twig', [
@@ -287,6 +289,7 @@
             if ($this->isCsrfTokenValid('delete' . $demande->getId(), $request->getPayload()->getString('_token'))) {
                 $entityManager->remove($demande);
                 $entityManager->flush();
+                $this->addFlash('success', 'Demande supprimée.');
             }
 
             return $this->redirectToRoute('app_demande_index', [], Response::HTTP_SEE_OTHER);

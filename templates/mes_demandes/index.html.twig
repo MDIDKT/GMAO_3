@@ -1,8 +1,7 @@
 {% extends 'layouts/app.html.twig' %}
 
-{% block page_subtitle %}
-    Mes demandes
-{% endblock %}
+{% block page_title %}Mes demandes{% endblock %}
+{% block page_subtitle %}Demandes que vous avez soumises{% endblock %}
 
 {% block page_actions %}
     <a href="{{ path('app_demande_new') }}"
@@ -41,14 +40,14 @@
                       d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
             </svg>
             <h3 class="mt-2 text-sm font-medium text-gray-900">Aucune demande</h3>
-            <p class="mt-1 text-sm text-gray-500">Vous n'avez pas encore d'demande assignée.</p>
+            <p class="mt-1 text-sm text-gray-500">Vous n'avez pas encore de demande soumise.</p>
         </div>
     {% else %}
         <div class="grid gap-4">
             {% for demande in pagination.items %}
                 {% set statutClass = 'bg-gray-100 text-gray-800' %}
                 {% if demande.statut %}
-                    {% if demande.statut.value == 'A_QUALIFIER' or demande.statut.value == 'NOUVEAU' %}
+                    {% if demande.statut.value == 'A_QUALIFIER' %}
                         {% set statutClass = 'bg-gray-100 text-gray-800' %}
                     {% elseif demande.statut.value == 'QUALIFIE' %}
                         {% set statutClass = 'bg-blue-100 text-blue-800' %}
@@ -65,7 +64,7 @@
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex-1">
                             <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                                demande #{{ demande.numero }}
+                                Demande #{{ demande.numero }}
                             </h3>
                             <span
                                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ statutClass }}">

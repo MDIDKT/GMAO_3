@@ -315,3 +315,38 @@ Déploiement production sur AlwaysData
 * schéma créé via doctrine:schema:create + migrations marquées comme appliquées
 * guide de déploiement complet disponible dans docs/DEPLOIEMENT-ALWAYSDATA.md
 * application fonctionnelle en production
+
+10-03-26
+Audit complet + Étape 1 : Affichage des flash messages
+
+Audit réalisé sur l'ensemble du projet (jours 0-18) :
+
+* BUG CRITIQUE identifié : 23+ appels addFlash() dans les controllers mais aucun template ne les affichait → messages
+  success/danger silencieux depuis le début du projet
+* Incohérence : StatutDemande::NOUVEAU défini dans l'enum mais jamais utilisé (demandes créées en A_QUALIFIER
+  directement)
+* Incohérence : DashboardController - $this->getUser()->getOrganisation() sans guard null → risque NPE
+* Incohérence : InterventionController::edit() ne recalcule pas le statut si technicien+date ajoutés en édition
+* Incohérence : DemandeVoter appelle getOrganisation() sur UserInterface (pas de cast App\Entity\User)
+* Incohérence : bouton "Planifier une intervention" visible pour ROLE_DEMANDEUR dans demande/show.html.twig
+* Incohérence : AdminUserController utilise $form->createView() déprécié en Symfony 7+
+* Incohérence : double vérification de rôle redondante dans InterventionController::valider()
+* Incohérence : pas de flash success sur création demande, création intervention, démarrage intervention
+* Constat : aucun système d'alertes email (hors invitation) — à implémenter avant les tests
+
+Étape 1 réalisée - Affichage des flash messages (templates/layouts/app.html.twig) :
+
+* ajout du bloc for type/messages in app.flashes dans la zone de contenu principale
+* 4 types gérés : success (vert), danger (rouge), warning (jaune), info (bleu)
+* icônes SVG adaptées par type (checkmark, triangle alerte, info)
+* les messages apparaissent maintenant au-dessus du contenu de chaque page après toute action
+
+Étapes 2, 3, 6, 7 + correctifs visuels :
+
+* tour visuel toutes pages → 10 bugs corrigés (titre mes_demandes, typos, casse, sidebar catégories équip., guard planifier, retour dynamique selon rôle, 500 sur compteRendu form)
+* DemandeController + InterventionController : flash + redirect sur edit/delete
+* étape 2 : DashboardController — garde null sur getOrganisation()
+* étape 3 : StatutDemande::NOUVEAU supprimé de l'enum et des fixtures
+* étape 6 : Voters DemandeVoter/InterventionVoter — UserInterface → User (type-safe)
+* étape 7 : InterventionController::edit() — recalcul du statut (A_PLANIFIER ↔ PLANIFIE)
+* UserFixtures : noms et prénoms remplacés par des noms d'Afrique de l'Ouest

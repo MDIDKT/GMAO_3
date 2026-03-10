@@ -2,6 +2,7 @@
 
     namespace App\Controller;
 
+    use App\Entity\User;
     use App\Repository\DemandeRepository;
     use App\Repository\InterventionRepository;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,9 +16,12 @@
         #[Route('/dashboard', name: 'app_Dashboard')]
         public function index(DemandeRepository $demandeRepository, InterventionRepository $interventionRepository): Response
         {
-//            $this->denyAccessUnlessGranted('ROLE_PLANIFICATEUR') || $this->denyAccessUnlessGranted('ROLE_ADMIN');
+            $user = $this->getUser();
+            if (!$user instanceof User || $user->getOrganisation() === null) {
+                throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
+            }
 
-            $organisation = $this->getUser()->getOrganisation();
+            $organisation = $user->getOrganisation();
 
             return $this->render('dashboard/dashborad.html.twig', [
                 'countP1Ouvertes' => $demandeRepository->countP1Ouvertes($organisation),

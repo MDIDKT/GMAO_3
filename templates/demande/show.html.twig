@@ -4,7 +4,8 @@
 {% block page_subtitle %}Detail de la demande{% endblock %}
 
 {% block page_actions %}
-    {% if demande.statut and demande.statut.value != 'CLOTURE' and demande.statut.value != 'REJETEE' %}
+    {% if demande.statut and demande.statut.value != 'CLOTURE' and demande.statut.value != 'REJETEE'
+          and (is_granted('ROLE_PLANIFICATEUR') or is_granted('ROLE_ADMIN')) %}
         <a href="{{ path('app_intervention_new', {'demande': demande.id}) }}"
            class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition font-medium mr-2">
             Planifier une intervention
@@ -129,7 +130,7 @@
             </div>
             <div class="bg-white rounded-xl shadow-md p-6">
                 <div class="flex flex-col gap-3">
-                    <a href="{{ path('app_demande_index') }}"
+                    <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_PLANIFICATEUR') ? path('app_demande_index') : path('app_demande_mes_demandes') }}"
                        class="text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
                         Retour a la liste
                     </a>

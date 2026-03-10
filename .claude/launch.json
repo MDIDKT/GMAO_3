@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "symfony-server",
+      "runtimeExecutable": "symfony",
+      "runtimeArgs": ["server:start", "--no-tls"],
+      "port": 8000
+    },
+    {
+      "name": "webpack-watch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "watch"],
+      "port": 8000
+    },
+    {
+      "name": "docker-mailpit",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "up", "mailpit"],
+      "port": 8025
+    }
+  ]
+}

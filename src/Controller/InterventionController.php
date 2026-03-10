@@ -93,7 +93,7 @@ final class InterventionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->interventionService->createIntervention($intervention);
-
+            $this->addFlash('success', 'Intervention ' . $intervention->getNumero() . ' planifiée avec succès.');
             return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -212,9 +212,18 @@ final class InterventionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Recalcul statut uniquement si l'intervention est encore planifiable
+            if (in_array($intervention->getStatut(), [StatutIntervention::A_PLANIFIER, StatutIntervention::PLANIFIE])) {
+                if ($intervention->getTechnicien() && $intervention->getDatePlanifiee()) {
+                    $intervention->setStatut(StatutIntervention::PLANIFIE);
+                } else {
+                    $intervention->setStatut(StatutIntervention::A_PLANIFIER);
+                }
+            }
             $entityManager->flush();
+            $this->addFlash('success', 'Intervention ' . $intervention->getNumero() . ' modifiée avec succès.');
 
-            return $this->redirectToRoute('app_intervention_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('intervention/edit.html.twig', [
@@ -230,6 +239,7 @@ final class InterventionController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $intervention->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($intervention);
             $entityManager->flush();
+            $this->addFlash('success', 'Intervention supprimée.');
         }
 
         return $this->redirectToRoute('app_intervention_index', [], Response::HTTP_SEE_OTHER);
@@ -243,6 +253,7 @@ final class InterventionController extends AbstractController
             $demande = $intervention->getDemande();
             try {
                 $this->interventionService->demarrerIntervention($intervention, $demande);
+                $this->addFlash('success', 'Intervention démarrée avec succès.');
             } catch (LogicException $e) {
                 $this->addFlash('danger', $e->getMessage());
             }

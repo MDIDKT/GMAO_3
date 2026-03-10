@@ -19,27 +19,27 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
      */
     private const USERS = [
         'GMAO Industries' => [
-            ['email' => 'admin@gmao.fr',          'nom' => 'Dupont',   'prenom' => 'Jean',     'roles' => ['ROLE_ADMIN']],
-            ['email' => 'planificateur@gmao.fr',   'nom' => 'Martin',   'prenom' => 'Sophie',   'roles' => ['ROLE_PLANIFICATEUR']],
-            ['email' => 'tech1@gmao.fr',           'nom' => 'Bernard',  'prenom' => 'Lucas',    'roles' => ['ROLE_TECHNICIEN']],
-            ['email' => 'tech2@gmao.fr',           'nom' => 'Petit',    'prenom' => 'Thomas',   'roles' => ['ROLE_TECHNICIEN']],
-            ['email' => 'demandeur@gmao.fr',       'nom' => 'Dubois',   'prenom' => 'Marie',    'roles' => ['ROLE_DEMANDEUR']],
+            ['email' => 'admin@gmao.fr',          'nom' => 'Diallo',    'prenom' => 'Moussa',      'roles' => ['ROLE_ADMIN']],
+            ['email' => 'planificateur@gmao.fr',   'nom' => 'Koné',      'prenom' => 'Fatoumata',   'roles' => ['ROLE_PLANIFICATEUR']],
+            ['email' => 'tech1@gmao.fr',           'nom' => 'Traoré',    'prenom' => 'Ibrahima',    'roles' => ['ROLE_TECHNICIEN']],
+            ['email' => 'tech2@gmao.fr',           'nom' => 'Coulibaly', 'prenom' => 'Seydou',      'roles' => ['ROLE_TECHNICIEN']],
+            ['email' => 'demandeur@gmao.fr',       'nom' => 'Keita',     'prenom' => 'Aminata',     'roles' => ['ROLE_DEMANDEUR']],
         ],
         'Maintenance Sud' => [
-            ['email' => 'admin@maintenance-sud.fr', 'nom' => 'Moreau',  'prenom' => 'Pierre',   'roles' => ['ROLE_ADMIN']],
-            ['email' => 'planif@maintenance-sud.fr', 'nom' => 'Leroy',  'prenom' => 'Julie',    'roles' => ['ROLE_PLANIFICATEUR']],
-            ['email' => 'tech@maintenance-sud.fr',   'nom' => 'Roux',   'prenom' => 'Antoine',  'roles' => ['ROLE_TECHNICIEN']],
-            ['email' => 'demandeur@maintenance-sud.fr', 'nom' => 'Simon', 'prenom' => 'Claire', 'roles' => ['ROLE_DEMANDEUR']],
+            ['email' => 'admin@maintenance-sud.fr',    'nom' => 'Touré',   'prenom' => 'Amadou',    'roles' => ['ROLE_ADMIN']],
+            ['email' => 'planif@maintenance-sud.fr',   'nom' => 'Camara',  'prenom' => 'Awa',       'roles' => ['ROLE_PLANIFICATEUR']],
+            ['email' => 'tech@maintenance-sud.fr',     'nom' => 'Bah',     'prenom' => 'Oumar',     'roles' => ['ROLE_TECHNICIEN']],
+            ['email' => 'demandeur@maintenance-sud.fr','nom' => 'Sidibé',  'prenom' => 'Mariama',   'roles' => ['ROLE_DEMANDEUR']],
         ],
         'Patrimoine Services' => [
-            ['email' => 'admin@patrimoine.fr',      'nom' => 'Laurent',  'prenom' => 'Marc',    'roles' => ['ROLE_ADMIN']],
-            ['email' => 'planif@patrimoine.fr',      'nom' => 'Michel',   'prenom' => 'Isabelle', 'roles' => ['ROLE_PLANIFICATEUR']],
-            ['email' => 'tech@patrimoine.fr',        'nom' => 'Garcia',   'prenom' => 'David',   'roles' => ['ROLE_TECHNICIEN']],
-            ['email' => 'demandeur@patrimoine.fr',   'nom' => 'Fournier', 'prenom' => 'Nathalie', 'roles' => ['ROLE_DEMANDEUR']],
+            ['email' => 'admin@patrimoine.fr',      'nom' => 'Cissé',     'prenom' => 'Boubacar',   'roles' => ['ROLE_ADMIN']],
+            ['email' => 'planif@patrimoine.fr',      'nom' => 'Dembélé',   'prenom' => 'Kadiatou',  'roles' => ['ROLE_PLANIFICATEUR']],
+            ['email' => 'tech@patrimoine.fr',        'nom' => 'Kouyaté',   'prenom' => 'Lamine',    'roles' => ['ROLE_TECHNICIEN']],
+            ['email' => 'demandeur@patrimoine.fr',   'nom' => 'Sow',       'prenom' => 'Hawa',      'roles' => ['ROLE_DEMANDEUR']],
         ],
         'Infra Support Ouest' => [
-            ['email' => 'admin@infra-ouest.fr',     'nom' => 'Girard',   'prenom' => 'Philippe', 'roles' => ['ROLE_ADMIN']],
-            ['email' => 'tech@infra-ouest.fr',       'nom' => 'Andre',    'prenom' => 'Clement',  'roles' => ['ROLE_TECHNICIEN']],
+            ['email' => 'admin@infra-ouest.fr',     'nom' => 'Barry',     'prenom' => 'Cheikh',     'roles' => ['ROLE_ADMIN']],
+            ['email' => 'tech@infra-ouest.fr',       'nom' => 'Diakité',   'prenom' => 'Ismaël',    'roles' => ['ROLE_TECHNICIEN']],
         ],
     ];
 

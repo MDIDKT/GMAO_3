@@ -25,12 +25,6 @@
     </div>
 </div>
 
-<div>
-    {{ form_label(form.compteRendu, null, {'label_attr': {'class': labelClass}}) }}
-    {{ form_widget(form.compteRendu, {'attr': {'class': inputClass, 'rows': 4, 'placeholder': 'Décrivez les actions réalisées...'}}) }}
-    {{ form_errors(form.compteRendu) }}
-</div>
-
 <div class="border-t border-gray-200 pt-6 flex items-center justify-between">
     <a href="{{ cancelPath }}"
        class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
