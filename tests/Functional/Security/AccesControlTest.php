@@ -8,19 +8,52 @@
 
     class AccesControlTest extends WebTestCase
     {
-        public function testSomething(): void
+        public function testRedirectionVersLoginSiNonConnecter(): void
         {
-            // This calls KernelTestCase::bootKernel(), and creates a
-            // "client" that is acting as the browser
-            $client = static::createClient();
+            $page = static::createClient();
+            $page->request('GET', '/dashboard');
+            $this->assertResponseRedirects('/login');
+        }
 
-            // Request a specific page
-            $crawler = $client->request('GET', '/');
+        public function testRedirectionInterventionSiNonConnecter(): void
+        {
+            $page = static::createClient();
+            $page->request('GET', '/intervention');
+            $this->assertResponseRedirects('/login');
+        }
 
-            // Validate a successful response and some content
-            $this->assertResponseIsSuccessful();
-            $this->assertSelectorTextContains('h1', 'Hello World');
+        public function testLoginAvecBonsIdentifiants(): void
+        {
+            $page = static::createClient();
+            $page->request('GET', '/login');
+            $page->submitForm('Se connecter', [
+                '_username' => 'admin@gmao.fr',
+                '_password' => 'Test1234!',
+            ]);
+            $this->assertResponseRedirects('/');
+        }
 
-            $this->assertGreaterThan(0, $crawler->filter('html:contains("Hello World")')->count());
+        public function testLoginAvecMauvaisIdentifiants(): void
+        {
+            $page = static::createClient();
+            $page->request('GET', '/login');
+            $page->submitForm('Se connecter', [
+                '_username' => 'toto',
+                '_password' => 'tata',
+            ]);
+            $this->assertResponseRedirects('/login');
+        }
+
+        public function testAccesDashboardNonAutorise(): void
+        {
+            $page = static::createClient();
+            $page->request('GET', '/login');
+            $page->submitForm('Se connecter', [
+                '_username' => 'demandeur@gmao.fr',
+                '_password' => 'Test1234!',
+            ]);
+            $page->followRedirects();
+            $page->request('GET', '/dashboard');
+            $this->assertResponseStatusCodeSame(403);
         }
     }

@@ -358,3 +358,16 @@ Premiers tests unitaires PHPUnit :
 * testTerminerVerifiePasseTerminer / testTerminerLeveExceptionSiStatutInvalide / testTerminerLeveExceptionSiCompteRenduVide
 * attribut #[CoversClass] ajouté sur la classe de test
 * désactivation xdebug incompatible arm64/x86_64 (99-xdebug.ini)
+
+11-03-26
+Premiers tests fonctionnels PHPUnit
+
+* création tests/Functional/Security/AccesControlTest.php — 5 tests fonctionnels tous verts
+* test : redirection vers /login si non connecté (/dashboard et /intervention)
+* test : login avec bons identifiants → redirect /
+* test : login avec mauvais identifiants → redirect /login
+* test : accès /dashboard refusé (403) pour un ROLE_DEMANDEUR
+* bug trouvé et corrigé : DashboardController avait #[IsGranted('ROLE_USER')] → remplacé par ROLE_PLANIFICATEUR
+* ajout role_hierarchy dans security.yaml : ROLE_ADMIN hérite de tous les rôles métier
+* renommage phpunit.dist.xml → phpunit.xml.dist (nom standard reconnu par PhpStorm)
+* correction .env.test : DATABASE_URL pointe sur gmao (Doctrine ajoute _test automatiquement en env test)

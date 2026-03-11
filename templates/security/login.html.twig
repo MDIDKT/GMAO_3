@@ -30,8 +30,8 @@
 
             {% if app.user %}
                 <div class="mb-4 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-4 text-sm">
-                    Vous etes connecte en tant que {{ app.user.userIdentifier }}.
-                    <a href="{{ path('app_logout') }}" class="font-semibold hover:underline">Se deconnecter</a>
+                    Vous êtes connecté en tant que {{ app.user.userIdentifier }}.
+                    <a href="{{ path('app_logout') }}" class="font-semibold hover:underline">Se déconnecter</a>
                 </div>
             {% endif %}
 
