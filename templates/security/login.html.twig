@@ -2,42 +2,50 @@
 
 {% block title %}Connexion{% endblock %}
 
-{% block body_class %}bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4{% endblock %}
+{% block html_class %}dark{% endblock %}
+
+{% block body_class %}bg-gray-100 dark:bg-fondun min-h-screen flex items-center justify-center p-4{% endblock %}
 
 {% block body %}
     <div class="w-full max-w-md">
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-fondcinq to-fondquatre rounded-2xl mb-4 shadow-lg">
                 <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800">GMAO SaaS</h1>
-            <p class="text-gray-600 mt-2">Gestion de Maintenance Assistée par Ordinateur</p>
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">GMAO SaaS</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">Gestion de Maintenance Assistee par Ordinateur</p>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-xl p-8">
-            <div class="mb-6">
-                <h2 class="text-2xl font-semibold text-gray-800">Connexion</h2>
-                <p class="text-gray-600 text-sm mt-1">Accédez à votre espace de gestion</p>
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-white/10">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">Connexion</h2>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Accedez a votre espace de gestion</p>
+                </div>
+                <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition" title="Changer de theme">
+                    <svg id="moonIcon" class="w-5 h-5 text-gray-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    <svg id="sunIcon" class="w-5 h-5 text-fondcinq" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                </button>
             </div>
 
             {% if error %}
-                <div class="mb-4 bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 text-sm">
+                <div class="mb-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800/50 text-red-800 dark:text-red-400 rounded-xl p-4 text-sm">
                     {{ error.messageKey|trans(error.messageData, 'security') }}
                 </div>
             {% endif %}
 
             {% if app.user %}
-                <div class="mb-4 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-4 text-sm">
-                    Vous êtes connecté en tant que {{ app.user.userIdentifier }}.
-                    <a href="{{ path('app_logout') }}" class="font-semibold hover:underline">Se déconnecter</a>
+                <div class="mb-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800/50 text-blue-800 dark:text-blue-400 rounded-xl p-4 text-sm">
+                    Vous etes connecte en tant que {{ app.user.userIdentifier }}.
+                    <a href="{{ path('app_logout') }}" class="font-semibold text-fondcinq hover:underline">Se deconnecter</a>
                 </div>
             {% endif %}
 
             <form method="post">
                 <div class="mb-4">
-                    <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Adresse email
                     </label>
                     <input
@@ -48,17 +56,17 @@
                         required
                         autofocus
                         autocomplete="email"
-                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition"
+                        class="block w-full px-4 py-3 bg-gray-50 dark:bg-fondun border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-fondcinq focus:border-fondcinq transition"
                         placeholder="exemple@entreprise.com"
                     >
                 </div>
 
                 <div class="mb-6">
                     <div class="flex items-center justify-between mb-2">
-                        <label for="password" class="block text-sm font-medium text-gray-700">
+                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Mot de passe
                         </label>
-                        <a href="#" class="text-sm text-primary hover:text-primary/80 font-medium">Mot de passe oublie ?</a>
+                        <a href="#" class="text-sm text-fondcinq hover:text-fondcinq/80 font-medium">Mot de passe oublie ?</a>
                     </div>
                     <input
                         type="password"
@@ -66,7 +74,7 @@
                         name="_password"
                         required
                         autocomplete="current-password"
-                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition"
+                        class="block w-full px-4 py-3 bg-gray-50 dark:bg-fondun border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-fondcinq focus:border-fondcinq transition"
                         placeholder="••••••••"
                     >
                 </div>
@@ -75,11 +83,15 @@
 
                 <button
                     type="submit"
-                    class="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition"
+                    class="w-full bg-fondcinq hover:bg-fondcinq/90 text-white dark:text-fondun font-semibold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition"
                 >
                     Se connecter
                 </button>
             </form>
         </div>
+
+        <p class="text-center text-gray-500 text-sm mt-6">
+            <a href="{{ path('app_home') }}" class="text-fondcinq hover:underline">Retour a l'accueil</a>
+        </p>
     </div>
 {% endblock %}

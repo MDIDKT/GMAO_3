@@ -12,6 +12,7 @@
     use App\Repository\DemandeRepository;
     use App\Repository\SiteRepository;
     use App\Service\FileUploadService;
+    use App\Service\NotificationService;
     use App\Service\NumberingService;
     use Doctrine\ORM\EntityManagerInterface;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,9 +26,10 @@
     #[Route('/demande')]
     final class DemandeController extends AbstractController
     {
-        public function __construct(private readonly NumberingService $numberingService)
-        {
-
+        public function __construct(
+            private readonly NumberingService $numberingService,
+            private readonly NotificationService $notificationService,
+        ) {
         }
 
         #[Route(name: 'app_demande_index', methods: ['GET'])]
@@ -195,6 +197,7 @@
 
             $demande->setStatut(StatutDemande::QUALIFIE);
             $entityManager->flush();
+            $this->notificationService->notifyDemandeQualifiee($demande);
 
             $this->addFlash('success', 'Demande qualifiee avec succes.');
             return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
@@ -226,6 +229,7 @@
             $demande->setMotifRejet($motifRejet);
             $demande->setStatut(StatutDemande::REJETEE);
             $entityManager->flush();
+            $this->notificationService->notifyDemandeRejetee($demande);
 
             $this->addFlash('success', 'Demande rejetee.');
             return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);

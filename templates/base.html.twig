@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="{% block html_class %}{% endblock %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +10,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        primary: '#2563EB',
+                        primary: '#CF9D7B',
                         secondary: '#64748B',
                         success: '#10B981',
                         warning: '#F59E0B',
@@ -23,6 +24,7 @@
                         fondtrois: '#3A3534',
                         fondquatre: '#724B39',
                         fondcinq: '#CF9D7B',
+                        fondsix: '#F2F0EE',
                     },
                     fontFamily: {
                         sans: ['Inter var', 'sans-serif'],
@@ -32,6 +34,59 @@
         };
     </script>
 
+    <style>
+        /* Sidebar transitions */
+        .sidebar-expanded { width: 240px; }
+        .sidebar-collapsed { width: 72px; }
+        .sidebar-label { transition: opacity 0.2s, width 0.2s; }
+        .sidebar-collapsed .sidebar-label { opacity: 0; width: 0; overflow: hidden; }
+        .sidebar-expanded .sidebar-label { opacity: 1; }
+
+        /* Mobile drawer */
+        .drawer-overlay { transition: opacity 0.3s; }
+        .drawer-panel { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .drawer-closed .drawer-overlay { opacity: 0; pointer-events: none; }
+        .drawer-closed .drawer-panel { transform: translateX(-100%); }
+        .drawer-open .drawer-overlay { opacity: 1; }
+        .drawer-open .drawer-panel { transform: translateX(0); }
+
+        /* Soft glow separators */
+        .sidebar-glow { box-shadow: 4px 0 24px -4px rgba(0,0,0,0.08); }
+        .dark .sidebar-glow { box-shadow: 4px 0 24px -4px rgba(0,0,0,0.4); }
+        .header-glow { box-shadow: 0 2px 16px -2px rgba(0,0,0,0.06); }
+        .dark .header-glow { box-shadow: 0 2px 16px -2px rgba(0,0,0,0.3); }
+
+        .soft-separator { position: relative; }
+        .soft-separator::after {
+            content: ''; position: absolute; bottom: 0; left: 16px; right: 16px; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(207,157,123,0.15), transparent);
+        }
+        :not(.dark) .soft-separator::after {
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
+        }
+        .nav-divider {
+            height: 1px; margin: 12px 8px;
+            background: linear-gradient(90deg, transparent, rgba(207,157,123,0.12), transparent);
+        }
+        :not(.dark) .nav-divider {
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
+        }
+        .top-separator::before {
+            content: ''; position: absolute; top: 0; left: 16px; right: 16px; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(207,157,123,0.15), transparent);
+        }
+        :not(.dark) .top-separator::before {
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
+        }
+
+        /* Smooth transitions */
+        *, *::before, *::after { transition: background-color 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s; }
+
+        /* Dark scrollbar */
+        .dark ::-webkit-scrollbar { width: 6px; }
+        .dark ::-webkit-scrollbar-track { background: #0C1519; }
+        .dark ::-webkit-scrollbar-thumb { background: #3A3534; border-radius: 3px; }
+    </style>
 
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
@@ -41,9 +96,44 @@
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
-<body class="{% block body_class %}bg-gray-50 min-h-screen {% endblock %}">
+<body class="{% block body_class %}bg-gray-50 dark:bg-fondun min-h-screen{% endblock %}">
 {% block body %}{% endblock %}
 <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
 
+<script>
+    // Theme management
+    (function() {
+        const saved = localStorage.getItem('gmao-theme');
+        if (saved === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+    })();
+
+    function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.classList.contains('dark');
+        if (isDark) {
+            html.classList.remove('dark');
+            localStorage.setItem('gmao-theme', 'light');
+        } else {
+            html.classList.add('dark');
+            localStorage.setItem('gmao-theme', 'dark');
+        }
+        updateThemeIcons();
+    }
+
+    function updateThemeIcons() {
+        const isDark = document.documentElement.classList.contains('dark');
+        const sun = document.getElementById('sunIcon');
+        const moon = document.getElementById('moonIcon');
+        if (sun && moon) {
+            sun.classList.toggle('hidden', !isDark);
+            moon.classList.toggle('hidden', isDark);
+        }
+    }
+    document.addEventListener('DOMContentLoaded', updateThemeIcons);
+</script>
 </body>
 </html>

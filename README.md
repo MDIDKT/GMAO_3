@@ -371,3 +371,14 @@ Premiers tests fonctionnels PHPUnit
 * ajout role_hierarchy dans security.yaml : ROLE_ADMIN hérite de tous les rôles métier
 * renommage phpunit.dist.xml → phpunit.xml.dist (nom standard reconnu par PhpStorm)
 * correction .env.test : DATABASE_URL pointe sur gmao (Doctrine ajoute _test automatiquement en env test)
+
+12-03-26
+Notifications email métier + stabilisation des tests
+
+* création/completion du NotificationService pour les 4 mails métier demandés
+* templates email ajoutés/corrigés : intervention assignée, demande qualifiée, demande rejetée, intervention terminée
+* branchement des notifications dans le workflow demande/intervention après flush
+* ajout d'un plan de test manuel pour vérifier les envois via profiler Symfony ou Mailpit
+* correction de la config PHPUnit (APP_SECRET en test) pour éviter les faux 500
+* ajout NotificationServiceTest + mise à jour des tests fonctionnels génériques
+* suite PHPUnit verte : 17 tests, 46 assertions

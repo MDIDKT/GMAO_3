@@ -14,32 +14,32 @@
 
 {% block page_content %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-danger">
-            <p class="text-gray-600 text-sm font-medium mb-1">Demandes P1 ouvertes</p>
-            <p class="text-3xl font-bold text-gray-800">{{ countP1Ouvertes }}</p>
+        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 border-l-4 border-danger">
+            <p class="text-gray-600 dark:text-gray-300 text-sm font-medium mb-1">Demandes P1 ouvertes</p>
+            <p class="text-3xl font-bold text-gray-800 dark:text-white">{{ countP1Ouvertes }}</p>
             <p class="text-xs text-gray-500 mt-2">Necessitent une attention immediate</p>
         </div>
-        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-warning">
-            <p class="text-gray-600 text-sm font-medium mb-1">A qualifier</p>
-            <p class="text-3xl font-bold text-gray-800">{{ countAQualifier }}</p>
+        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 border-l-4 border-warning">
+            <p class="text-gray-600 dark:text-gray-300 text-sm font-medium mb-1">A qualifier</p>
+            <p class="text-3xl font-bold text-gray-800 dark:text-white">{{ countAQualifier }}</p>
             <p class="text-xs text-gray-500 mt-2">Demandes en attente</p>
         </div>
-        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
-            <p class="text-gray-600 text-sm font-medium mb-1">Interventions aujourd'hui</p>
-            <p class="text-3xl font-bold text-gray-800">{{ countInterventionsDuJour }}</p>
+        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 border-l-4 border-primary">
+            <p class="text-gray-600 dark:text-gray-300 text-sm font-medium mb-1">Interventions aujourd'hui</p>
+            <p class="text-3xl font-bold text-gray-800 dark:text-white">{{ countInterventionsDuJour }}</p>
             <p class="text-xs text-gray-500 mt-2">Planifiees pour aujourd'hui</p>
         </div>
-        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-success">
-            <p class="text-gray-600 text-sm font-medium mb-1">En retard</p>
-            <p class="text-3xl font-bold text-gray-800">{{ countInterventionsEnRetard }}</p>
+        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 border-l-4 border-success">
+            <p class="text-gray-600 dark:text-gray-300 text-sm font-medium mb-1">En retard</p>
+            <p class="text-3xl font-bold text-gray-800 dark:text-white">{{ countInterventionsEnRetard }}</p>
             <p class="text-xs text-gray-500 mt-2">Interventions non cloturees</p>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white rounded-xl shadow-md">
-            <div class="p-6 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800">Demandes prioritaires</h3>
+        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none">
+            <div class="p-6 border-b border-gray-200 dark:border-white/10 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Demandes prioritaires</h3>
                 <a href="{{ path('app_demande_index', {priorite: 'P1_URGENTE'}) }}" class="text-sm text-primary hover:text-primary/80 font-medium">Voir tout &rarr;</a>
             </div>
             <div class="p-6 text-center text-gray-500 text-sm">
@@ -47,9 +47,9 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-md">
-            <div class="p-6 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800">Interventions du jour</h3>
+        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none">
+            <div class="p-6 border-b border-gray-200 dark:border-white/10 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Interventions du jour</h3>
                 <a href="{{ path('app_intervention_index') }}" class="text-sm text-primary hover:text-primary/80 font-medium">Voir tout &rarr;</a>
             </div>
             <div class="p-6 text-center text-gray-500 text-sm">

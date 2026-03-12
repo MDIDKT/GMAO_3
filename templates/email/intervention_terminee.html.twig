@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Intervention terminée</title>
+</head>
+<body style="font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px;">
+<div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px;">
+    <h2>Intervention terminée</h2>
+    <p>Bonjour {{ planificateur.prenom }},</p>
+    <p>L'intervention <strong>{{ intervention.numero }}</strong> a été terminée{% if technicien %} par {{ technicien.prenom }} {{ technicien.nom }}{% endif %}.</p>
+    {% if intervention.compteRendu %}
+        <p>Compte-rendu : {{ intervention.compteRendu }}</p>
+    {% endif %}
+    {% if intervention.dureeMinutes %}
+        <p>Durée : {{ intervention.dureeMinutes }} minutes</p>
+    {% endif %}
+    <p>
+        <a href="{{ interventionUrl }}"
+           style="display: inline-block; background: #0f766e; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none;">
+            Ouvrir l'intervention
+        </a>
+    </p>
+    <p style="color: #666; font-size: 14px;">Cette intervention peut maintenant être relue et validée.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Demande rejetée</title>
+</head>
+<body style="font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px;">
+<div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px;">
+    <h2>Votre demande a été rejetée</h2>
+    <p>Bonjour {{ demandeur.prenom }},</p>
+    <p>La demande <strong>{{ demande.numero }}</strong> n'a pas été retenue.</p>
+    {% if demande.motifRejet %}
+        <p>Motif : <strong>{{ demande.motifRejet }}</strong></p>
+    {% endif %}
+    <p>
+        <a href="{{ demandeUrl }}"
+           style="display: inline-block; background: #dc2626; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none;">
+            Consulter la demande
+        </a>
+    </p>
+</div>
+</body>
+</html>

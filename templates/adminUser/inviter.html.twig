@@ -4,18 +4,18 @@
 {% block page_subtitle %}Creation d'un compte par invitation{% endblock %}
 
 {% block page_content %}
-    {% set inputClass = 'block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition' %}
-    {% set labelClass = 'block text-sm font-medium text-gray-700 mb-2' %}
+    {% set inputClass = 'block w-full px-4 py-3 border border-gray-300 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition dark:bg-fondun dark:text-white' %}
+    {% set labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %}
 
     <div class="max-w-3xl mx-auto">
-        <div class="bg-white rounded-xl shadow-md">
-            <div class="px-8 py-6 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-800">Informations utilisateur</h3>
-                <p class="text-sm text-gray-600 mt-1">Un email d'invitation sera envoye automatiquement.</p>
+        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none">
+            <div class="px-8 py-6 border-b border-gray-200 dark:border-white/10">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Informations utilisateur</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Un email d'invitation sera envoye automatiquement.</p>
             </div>
             <div class="p-8">
                 {% for message in app.flashes('success') %}
-                    <div class="mb-6 bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 text-sm">
+                    <div class="mb-6 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-400 rounded-lg p-4 text-sm">
                         {{ message }}
                     </div>
                 {% endfor %}
@@ -43,7 +43,7 @@
                         {{ form_widget(form.roles, {'attr': {'class': inputClass}}) }}
                         {{ form_errors(form.roles) }}
                     </div>
-                    <div class="border-t border-gray-200 pt-6">
+                    <div class="border-t border-gray-200 dark:border-white/10 pt-6">
                         <button type="submit" class="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg transition font-medium">
                             Envoyer l'invitation
                         </button>

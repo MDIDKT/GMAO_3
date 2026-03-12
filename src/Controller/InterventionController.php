@@ -13,6 +13,7 @@ use App\Form\InterventionType;
 use App\Repository\InterventionRepository;
 use App\Service\FileUploadService;
 use App\Service\InterventionService;
+use App\Service\NotificationService;
 use App\Service\NumberingService;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
@@ -29,10 +30,11 @@ final class InterventionController extends AbstractController
 {
     public function __construct(
         private readonly NumberingService $numberingService,
-        private readonly InterventionService $interventionService
-    )
-    {
+        private readonly InterventionService $interventionService,
+        private readonly NotificationService $notificationService,
+    ) {
     }
+
     #[Route(name: 'app_intervention_index', methods: ['GET'])]
     public function index(InterventionRepository $interventionRepository, Request $request): Response
     {
@@ -208,6 +210,7 @@ final class InterventionController extends AbstractController
             throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
         }
 
+        $previousTechnicienId = $intervention->getTechnicien()?->getId();
         $form = $this->createForm(InterventionType::class, $intervention, ['organisation' => $currentUser->getOrganisation()]);
         $form->handleRequest($request);
 
@@ -221,6 +224,12 @@ final class InterventionController extends AbstractController
                 }
             }
             $entityManager->flush();
+
+            $currentTechnicien = $intervention->getTechnicien();
+            if ($currentTechnicien !== null && $currentTechnicien->getId() !== $previousTechnicienId) {
+                $this->notificationService->notifyTechnicienAssigne($intervention);
+            }
+
             $this->addFlash('success', 'Intervention ' . $intervention->getNumero() . ' modifiée avec succès.');
 
             return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()], Response::HTTP_SEE_OTHER);

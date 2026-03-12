@@ -2,24 +2,26 @@
 
 {% block title %}Activation du compte{% endblock %}
 
-{% block body_class %}bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4{% endblock %}
+{% block html_class %}dark{% endblock %}
+
+{% block body_class %}bg-gray-100 dark:bg-fondun min-h-screen flex items-center justify-center p-4{% endblock %}
 
 {% block body %}
-    {% set inputClass = 'block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition' %}
-    {% set labelClass = 'block text-sm font-medium text-gray-700 mb-2' %}
+    {% set inputClass = 'block w-full px-4 py-3 bg-gray-50 dark:bg-fondun border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-fondcinq focus:border-fondcinq transition' %}
+    {% set labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2' %}
 
     <div class="w-full max-w-md">
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-fondcinq to-fondquatre rounded-2xl mb-4 shadow-lg">
                 <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800">Activation du compte</h1>
-            <p class="text-gray-600 mt-2">Definissez votre mot de passe pour finaliser votre acces.</p>
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Activation du compte</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">Definissez votre mot de passe pour finaliser votre acces.</p>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-xl p-8">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-white/10">
             {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
                 <div>
                     {{ form_label(form.plainPassword.first, null, {'label_attr': {'class': labelClass}}) }}
@@ -31,7 +33,7 @@
                     {{ form_widget(form.plainPassword.second, {'attr': {'class': inputClass}}) }}
                     {{ form_errors(form.plainPassword.second) }}
                 </div>
-                <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-4 rounded-lg transition">
+                <button type="submit" class="w-full bg-fondcinq hover:bg-fondcinq/90 text-white dark:text-fondun font-semibold py-3 px-4 rounded-lg transition">
                     Valider
                 </button>
             {{ form_end(form) }}

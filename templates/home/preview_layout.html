@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMAO - Preview Layout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        fondun: '#0C1519',
+                        fonddeux: '#162127',
+                        fondtrois: '#3A3534',
+                        fondquatre: '#724B39',
+                        fondcinq: '#CF9D7B',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Sidebar transition */
+        .sidebar-expanded { width: 240px; }
+        .sidebar-collapsed { width: 72px; }
+        .sidebar-label { transition: opacity 0.2s, width 0.2s; }
+        .sidebar-collapsed .sidebar-label { opacity: 0; width: 0; overflow: hidden; }
+        .sidebar-expanded .sidebar-label { opacity: 1; }
+
+        /* Mobile drawer */
+        .drawer-overlay { transition: opacity 0.3s; }
+        .drawer-panel { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .drawer-closed .drawer-overlay { opacity: 0; pointer-events: none; }
+        .drawer-closed .drawer-panel { transform: translateX(-100%); }
+        .drawer-open .drawer-overlay { opacity: 1; }
+        .drawer-open .drawer-panel { transform: translateX(0); }
+
+        /* Smooth theme transition */
+        * { transition: background-color 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s; }
+
+        /* Sidebar soft glow instead of hard border */
+        .sidebar-glow {
+            box-shadow: 4px 0 24px -4px rgba(0,0,0,0.08);
+        }
+        .dark .sidebar-glow {
+            box-shadow: 4px 0 24px -4px rgba(0,0,0,0.4);
+        }
+
+        /* Header soft shadow */
+        .header-glow {
+            box-shadow: 0 2px 16px -2px rgba(0,0,0,0.06);
+        }
+        .dark .header-glow {
+            box-shadow: 0 2px 16px -2px rgba(0,0,0,0.3);
+        }
+
+        /* Section separator: soft gradient line */
+        .soft-separator {
+            position: relative;
+        }
+        .soft-separator::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 16px;
+            right: 16px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(207,157,123,0.15), transparent);
+        }
+        .light .soft-separator::after,
+        :not(.dark) .soft-separator::after {
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
+        }
+
+        /* Nav section divider */
+        .nav-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(207,157,123,0.12), transparent);
+            margin: 12px 8px;
+        }
+        :not(.dark) .nav-divider {
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
+        }
+
+        /* Scrollbar dark */
+        .dark ::-webkit-scrollbar { width: 6px; }
+        .dark ::-webkit-scrollbar-track { background: #0C1519; }
+        .dark ::-webkit-scrollbar-thumb { background: #3A3534; border-radius: 3px; }
+    </style>
+</head>
+<body class="dark">
+
+<div id="app" class="flex h-screen bg-gray-100 dark:bg-fondun text-gray-900 dark:text-gray-100">
+
+    <!-- ============================================ -->
+    <!-- MOBILE DRAWER -->
+    <!-- ============================================ -->
+    <div id="mobileDrawer" class="drawer-closed fixed inset-0 z-50 lg:hidden">
+        <div class="drawer-overlay absolute inset-0 bg-black/60" onclick="closeDrawer()"></div>
+        <div class="drawer-panel absolute left-0 top-0 bottom-0 w-72 bg-white dark:bg-fonddeux shadow-2xl flex flex-col rounded-r-2xl overflow-hidden">
+            <!-- Drawer header -->
+            <div class="soft-separator p-5 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-gradient-to-br from-fondcinq to-fondquatre rounded-xl flex items-center justify-center shadow-sm">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <span class="font-bold text-lg dark:text-white">GMAO SaaS</span>
+                </div>
+                <button onclick="closeDrawer()" class="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10">
+                    <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <!-- Drawer nav -->
+            <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-fondcinq/15 text-fondcinq font-medium text-sm" onclick="showPage('dashboard')">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm" onclick="showPage('demandes')">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <span>Demandes</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <span>Interventions</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    <span>Reporting</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    <span>Sites</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    <span>Equipements</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <span>Utilisateurs</span>
+                </a>
+            </nav>
+            <!-- Drawer user -->
+            <div class="p-4 relative">
+                <div class="soft-separator rotate-180 absolute top-0 left-0 right-0"></div>
+                <div class="flex items-center gap-3 pt-2">
+                    <div class="w-9 h-9 bg-gradient-to-br from-fondquatre to-fondcinq/80 rounded-full flex items-center justify-center shadow-sm">
+                        <span class="text-white font-semibold text-xs">MD</span>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-medium dark:text-white truncate">Moussa Diallo</p>
+                        <p class="text-xs text-gray-500 truncate">admin@gmao.fr</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- DESKTOP SIDEBAR (icon-only, expandable) -->
+    <!-- ============================================ -->
+    <aside id="sidebar" class="sidebar-collapsed hidden lg:flex flex-col bg-white dark:bg-fonddeux sidebar-glow shrink-0 z-40 relative">
+        <!-- Logo + Toggle -->
+        <div class="soft-separator p-4 flex items-center justify-between">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-9 h-9 bg-gradient-to-br from-fondcinq to-fondquatre rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <span class="sidebar-label font-bold text-base dark:text-white whitespace-nowrap">GMAO</span>
+            </div>
+            <button onclick="toggleSidebar()" class="sidebar-label w-7 h-7 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 transition shrink-0" title="Replier">
+                <svg id="sidebarToggleIcon" class="w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+            </button>
+        </div>
+
+        <!-- Nav items -->
+        <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+            <a href="#" onclick="showPage('dashboard')" id="nav-dashboard" class="sidebar-nav-item active flex items-center gap-3 px-3 py-2.5 rounded-xl bg-fondcinq/15 text-fondcinq font-medium text-sm" title="Dashboard">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span class="sidebar-label whitespace-nowrap">Dashboard</span>
+            </a>
+            <a href="#" onclick="showPage('demandes')" id="nav-demandes" class="sidebar-nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm" title="Demandes">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <span class="sidebar-label whitespace-nowrap">Demandes</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm" title="Interventions">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="sidebar-label whitespace-nowrap">Interventions</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm" title="Reporting">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                <span class="sidebar-label whitespace-nowrap">Reporting</span>
+            </a>
+
+            <div class="nav-divider"></div>
+
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm" title="Sites">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <span class="sidebar-label whitespace-nowrap">Sites</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm" title="Batiments">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M5 21V7l8-4 6 3v15m-10 0V11h4v10"/></svg>
+                <span class="sidebar-label whitespace-nowrap">Batiments</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm" title="Equipements">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                <span class="sidebar-label whitespace-nowrap">Equipements</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm" title="Categories">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                <span class="sidebar-label whitespace-nowrap">Categories</span>
+            </a>
+
+            <div class="nav-divider"></div>
+
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 text-sm" title="Utilisateurs">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                <span class="sidebar-label whitespace-nowrap">Utilisateurs</span>
+            </a>
+        </nav>
+
+        <!-- User section -->
+        <div class="p-3 relative">
+            <div class="absolute top-0 left-4 right-4 h-px" style="background: linear-gradient(90deg, transparent, rgba(207,157,123,0.15), transparent);"></div>
+            <div class="flex items-center gap-3 px-1 py-1">
+                <div class="w-9 h-9 bg-gradient-to-br from-fondquatre to-fondcinq/80 rounded-full flex items-center justify-center shrink-0 shadow-sm">
+                    <span class="text-white font-semibold text-xs">MD</span>
+                </div>
+                <div class="sidebar-label min-w-0">
+                    <p class="text-sm font-medium dark:text-white truncate">Moussa D.</p>
+                    <p class="text-xs text-gray-500 truncate">Admin</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ============================================ -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================================ -->
+    <div class="flex-1 flex flex-col min-w-0">
+        <!-- HEADER -->
+        <header class="bg-white dark:bg-fonddeux header-glow shrink-0 relative z-10">
+            <div class="px-4 lg:px-6 py-3 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <!-- Hamburger mobile -->
+                    <button onclick="openDrawer()" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10">
+                        <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
+                    <div>
+                        <h2 id="pageTitle" class="text-xl font-bold dark:text-white">Tableau de bord</h2>
+                        <p id="pageSubtitle" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Vue d'ensemble de la maintenance</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <!-- Theme toggle -->
+                    <button onclick="toggleTheme()" id="themeBtn" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition" title="Changer de theme">
+                        <!-- Moon (visible in light) -->
+                        <svg id="moonIcon" class="w-5 h-5 text-gray-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                        <!-- Sun (visible in dark) -->
+                        <svg id="sunIcon" class="w-5 h-5 text-fondcinq" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    </button>
+                    <!-- Notifications -->
+                    <button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 relative">
+                        <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <!-- Avatar -->
+                    <div class="w-8 h-8 bg-fondquatre rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold text-xs">MD</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <main class="flex-1 overflow-y-auto p-4 lg:p-6">
+
+            <!-- ========== DASHBOARD PAGE ========== -->
+            <div id="page-dashboard">
+                <!-- KPI Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white dark:bg-fonddeux rounded-xl border border-gray-200 dark:border-white/10 p-5 border-l-4 border-l-red-500">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Demandes P1 ouvertes</p>
+                            <span class="text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2 py-0.5 rounded-full">Urgent</span>
+                        </div>
+                        <p class="text-3xl font-bold dark:text-white">6</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Necessitent une attention immediate</p>
+                    </div>
+                    <div class="bg-white dark:bg-fonddeux rounded-xl border border-gray-200 dark:border-white/10 p-5 border-l-4 border-l-yellow-500">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">A qualifier</p>
+                        </div>
+                        <p class="text-3xl font-bold dark:text-white">5</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Demandes en attente</p>
+                    </div>
+                    <div class="bg-white dark:bg-fonddeux rounded-xl border border-gray-200 dark:border-white/10 p-5 border-l-4 border-l-blue-500">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Interventions aujourd'hui</p>
+                        </div>
+                        <p class="text-3xl font-bold dark:text-white">1</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Planifiees pour aujourd'hui</p>
+                    </div>
+                    <div class="bg-white dark:bg-fonddeux rounded-xl border border-gray-200 dark:border-white/10 p-5 border-l-4 border-l-emerald-500">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">En retard</p>
+                        </div>
+                        <p class="text-3xl font-bold dark:text-white">0</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Interventions non cloturees</p>
+                    </div>
+                </div>
+
+                <!-- Secondary sections -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="bg-white dark:bg-fonddeux rounded-xl border border-gray-200 dark:border-white/10 p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold dark:text-white">Demandes prioritaires</h3>
+                            <a href="#" class="text-sm text-fondcinq hover:underline">Voir tout &rarr;</a>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-fondun rounded-lg">
+                                <span class="w-2 h-2 bg-red-500 rounded-full shrink-0"></span>
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-sm font-medium dark:text-gray-200 truncate">Fuite d'eau salle B203</p>
+                                    <p class="text-xs text-gray-500">DEM-001 &bull; P1 Urgente</p>
+                                </div>
+                                <span class="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-full">En cours</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-fondun rounded-lg">
+                                <span class="w-2 h-2 bg-red-500 rounded-full shrink-0"></span>
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-sm font-medium dark:text-gray-200 truncate">Climatisation HS bureau direction</p>
+                                    <p class="text-xs text-gray-500">DEM-003 &bull; P1 Urgente</p>
+                                </div>
+                                <span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded-full">A qualifier</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-fondun rounded-lg">
+                                <span class="w-2 h-2 bg-red-500 rounded-full shrink-0"></span>
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-sm font-medium dark:text-gray-200 truncate">Panne ascenseur batiment A</p>
+                                    <p class="text-xs text-gray-500">DEM-007 &bull; P1 Urgente</p>
+                                </div>
+                                <span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded-full">A qualifier</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-fonddeux rounded-xl border border-gray-200 dark:border-white/10 p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold dark:text-white">Interventions du jour</h3>
+                            <a href="#" class="text-sm text-fondcinq hover:underline">Voir tout &rarr;</a>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-fondun rounded-lg">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full shrink-0"></span>
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-sm font-medium dark:text-gray-200 truncate">Reparation fuite salle B203</p>
+                                    <p class="text-xs text-gray-500">INT-001 &bull; Tech: J. Dupont</p>
+                                </div>
+                                <span class="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-full">En cours</span>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-500 text-center py-4">1 intervention planifiee aujourd'hui</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== DEMANDES PAGE ========== -->
+            <div id="page-demandes" class="hidden">
+                <!-- Filters -->
+                <div class="bg-white dark:bg-fonddeux rounded-xl border border-gray-200 dark:border-white/10 p-4 mb-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <select class="bg-gray-50 dark:bg-fondun border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-fondcinq">
+                            <option>Tous les sites</option>
+                            <option>Site Paris</option>
+                            <option>Site Lyon</option>
+                        </select>
+                        <select class="bg-gray-50 dark:bg-fondun border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-fondcinq">
+                            <option>Toutes priorites</option>
+                            <option>P1 - Urgente</option>
+                            <option>P2 - Haute</option>
+                        </select>
+                        <select class="bg-gray-50 dark:bg-fondun border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-fondcinq">
+                            <option>Tous statuts</option>
+                            <option>En cours</option>
+                            <option>A qualifier</option>
+                        </select>
+                        <div class="relative">
+                            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                            <input type="text" placeholder="Rechercher..." class="w-full bg-gray-50 dark:bg-fondun border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 rounded-lg pl-9 pr-3 py-2 text-sm placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-fondcinq">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metric cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                    <div class="bg-white dark:bg-fonddeux rounded-xl border border-gray-200 dark:border-white/10 p-4 border-l-4 border-l-red-500">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Urgentes</p>
+                        <p class="text-2xl font-bold dark:text-white mt-1">6</p>
+                    </div>
+                    <div class="bg-white dark:bg-fonddeux rounded-xl border border-gray-200 dark:border-white/10 p-4 border-l-4 border-l-blue-500">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Ouvertes</p>
+                        <p class="text-2xl font-bold dark:text-white mt-1">12</p>
+                    </div>
+                    <div class="bg-white dark:bg-fonddeux rounded-xl border border-gray-200 dark:border-white/10 p-4 border-l-4 border-l-emerald-500">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Cloturees</p>
+                        <p class="text-2xl font-bold dark:text-white mt-1">34</p>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="bg-white dark:bg-fonddeux rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-gray-200 dark:border-white/10">
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Numero</th>
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Titre</th>
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Priorite</th>
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Statut</th>
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Site</th>
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 dark:divide-white/5">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                                    <td class="px-4 py-3 font-medium dark:text-gray-200">DEM-001</td>
+                                    <td class="px-4 py-3 dark:text-gray-300">Fuite d'eau salle B203</td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">P1 Urgente</span></td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">En cours</span></td>
+                                    <td class="px-4 py-3 dark:text-gray-400">Site Paris</td>
+                                    <td class="px-4 py-3 text-gray-500 dark:text-gray-500">10/03/2026</td>
+                                    <td class="px-4 py-3"><a href="#" class="text-fondcinq hover:underline text-xs font-medium">Voir</a></td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                                    <td class="px-4 py-3 font-medium dark:text-gray-200">DEM-002</td>
+                                    <td class="px-4 py-3 dark:text-gray-300">Eclairage defaillant couloir C1</td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400">P2 Haute</span></td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">A qualifier</span></td>
+                                    <td class="px-4 py-3 dark:text-gray-400">Site Lyon</td>
+                                    <td class="px-4 py-3 text-gray-500 dark:text-gray-500">09/03/2026</td>
+                                    <td class="px-4 py-3"><a href="#" class="text-fondcinq hover:underline text-xs font-medium">Voir</a></td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                                    <td class="px-4 py-3 font-medium dark:text-gray-200">DEM-003</td>
+                                    <td class="px-4 py-3 dark:text-gray-300">Climatisation HS bureau direction</td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">P1 Urgente</span></td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">A qualifier</span></td>
+                                    <td class="px-4 py-3 dark:text-gray-400">Site Paris</td>
+                                    <td class="px-4 py-3 text-gray-500 dark:text-gray-500">08/03/2026</td>
+                                    <td class="px-4 py-3"><a href="#" class="text-fondcinq hover:underline text-xs font-medium">Voir</a></td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                                    <td class="px-4 py-3 font-medium dark:text-gray-200">DEM-004</td>
+                                    <td class="px-4 py-3 dark:text-gray-300">Porte automatique bloquee entree</td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">P3 Normale</span></td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">Cloturee</span></td>
+                                    <td class="px-4 py-3 dark:text-gray-400">Site Paris</td>
+                                    <td class="px-4 py-3 text-gray-500 dark:text-gray-500">05/03/2026</td>
+                                    <td class="px-4 py-3"><a href="#" class="text-fondcinq hover:underline text-xs font-medium">Voir</a></td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                                    <td class="px-4 py-3 font-medium dark:text-gray-200">DEM-005</td>
+                                    <td class="px-4 py-3 dark:text-gray-300">Changement ampoules salle reunion</td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800/50 text-gray-700 dark:text-gray-400">P4 Basse</span></td>
+                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">En cours</span></td>
+                                    <td class="px-4 py-3 dark:text-gray-400">Site Lyon</td>
+                                    <td class="px-4 py-3 text-gray-500 dark:text-gray-500">03/03/2026</td>
+                                    <td class="px-4 py-3"><a href="#" class="text-fondcinq hover:underline text-xs font-medium">Voir</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination -->
+                    <div class="px-4 py-3 border-t border-gray-200 dark:border-white/10 flex items-center justify-between">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">5 resultats sur 34</p>
+                        <div class="flex items-center gap-1">
+                            <button class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 dark:bg-fondun text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10">&laquo; Prec.</button>
+                            <button class="px-3 py-1.5 text-xs rounded-lg bg-fondcinq text-white font-medium">1</button>
+                            <button class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 dark:bg-fondun text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10">2</button>
+                            <button class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 dark:bg-fondun text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10">3</button>
+                            <button class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 dark:bg-fondun text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10">Suiv. &raquo;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<script>
+    // Theme toggle
+    function toggleTheme() {
+        const html = document.body;
+        const isDark = html.classList.contains('dark');
+        if (isDark) {
+            html.classList.remove('dark');
+            document.getElementById('sunIcon').classList.add('hidden');
+            document.getElementById('moonIcon').classList.remove('hidden');
+        } else {
+            html.classList.add('dark');
+            document.getElementById('moonIcon').classList.add('hidden');
+            document.getElementById('sunIcon').classList.remove('hidden');
+        }
+    }
+
+    // Sidebar toggle
+    let sidebarExpanded = false;
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebarExpanded = !sidebarExpanded;
+        if (sidebarExpanded) {
+            sidebar.classList.remove('sidebar-collapsed');
+            sidebar.classList.add('sidebar-expanded');
+        } else {
+            sidebar.classList.remove('sidebar-expanded');
+            sidebar.classList.add('sidebar-collapsed');
+        }
+    }
+
+    // Expand sidebar on logo click when collapsed
+    document.querySelector('#sidebar .flex.items-center.gap-2\\.5')?.addEventListener('click', function() {
+        if (!sidebarExpanded) toggleSidebar();
+    });
+
+    // Mobile drawer
+    function openDrawer() {
+        const d = document.getElementById('mobileDrawer');
+        d.classList.remove('drawer-closed');
+        d.classList.add('drawer-open');
+    }
+    function closeDrawer() {
+        const d = document.getElementById('mobileDrawer');
+        d.classList.remove('drawer-open');
+        d.classList.add('drawer-closed');
+    }
+
+    // Page switching
+    function showPage(page) {
+        document.getElementById('page-dashboard').classList.add('hidden');
+        document.getElementById('page-demandes').classList.add('hidden');
+        document.getElementById('page-' + page).classList.remove('hidden');
+
+        // Update nav active states
+        document.querySelectorAll('.sidebar-nav-item').forEach(el => {
+            el.className = el.className.replace('bg-fondcinq/15 text-fondcinq font-medium', 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5');
+        });
+        const activeNav = document.getElementById('nav-' + page);
+        if (activeNav) {
+            activeNav.className = activeNav.className.replace('text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5', 'bg-fondcinq/15 text-fondcinq font-medium');
+        }
+
+        // Update header
+        if (page === 'dashboard') {
+            document.getElementById('pageTitle').textContent = 'Tableau de bord';
+            document.getElementById('pageSubtitle').textContent = "Vue d'ensemble de la maintenance";
+        } else if (page === 'demandes') {
+            document.getElementById('pageTitle').textContent = 'Demandes';
+            document.getElementById('pageSubtitle').textContent = 'Gestion des demandes de maintenance';
+        }
+
+        closeDrawer();
+    }
+</script>
+</body>
+</html>

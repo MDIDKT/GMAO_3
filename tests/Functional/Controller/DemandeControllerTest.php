@@ -1,26 +1,19 @@
 <?php
 
-    declare(strict_types=1);
+declare(strict_types=1);
 
-    namespace App\Tests\Functional\Controller;
+namespace App\Tests\Functional\Controller;
 
-    use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-    class DemandeControllerTest extends WebTestCase
+final class DemandeControllerTest extends WebTestCase
+{
+    public function testAccueilEstAccessible(): void
     {
-        public function testSomething(): void
-        {
-            // This calls KernelTestCase::bootKernel(), and creates a
-            // "client" that is acting as the browser
-            $client = static::createClient();
+        $client = static::createClient();
+        $client->request('GET', '/');
 
-            // Request a specific page
-            $crawler = $client->request('GET', '/');
-
-            // Validate a successful response and some content
-            $this->assertResponseIsSuccessful();
-            $this->assertSelectorTextContains('h1', 'Hello World');
-
-            $this->assertGreaterThan(0, $crawler->filter('html:contains("Hello World")')->count());
-        }
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'Gestion de Maintenance');
     }
+}

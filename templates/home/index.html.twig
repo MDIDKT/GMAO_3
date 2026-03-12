@@ -1,20 +1,229 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}GMAO SaaS — Gestion de Maintenance{% endblock %}
+
+{% block html_class %}dark{% endblock %}
+
+{% block body_class %}bg-gray-50 dark:bg-fondun min-h-screen text-gray-900 dark:text-white{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    {# NAVBAR #}
+    <nav class="bg-fondun/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-fondcinq to-fondquatre rounded-xl flex items-center justify-center shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </div>
+                <span class="text-xl font-bold">GMAO <span class="text-fondcinq">SaaS</span></span>
+            </div>
+            <a href="{{ path('app_login') }}" class="bg-gradient-to-r from-fondcinq to-fondquatre hover:from-fondcinq/90 hover:to-fondquatre/90 text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition">
+                Se connecter
+            </a>
+        </div>
+    </nav>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {# HERO #}
+    <section class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-fondun via-fonddeux/50 to-fondun"></div>
+        <div class="absolute top-10 right-20 w-80 h-80 bg-fondcinq/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-10 w-96 h-96 bg-fondquatre/5 rounded-full blur-3xl"></div>
+        <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;1&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"></div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/Users/diakite/GMAO/GMAO/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>/Users/diakite/GMAO/GMAO/templates/home/index.html.twig</code></li>
-    </ul>
-</div>
+        <div class="relative max-w-6xl mx-auto px-6 py-28 text-center">
+            <div class="inline-flex items-center gap-2 bg-fondcinq/10 text-fondcinq text-sm font-medium px-4 py-1.5 rounded-full mb-6 border border-fondcinq/20">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                Maintenance corrective simplifiee
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
+                <span class="text-white">Gestion de</span><br>
+                <span class="bg-gradient-to-r from-fondcinq via-fondcinq to-fondquatre bg-clip-text text-transparent">Maintenance</span>
+            </h1>
+            <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Centralisez vos demandes d'intervention, planifiez la maintenance et suivez chaque etape en temps reel. Du signalement a la cloture.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="{{ path('app_login') }}" class="bg-gradient-to-r from-fondcinq to-fondquatre hover:from-fondcinq/90 hover:to-fondquatre/90 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-2xl transition text-lg">
+                    Se connecter
+                </a>
+                <a href="#roles" class="text-gray-400 hover:text-fondcinq font-medium px-8 py-4 rounded-xl border border-white/10 hover:border-fondcinq/30 transition text-lg">
+                    Decouvrir les roles
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {# WORKFLOW 5 ETAPES #}
+    <section class="max-w-6xl mx-auto px-6 py-16">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3 bg-fonddeux rounded-xl px-5 py-3 border border-white/5">
+                <div class="w-8 h-8 bg-warning/10 text-warning rounded-lg flex items-center justify-center font-bold text-sm">1</div>
+                <span class="text-sm font-medium text-gray-300">Demande</span>
+            </div>
+            <svg class="w-6 h-6 text-white/10 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <div class="flex items-center gap-3 bg-fonddeux rounded-xl px-5 py-3 border border-white/5">
+                <div class="w-8 h-8 bg-fondcinq/20 text-fondcinq rounded-lg flex items-center justify-center font-bold text-sm">2</div>
+                <span class="text-sm font-medium text-gray-300">Qualification</span>
+            </div>
+            <svg class="w-6 h-6 text-white/10 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <div class="flex items-center gap-3 bg-fonddeux rounded-xl px-5 py-3 border border-white/5">
+                <div class="w-8 h-8 bg-fondcinq/10 text-fondcinq rounded-lg flex items-center justify-center font-bold text-sm">3</div>
+                <span class="text-sm font-medium text-gray-300">Intervention</span>
+            </div>
+            <svg class="w-6 h-6 text-white/10 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <div class="flex items-center gap-3 bg-fonddeux rounded-xl px-5 py-3 border border-white/5">
+                <div class="w-8 h-8 bg-fondquatre/20 text-fondquatre rounded-lg flex items-center justify-center font-bold text-sm">4</div>
+                <span class="text-sm font-medium text-gray-300">Realisation</span>
+            </div>
+            <svg class="w-6 h-6 text-white/10 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <div class="flex items-center gap-3 bg-fonddeux rounded-xl px-5 py-3 border border-white/5">
+                <div class="w-8 h-8 bg-success/10 text-success rounded-lg flex items-center justify-center font-bold text-sm">5</div>
+                <span class="text-sm font-medium text-gray-300">Validation</span>
+            </div>
+        </div>
+    </section>
+
+    {# 4 ROLES #}
+    <section id="roles" class="py-20">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <h2 class="text-3xl font-bold text-white mb-3">4 roles, une seule plateforme</h2>
+                <p class="text-gray-500 max-w-xl mx-auto">Chaque acteur dispose d'un espace adapte a ses responsabilites.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {# ADMIN #}
+                <div class="bg-fonddeux rounded-2xl p-6 border border-white/5 hover:border-fondcinq/20 transition group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-fondcinq/5 to-transparent rounded-bl-full"></div>
+                    <div class="relative">
+                        <div class="w-12 h-12 bg-fondcinq/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-fondcinq/20 transition">
+                            <svg class="w-6 h-6 text-fondcinq" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Administrateur</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Configuration des sites, batiments, equipements. Gestion des utilisateurs et des droits.</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="text-xs bg-fondcinq/10 text-fondcinq px-2.5 py-1 rounded-full font-medium border border-fondcinq/10">Sites</span>
+                            <span class="text-xs bg-fondcinq/10 text-fondcinq px-2.5 py-1 rounded-full font-medium border border-fondcinq/10">Users</span>
+                            <span class="text-xs bg-fondcinq/10 text-fondcinq px-2.5 py-1 rounded-full font-medium border border-fondcinq/10">Dashboard</span>
+                        </div>
+                    </div>
+                </div>
+
+                {# PLANIFICATEUR #}
+                <div class="bg-fonddeux rounded-2xl p-6 border border-white/5 hover:border-fondquatre/20 transition group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-fondquatre/5 to-transparent rounded-bl-full"></div>
+                    <div class="relative">
+                        <div class="w-12 h-12 bg-fondquatre/15 rounded-xl flex items-center justify-center mb-5 group-hover:bg-fondquatre/25 transition">
+                            <svg class="w-6 h-6 text-fondquatre" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Planificateur</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Qualification des demandes, planification et assignation des interventions aux techniciens.</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="text-xs bg-fondquatre/10 text-fondquatre px-2.5 py-1 rounded-full font-medium border border-fondquatre/10">Qualifier</span>
+                            <span class="text-xs bg-fondquatre/10 text-fondquatre px-2.5 py-1 rounded-full font-medium border border-fondquatre/10">Planifier</span>
+                            <span class="text-xs bg-fondquatre/10 text-fondquatre px-2.5 py-1 rounded-full font-medium border border-fondquatre/10">Reporting</span>
+                        </div>
+                    </div>
+                </div>
+
+                {# TECHNICIEN #}
+                <div class="bg-fonddeux rounded-2xl p-6 border border-white/5 hover:border-success/20 transition group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-success/5 to-transparent rounded-bl-full"></div>
+                    <div class="relative">
+                        <div class="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-success/20 transition">
+                            <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Technicien</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Realisation des interventions terrain, compte rendu, suivi du temps passe et photos.</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="text-xs bg-success/10 text-success px-2.5 py-1 rounded-full font-medium border border-success/10">Interventions</span>
+                            <span class="text-xs bg-success/10 text-success px-2.5 py-1 rounded-full font-medium border border-success/10">CR</span>
+                            <span class="text-xs bg-success/10 text-success px-2.5 py-1 rounded-full font-medium border border-success/10">Photos</span>
+                        </div>
+                    </div>
+                </div>
+
+                {# DEMANDEUR #}
+                <div class="bg-fonddeux rounded-2xl p-6 border border-white/5 hover:border-warning/20 transition group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-warning/5 to-transparent rounded-bl-full"></div>
+                    <div class="relative">
+                        <div class="w-12 h-12 bg-warning/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-warning/20 transition">
+                            <svg class="w-6 h-6 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Demandeur</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Signalement des pannes et anomalies, suivi de l'avancement de ses demandes en temps reel.</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="text-xs bg-warning/10 text-warning px-2.5 py-1 rounded-full font-medium border border-warning/10">Signaler</span>
+                            <span class="text-xs bg-warning/10 text-warning px-2.5 py-1 rounded-full font-medium border border-warning/10">Suivre</span>
+                            <span class="text-xs bg-warning/10 text-warning px-2.5 py-1 rounded-full font-medium border border-warning/10">Historique</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# COMPTES DEMO #}
+    <section class="py-20">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center gap-2 bg-success/10 text-success text-sm font-medium px-4 py-1.5 rounded-full mb-4 border border-success/20">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    Testez immediatement
+                </div>
+                <h2 class="text-3xl font-bold text-white mb-3">Comptes de demonstration</h2>
+                <p class="text-gray-500">Connectez-vous avec l'un des comptes ci-dessous pour explorer la plateforme.</p>
+            </div>
+
+            <div class="bg-fonddeux rounded-2xl border border-white/5 overflow-hidden">
+                <table class="w-full">
+                    <thead class="border-b border-white/5">
+                        <tr>
+                            <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Role</th>
+                            <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Email</th>
+                            <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Mot de passe</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        <tr class="hover:bg-fondcinq/5 transition">
+                            <td class="px-6 py-4"><span class="inline-flex items-center gap-2 text-sm font-semibold text-fondcinq"><span class="w-2 h-2 bg-fondcinq rounded-full"></span>Admin</span></td>
+                            <td class="px-6 py-4 text-sm text-gray-300 font-mono">admin@gmao.fr</td>
+                            <td class="px-6 py-4 text-sm text-gray-500 font-mono">Test1234!</td>
+                        </tr>
+                        <tr class="hover:bg-fondquatre/5 transition">
+                            <td class="px-6 py-4"><span class="inline-flex items-center gap-2 text-sm font-semibold text-fondquatre"><span class="w-2 h-2 bg-fondquatre rounded-full"></span>Planificateur</span></td>
+                            <td class="px-6 py-4 text-sm text-gray-300 font-mono">planificateur@gmao.fr</td>
+                            <td class="px-6 py-4 text-sm text-gray-500 font-mono">Test1234!</td>
+                        </tr>
+                        <tr class="hover:bg-success/5 transition">
+                            <td class="px-6 py-4"><span class="inline-flex items-center gap-2 text-sm font-semibold text-success"><span class="w-2 h-2 bg-success rounded-full"></span>Technicien</span></td>
+                            <td class="px-6 py-4 text-sm text-gray-300 font-mono">tech1@gmao.fr</td>
+                            <td class="px-6 py-4 text-sm text-gray-500 font-mono">Test1234!</td>
+                        </tr>
+                        <tr class="hover:bg-warning/5 transition">
+                            <td class="px-6 py-4"><span class="inline-flex items-center gap-2 text-sm font-semibold text-warning"><span class="w-2 h-2 bg-warning rounded-full"></span>Demandeur</span></td>
+                            <td class="px-6 py-4 text-sm text-gray-300 font-mono">demandeur@gmao.fr</td>
+                            <td class="px-6 py-4 text-sm text-gray-500 font-mono">Test1234!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center mt-8">
+                <a href="{{ path('app_login') }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-fondcinq to-fondquatre hover:from-fondcinq/90 hover:to-fondquatre/90 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-2xl transition text-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+                    Se connecter maintenant
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {# FOOTER #}
+    <footer class="border-t border-white/5 py-8">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <p class="text-sm text-gray-600">GMAO SaaS &mdash; Symfony 8.0.5 &middot; PHP 8.4 &middot; Tailwind CSS v4</p>
+        </div>
+    </footer>
 {% endblock %}

@@ -15,11 +15,11 @@
 {% block page_content %}
     {% set inactiveCount = totalCount - activeCount %}
 
-    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+    <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 mb-6">
         <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-                <label for="actif" class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
-                <select id="actif" name="actif" class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                <label for="actif" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Statut</label>
+                <select id="actif" name="actif" class="block w-full px-3 py-2 border border-gray-300 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-fondun dark:text-white dark:placeholder-gray-500">
                     <option value="" {{ selectedActif == '' ? 'selected' : '' }}>Tous</option>
                     <option value="1" {{ selectedActif == '1' ? 'selected' : '' }}>Actifs</option>
                     <option value="0" {{ selectedActif == '0' ? 'selected' : '' }}>Inactifs</option>
@@ -31,7 +31,7 @@
                 </button>
             </div>
             <div class="flex items-end">
-                <a href="{{ path('app_batiment_index') }}" class="w-full text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                <a href="{{ path('app_batiment_index') }}" class="w-full text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
                     Reinitialiser
                 </a>
             </div>
@@ -39,27 +39,27 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-success">
-            <p class="text-sm text-gray-600 font-medium">Batiments actifs</p>
-            <p class="text-2xl font-bold text-gray-800 mt-1">{{ activeCount }}</p>
+        <div class="bg-white dark:bg-fonddeux rounded-lg shadow dark:shadow-none p-4 border-l-4 border-success">
+            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Batiments actifs</p>
+            <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ activeCount }}</p>
         </div>
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-gray-400">
-            <p class="text-sm text-gray-600 font-medium">Batiments inactifs</p>
-            <p class="text-2xl font-bold text-gray-800 mt-1">{{ inactiveCount }}</p>
+        <div class="bg-white dark:bg-fonddeux rounded-lg shadow dark:shadow-none p-4 border-l-4 border-gray-400">
+            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Batiments inactifs</p>
+            <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ inactiveCount }}</p>
         </div>
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-primary">
-            <p class="text-sm text-gray-600 font-medium">Total batiments</p>
-            <p class="text-2xl font-bold text-gray-800 mt-1">{{ totalCount }}</p>
+        <div class="bg-white dark:bg-fonddeux rounded-lg shadow dark:shadow-none p-4 border-l-4 border-primary">
+            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Total batiments</p>
+            <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ totalCount }}</p>
         </div>
     </div>
 
-    <div class="bg-white rounded-xl shadow-md overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <p class="text-sm font-medium text-gray-700">{{ totalCount }} batiments trouves</p>
+    <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-fondun">
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ totalCount }} batiments trouves</p>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-gray-50 border-b border-gray-200">
+                <thead class="bg-gray-50 dark:bg-fondun border-b border-gray-200 dark:border-white/10">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Etage</th>
@@ -68,21 +68,21 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="bg-white dark:bg-fonddeux divide-y divide-gray-200 dark:divide-white/10">
                     {% for batiment in pagination %}
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ batiment.nom }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ batiment.etage ?: '-' }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ batiment.site ? batiment.site.nom : '-' }}</td>
+                        <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{{ batiment.nom }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-200">{{ batiment.etage ?: '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-200">{{ batiment.site ? batiment.site.nom : '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ batiment.actif ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ batiment.actif ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' : 'bg-gray-100 dark:bg-fondun text-gray-800 dark:text-white' }}">
                                     {{ batiment.actif ? 'Actif' : 'Inactif' }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center gap-4">
                                     <a href="{{ path('app_batiment_show', {'id': batiment.id}) }}" class="text-primary hover:text-primary/80">Voir</a>
-                                    <a href="{{ path('app_batiment_edit', {'id': batiment.id}) }}" class="text-gray-700 hover:text-gray-900">Modifier</a>
+                                    <a href="{{ path('app_batiment_edit', {'id': batiment.id}) }}" class="text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">Modifier</a>
                                 </div>
                             </td>
                         </tr>
@@ -101,19 +101,19 @@
             <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                 {% if pagination.currentPageNumber > 1 %}
                     <a href="{{ path('app_batiment_index', {page: pagination.currentPageNumber - 1, actif: selectedActif}) }}"
-                       class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                       class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5">
                         Precedent
                     </a>
                 {% endif %}
                 {% for page in 1..pagination.pageCount %}
                     <a href="{{ path('app_batiment_index', {page: page, actif: selectedActif}) }}"
-                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50' }}">
+                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/30' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5' }}">
                         {{ page }}
                     </a>
                 {% endfor %}
                 {% if pagination.currentPageNumber < pagination.pageCount %}
                     <a href="{{ path('app_batiment_index', {page: pagination.currentPageNumber + 1, actif: selectedActif}) }}"
-                       class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                       class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5">
                         Suivant
                     </a>
                 {% endif %}

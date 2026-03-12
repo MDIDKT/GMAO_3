@@ -1,0 +1,11 @@
+parameters:
+    phpVersion: 80500
+    level: 5
+    excludePaths:
+        - vendor
+        - var
+        - public/build
+    ignoreErrors:
+        - '#Attribute class NoDiscard is only supported in PHP 8.5#'
+        - '#Expected: variable, got.*at position.*#'
+

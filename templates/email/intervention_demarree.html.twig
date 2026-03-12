@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Intervention démarrée</title>
+</head>
+<body style="font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px;">
+<div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px;">
+    <h2>Intervention démarrée</h2>
+    <p>Bonjour {{ planificateur.prenom }},</p>
+    <p>L'intervention <strong>{{ intervention.numero }}</strong> est passée au statut <strong>En cours</strong>.</p>
+    {% if technicien %}
+        <p>Technicien : <strong>{{ technicien.prenom }} {{ technicien.nom }}</strong></p>
+    {% endif %}
+    {% if demande %}
+        <p>Demande liée : <strong>{{ demande.numero }}</strong> - {{ demande.titre }}</p>
+    {% endif %}
+    <p>
+        <a href="{{ interventionUrl }}"
+           style="display: inline-block; background: #d97706; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none;">
+            Suivre l'intervention
+        </a>
+    </p>
+</div>
+</body>
+</html>
