@@ -1,245 +1,41 @@
-# GMAO_3
-Création de ma GMAO en MVP
+# GMAO MVP
 
-14-02-26
+Application web de gestion de maintenance assistee par ordinateur construite avec Symfony 8. Le projet couvre le cycle MVP de suivi des demandes, planification des interventions, gestion des equipements et controle d'acces multi-organisation.
 
-* Invitation + reception mail OK
-* Faire le jour 5 validation de l'activation du compte
+## Fonctionnalites
 
-15-02-26
+- Gestion multi-organisation avec isolation par organisation
+- Referentiels techniques : sites, batiments, categories et equipements
+- Demandes de maintenance avec priorite, qualification, rejet et photos
+- Interventions avec planification, demarrage, cloture, validation et photos avant/apres
+- Dashboards et reporting avec KPI metier
+- Notifications email metier sur les etapes clefs
+- Tests unitaires et fonctionnels sur les workflows sensibles
 
-* Activation du compte OK mais pas fait seul
-* fait avec chatgpt donc revoir comment c'est fait pour decortiqué et comprendre comment c'est fait
-* prochainement terminer le jour 5 avec comprehension et faire le jour 6
-* templates/email/invitation.html.twig doit être complété avec un bouton et un message disant de valider mon compte dans
-  les 48h puis renvoyer vers la page de validation du mdp
+## Stack technique
 
-16-02-26
+- PHP 8.4
+- Symfony 8
+- Doctrine ORM et Doctrine Migrations
+- Twig
+- Webpack Encore, Tailwind CSS et Flowbite
+- PHPUnit
+- MySQL ou MariaDB
 
-* Activation du compte OK
-* Rception mail OK
-* Validation du mdp OK
-* continuer a valider le fonctionnement du jour 5
+## Roles applicatifs
 
-17-02-26
+- `ROLE_ADMIN`
+- `ROLE_PLANIFICATEUR`
+- `ROLE_TECHNICIEN`
+- `ROLE_DEMANDEUR`
 
-* Validation du mdp OK
-* correction réalisé avec l'aide de codex 100%
-* il a corriger et fait du copie coller le code fonctionne une verification reste a faire pour bien comprendre
-* je passe au jour 6
-* J'ai cree les entty et CRUD pour site et batiment
+## Prerequis
 
-18-02-26
-
-* j'ai tenté de faire les filtre mais je ne les comprends pas je n'y arrive pas . je ne comprend pas trop la notion et
-  comment l'implementer
-* je passe au jour 7
-* J'ai fait ajouter les entity pour categorie et equipement(+CRUD)
-* il me reste a faire les filtres
-
-19-02-26
-
-* J'ai fait les filtres et les ajouter dans le tableau des batiments 100%
-* corrections fait avec codex donc reste a comprendre ce qu'il fait et comment il fonctionne exactement
-* jour6 tout est ok
-* je passe au jour 7 avec les filtres a finir avant de passer au jour 8
-
-20_02_26
-
-* J'ai realisé le jours 7 avec codex mise en place des filtre comme demandé
-* correction des different incoherence dans mon code.
-* Mise en place des fixture
-* modification des templates pour avoir la meme ui que sur GMAO_VISUEL
-* Je passe au jour 8
-* Début du jour 8
-* verification des enum pour voir s'il sont tous fait
-* creation de l'entité demande
-* jour 8 tout est ok
-*
-
-21-02-26
-
-* creation de mon service demande qui fait le numero de demande avec le prefixe et la date
-* il passe bien dans mon controlleur puis je l'affiche
-* j'ai mis un numero aleatoire mais je doit mettre en place la recherche du dernier numero de demande en bdd vie le
-* repository
-* le recuperer dans le service demande
-
-22-02-26
-
-* j'ai fini de mettre en place le numero de demande avec la date et le prefixe
-* j'ai fini de mettre en place le service demande qui fait le numero de demande avec le prefixe et la date
-* j'ai fini de mettre en place le repository demande qui fait la recherche du dernier numero de demande en bdd vie le
-* repository
-* j'ai fini de mettre en place le controller demande qui fait le recuperer dans le service demande
-* jour 9 tout est ok
-*
-* jour 10 : Objectif : Permettre d'ajouter des photos lors de la creation ou edition d'une demande.
-
-23-02-26
-debut jour 10
-
-* mise en place de l'entité photo
-* mise en place du controller photo
-* verification a faire et verifier la remonté des images
-
-24-02-26
-jour 10 finalisé
-
-* upload des photos OK sur la creation et l'edition d'une demande
-* affichage des images OK dans le detail de la demande (route photo_show)
-* correction des erreurs sur le fichier temporaire et created_at
-* jour 10 tout est ok
-
-25-02-26
-jour 11 - nettoyage et pagination des demandes
-
-* correction des filtres dans index() (suppression $site = null)
-* suppression du $_GET dans le repository
-* findByFilters() réécrit avec des if séparés par filtre
-* conversion string vers Enum avec tryFrom()
-* récupération du Site via SiteRepository
-* mise en place de la pagination KnpPaginator
-* controller nettoyé (variables inutiles supprimées)
-* correction de la valeur de limit de 10 a 3 car j'ai moins de 10 demandes donc la pagination ne s'affiche pas
-  jour 11 tout est ok
-
-28-02-26
-jour 12 - Module Intervention
-
-* creation de l'entite Intervention (relations Demande, User technicien/planificateur, Organisation, Photo)
-* enum StatutIntervention (A_PLANIFIER, PLANIFIE, EN_COURS, TERMINEE, VALIDEE)
-* controller CRUD avec filtrage par organisation
-* NumberingService etendu pour generer les numeros INT-YYYY-NNNN
-* correction NumberingService (or → ?? et ||)
-* formulaire avec query_builder pour filtrer demandes et users par organisation
-* templates stylises Tailwind/Flowbite (index avec compteurs, show 2 colonnes, form avec champs individuels)
-* lien Interventions actif dans la sidebar
-* jour 12 tout est ok
-
-02-03-26
-Audit complet Jour 0-12 + corrections CDC + Jour 13
-
-Audit et corrections Jour 0-12 :
-* ajout motifRejet (TEXT nullable) sur entite Demande (manquant MLD §5.2)
-* correction contrainte File dans DemandeType : passage aux named arguments Symfony 8 (plus d'array de config)
-* nettoyage InterventionType : suppression des 8 champs hors perimetre (dateDebut, dateFin, compteRendu, dureeMinutes, notes, statut, demande, organisation)
-* ajout access_control security.yaml pour /intervention (ROLE_PLANIFICATEUR, ROLE_ADMIN)
-* correction SiteType : suppression champ organisation (deja set par le controller)
-* correction EquipementType : ajout option organisation, query_builder filtre par organisation, choice_label nom
-* correction EquipementController : setOrganisation() + passage organisation au form
-* correction BatimentType : ajout option organisation, query_builder filtre sites actifs par organisation, choice_label nom
-* correction BatimentController : passage organisation au form
-* ajout JoinColumn nullable: false sur Site.organisation
-* migration : motif_rejet + organisation_id NOT NULL
-* correction templates site/_form et equipement/_form : suppression bloc form.organisation (erreur Twig apres nettoyage FormType)
-* creation PLAN-TEST-MANUEL.md
-
-Jour 13 - Workflow intervention (Démarrer / Terminer) :
-* InterventionService : demarrerIntervention() PLANIFIE→EN_COURS + dateDebut + cascade demande EN_COURS
-* InterventionService : terminerIntervention() EN_COURS→TERMINEE + compteRendu obligatoire + dateFin + dureeMinutes + cascade demande CLOTURE
-* InterventionController : actions demarrer et terminer (POST, CSRF, flash LogicException)
-* MesInterventionsController : liste des interventions du technicien connecte
-* show.html.twig : ajout bouton Demarrer (visible si PLANIFIE) et bouton Terminer (visible si EN_COURS)
-* InterventionType : ajout champ compteRendu (TextareaType, required: false)
-* jour 13 tout est ok
-
-Jour 14 - Photos intervention (AVANT / APRES / COMPLEMENT) :
-* InterventionPhotoType : FileType multiple + EnumType typePhoto (AVANT/APRES/COMPLEMENT, SIGNALEMENT exclu)
-* InterventionController : action ajouterPhotos (POST /{id}/photos, verification EN_COURS + technicien assigne)
-* show.html.twig : galerie groupee par type (toujours visible) + formulaire upload (EN_COURS + technicien uniquement)
-* correction currentPage → currentPageNumber dans mes_interventions (KnpPaginator)
-* jour 14 tout est ok
-
-Jour 15 - Voters (protection anti-IDOR) :
-* InterventionVoter : attributs VIEW, EDIT, DEMARRER, TERMINER, AJOUTER_PHOTO, DELETE
-* security.yaml : ROLE_TECHNICIEN autorise sur /intervention
-* denyAccessUnlessGranted sur toutes les actions du controller
-* suppression verification manuelle redondante dans ajouterPhotos
-* jour 15 tout est ok
-
-03-03-26
-Corrections post-audit + Début Jour 16
-
-Corrections post-audit :
-* fix Doctrine mapping Intervention#planificateur : suppression inversedBy incohérent
-* fix User extends Site (erreur linter) : rétabli implements UserInterface
-* fix terminerIntervention : guard null sur dateDebut
-* fix DemandeRepository : ajout paramètre ?User $user à getQueryBuilderByFilters() et findByFilters()
-* fix MesDemandesController : passage $currentUser via repository au lieu de inline query
-* fix mes_demandes/index.html.twig : remplacement champs Intervention par champs Demande (createdAt, site, priorite) + statuts corrigés
-* création CategorieEquipement CRUD complet (/admin/categories-equipement)
-* ajout actions qualifier et rejeter sur Demande (avec motifRejet)
-* ajout action valider sur Intervention (TERMINEE → VALIDEE) + attribut VALIDER dans InterventionVoter
-
-Début Jour 16 - Dashboard adapté par rôle :
-* création DemandeVoter (copie du pattern InterventionVoter adapté pour Demande)
-* création HomeController route / avec redirection par rôle (admin/planif → dashboard, tech → mes-interventions, demandeur → mes-demandes)
-
-05-03-26
-Jour 16 finalisé - Dashboard + KPI + Pagination uniforme
-
-Dashboard KPI :
-* DashboardController : injection DemandeRepository + InterventionRepository, denyAccessUnlessGranted ROLE_PLANIFICATEUR
-* DemandeRepository : countP1Ouvertes(), countAQualifier(), countUrgent(), countOpen(), countClosed(), countTotal()
-* InterventionRepository : countInterventionsDuJour(), countInterventionsEnRetard(), countAPlanifier(), countEnCours(), countTerminees(), countTotal()
-* template dashboard/dashborad.html.twig : remplacement des valeurs en dur par les variables du controller
-
-Pagination uniforme sur toutes les pages :
-* ajout pagination manuelle (Precedent/Suivant) sur : Site, Batiment, Equipement, CategorieEquipement
-* remplacement knp_pagination_render() par pagination manuelle sur : Demande, Intervention
-* suppression double requete sur Demande et Intervention (stats calculees par repository au lieu de boucle Twig)
-* repositories : ajout getQueryBuilder*(), paginate*(), countActive(), countTotal() sur Site, Batiment, Equipement, CategorieEquipement
-* limite pagination : 5 par page sur toutes les pages
-* liens de pagination preservent les filtres actifs (site, statut, priorite, search, actif)
-
-Corrections securite Jour 16 :
-* fix DemandeVoter : suppression getTechnicien() (n'existe pas sur Demande), remplace par getUser() pour DEMANDEUR
-* nettoyage attributs DemandeVoter : VIEW, EDIT, DELETE (suppression DEMARRER/TERMINER/AJOUTER_PHOTO/VALIDER qui n'ont pas de sens sur Demande)
-* DemandeController : ajout denyAccessUnlessGranted sur show, edit, delete (anti-IDOR)
-* sidebar filtree par role : Dashboard/Demandes/Interventions (ADMIN+PLANIF), Mes demandes (DEMANDEUR), Mes interventions (TECHNICIEN), Sites/Batiments/Equipements/Utilisateurs (ADMIN)
-* suppression double requete MesInterventionsController (meme fix que Demande/Intervention)
-* fix mes_interventions template : interventions is empty → pagination.items is empty
-* dashboard : suppression donnees fake, remplacement par compteurs dynamiques + liens vers pages filtrees
-* jour 16 tout est ok
-
-Refonte des fixtures :
-* CategorieEquipementFixtures : 4 → 8 categories par org (ajout Plomberie, Ascenseurs, Incendie, Menuiserie)
-* SiteFixtures : 3 → 5 sites par org (20 sites total, ajout Strasbourg, Toulouse, Montpellier, Aix, Caen, Saint-Malo, La Rochelle, Limoges)
-* BatimentFixtures : reecrit avec noms realistes (Batiment A - Administration, Hall Technique, Aile Nord - Bureaux…), 3 par site = 60 total
-* EquipementFixtures : reecrit avec noms/marques/modeles realistes (Daikin, Schneider, Otis, Siemens…), 25 par org = 100 total
-* creation DemandeFixtures : 20 demandes par org, tous statuts/priorites couverts, motifs de rejet inclus
-* creation InterventionFixtures : 12 interventions par org, tous statuts, comptes rendus, durees, dates planifiees/debut/fin
-* Users inchanges (6 users)
-* chargement verifie : 4 org / 20 sites / 60 bat / 32 cat / 100 equip / 40 demandes / 24 interventions
-
-Jour 17 - Reporting (4 KPI) :
-* creation ReportingController route /reporting (PLANIFICATEUR + ADMIN)
-* filtres : site (select) + periode (date debut / date fin)
-* KPI 1 : demandes par statut (compteurs colores par statut)
-* KPI 2 : delai moyen de traitement (heures/jours, base sur demandes CLOTURE)
-* KPI 3 : interventions par technicien (tableau avec total par tech)
-* KPI 4 : demandes par site et priorite (tableau croise sites x priorites)
-* methodes repository dediees : countByStatut(), delaiMoyenTraitement(), countBySiteAndPriorite(), countByTechnicien()
-* access_control /reporting dans security.yaml
-* lien Reporting dans la sidebar (ADMIN + PLANIFICATEUR)
-* jour 17 tout est ok
-
-Jour 18 - Fixtures completes + README installation
-
-Fixtures (doctrine-fixtures-bundle) :
-* jeu de donnees demo complet, reproductible en une commande (php bin/console doctrine:fixtures:load --append)
-* OrganisationFixtures : 4 organisations (3 actives, 1 inactive)
-* SiteFixtures : 5 sites par organisation (20 total) avec adresses, telephones, emails
-* BatimentFixtures : 3 batiments par site (60 total) avec noms realistes
-* CategorieEquipementFixtures : 8 categories par organisation (32 total)
-* EquipementFixtures : 25 equipements par organisation (100 total) avec marques/modeles reels
-* DemandeFixtures : 20 demandes par organisation (40 total), tous statuts et priorites couverts
-* InterventionFixtures : 12 interventions par organisation (24 total), tous statuts couverts
-* UserFixtures : 15 utilisateurs repartis sur les 4 organisations (admin, planif, techniciens, demandeurs), mot de passe unique Test1234!
-* dependances entre fixtures respectees (DependentFixtureInterface)
-
----
+- PHP 8.4 ou plus
+- Composer
+- Node.js et npm
+- MySQL 8 ou MariaDB 10.11+
+- Symfony CLI optionnel
 
 ## Installation
 
@@ -247,138 +43,67 @@ Fixtures (doctrine-fixtures-bundle) :
 git clone <url-du-repo>
 cd GMAO
 composer install
+npm install
 ```
 
-Copier le fichier `.env` en `.env.local` et configurer la base de donnees :
-```
+Creer un fichier `.env.local` adapte a ton environnement :
+
+```dotenv
+APP_ENV=dev
+APP_SECRET=change-me
 DATABASE_URL="mysql://user:password@127.0.0.1:3306/gmao?serverVersion=8.0"
+MAILER_DSN="smtp://localhost:1025"
 ```
 
-Creer la base et executer les migrations :
+Initialiser la base puis charger les assets :
+
 ```bash
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate --no-interaction
+npm run build
 ```
 
-Charger les fixtures :
+Pour charger un jeu de donnees local de demonstration :
+
 ```bash
 php bin/console doctrine:fixtures:load --append
 ```
 
-Lancer le serveur :
+## Lancement
+
+Avec Symfony CLI :
+
 ```bash
 symfony server:start
 ```
 
-## Comptes de demo
+Ou avec le serveur PHP integre :
 
-Mot de passe unique pour tous les comptes : `Test1234!`
+```bash
+php -S 127.0.0.1:8000 -t public
+```
 
-| Email                   | Role            | Organisation        |
-|-------------------------|-----------------|---------------------|
-| admin@gmao.fr           | ROLE_ADMIN      | GMAO Industries     |
-| planificateur@gmao.fr   | ROLE_PLANIFICATEUR | GMAO Industries  |
-| tech1@gmao.fr           | ROLE_TECHNICIEN | GMAO Industries     |
-| tech2@gmao.fr           | ROLE_TECHNICIEN | GMAO Industries     |
-| demandeur@gmao.fr       | ROLE_DEMANDEUR  | GMAO Industries     |
-| admin@maintenance-sud.fr | ROLE_ADMIN     | Maintenance Sud     |
-| admin@patrimoine.fr     | ROLE_ADMIN      | Patrimoine Services |
-| admin@infra-ouest.fr    | ROLE_ADMIN      | Infra Support Ouest |
+## Qualite et verification
 
-## Scenario de test nominal
+Commandes utiles avant validation :
 
-1. Se connecter en tant qu'ADMIN (admin@gmao.fr / Test1234!)
-2. Verifier le Dashboard : KPI demandes + interventions
-3. Aller dans Demandes : filtrer par statut, site, priorite
-4. Creer une demande → verifier le numero auto (DEM-YYYY-NNNN)
-5. Qualifier la demande (statut A_QUALIFIER → QUALIFIE)
-6. Aller dans Interventions → creer une intervention liee a la demande
-7. Se connecter en tant que TECHNICIEN (tech1@gmao.fr / Test1234!)
-8. Voir Mes interventions → Demarrer l'intervention
-9. Ajouter des photos (AVANT / APRES)
-10. Terminer l'intervention (compte rendu obligatoire)
-11. Se reconnecter en ADMIN → Valider l'intervention (TERMINEE → VALIDEE)
-12. Verifier le Reporting : les 4 KPI refletent les actions effectuees
-13. Se connecter en DEMANDEUR (demandeur@gmao.fr / Test1234!) → voir Mes demandes uniquement
+```bash
+php bin/phpunit
+php bin/console lint:container
+php bin/console lint:twig templates
+php bin/console doctrine:schema:validate --skip-sync
+```
 
-* jour 18 tout est ok
+## Structure
 
-08-03-26
-Déploiement production sur AlwaysData
+```text
+src/        logique metier, controllers, services, voters, repositories
+templates/  vues Twig
+tests/      tests unitaires et fonctionnels
+public/     point d'entree HTTP et assets compiles
+docs/       documentation locale du projet
+```
 
-* premier déploiement de l'application en production
-* hébergeur : AlwaysData (https://mdidkt.alwaysdata.net)
-* base de données : MariaDB 10.11 (serverVersion=mariadb-10.11.15)
-* PHP 8.4 + Apache avec .htaccess Symfony
-* création commande app:create-admin pour créer le premier admin sans fixtures
-* assets compilés (npm run build) et commités dans Git (public/build/ retiré du .gitignore)
-* schéma créé via doctrine:schema:create + migrations marquées comme appliquées
-* guide de déploiement complet disponible dans docs/DEPLOIEMENT-ALWAYSDATA.md
-* application fonctionnelle en production
+## Etat du projet
 
-10-03-26
-Audit complet + Étape 1 : Affichage des flash messages
-
-Audit réalisé sur l'ensemble du projet (jours 0-18) :
-
-* BUG CRITIQUE identifié : 23+ appels addFlash() dans les controllers mais aucun template ne les affichait → messages
-  success/danger silencieux depuis le début du projet
-* Incohérence : StatutDemande::NOUVEAU défini dans l'enum mais jamais utilisé (demandes créées en A_QUALIFIER
-  directement)
-* Incohérence : DashboardController - $this->getUser()->getOrganisation() sans guard null → risque NPE
-* Incohérence : InterventionController::edit() ne recalcule pas le statut si technicien+date ajoutés en édition
-* Incohérence : DemandeVoter appelle getOrganisation() sur UserInterface (pas de cast App\Entity\User)
-* Incohérence : bouton "Planifier une intervention" visible pour ROLE_DEMANDEUR dans demande/show.html.twig
-* Incohérence : AdminUserController utilise $form->createView() déprécié en Symfony 7+
-* Incohérence : double vérification de rôle redondante dans InterventionController::valider()
-* Incohérence : pas de flash success sur création demande, création intervention, démarrage intervention
-* Constat : aucun système d'alertes email (hors invitation) — à implémenter avant les tests
-
-Étape 1 réalisée - Affichage des flash messages (templates/layouts/app.html.twig) :
-
-* ajout du bloc for type/messages in app.flashes dans la zone de contenu principale
-* 4 types gérés : success (vert), danger (rouge), warning (jaune), info (bleu)
-* icônes SVG adaptées par type (checkmark, triangle alerte, info)
-* les messages apparaissent maintenant au-dessus du contenu de chaque page après toute action
-
-Étapes 2, 3, 6, 7 + correctifs visuels :
-
-* tour visuel toutes pages → 10 bugs corrigés (titre mes_demandes, typos, casse, sidebar catégories équip., guard planifier, retour dynamique selon rôle, 500 sur compteRendu form)
-* DemandeController + InterventionController : flash + redirect sur edit/delete
-* étape 2 : DashboardController — garde null sur getOrganisation()
-* étape 3 : StatutDemande::NOUVEAU supprimé de l'enum et des fixtures
-* étape 6 : Voters DemandeVoter/InterventionVoter — UserInterface → User (type-safe)
-* étape 7 : InterventionController::edit() — recalcul du statut (A_PLANIFIER ↔ PLANIFIE)
-* UserFixtures : noms et prénoms remplacés par des noms d'Afrique de l'Ouest
-
-Premiers tests unitaires PHPUnit :
-* création docs/PROCEDURE-TESTS-PHPUNIT.md — procédure détaillée 7 phases
-* création tests/Unit/Service/InterventionServiceTest.php — 5 tests unitaires
-* testDemarrerPasseLeStatutEnCours / testDemarrerLeveExceptionSiStatutInvalide
-* testTerminerVerifiePasseTerminer / testTerminerLeveExceptionSiStatutInvalide / testTerminerLeveExceptionSiCompteRenduVide
-* attribut #[CoversClass] ajouté sur la classe de test
-* désactivation xdebug incompatible arm64/x86_64 (99-xdebug.ini)
-
-11-03-26
-Premiers tests fonctionnels PHPUnit
-
-* création tests/Functional/Security/AccesControlTest.php — 5 tests fonctionnels tous verts
-* test : redirection vers /login si non connecté (/dashboard et /intervention)
-* test : login avec bons identifiants → redirect /
-* test : login avec mauvais identifiants → redirect /login
-* test : accès /dashboard refusé (403) pour un ROLE_DEMANDEUR
-* bug trouvé et corrigé : DashboardController avait #[IsGranted('ROLE_USER')] → remplacé par ROLE_PLANIFICATEUR
-* ajout role_hierarchy dans security.yaml : ROLE_ADMIN hérite de tous les rôles métier
-* renommage phpunit.dist.xml → phpunit.xml.dist (nom standard reconnu par PhpStorm)
-* correction .env.test : DATABASE_URL pointe sur gmao (Doctrine ajoute _test automatiquement en env test)
-
-12-03-26
-Notifications email métier + stabilisation des tests
-
-* création/completion du NotificationService pour les 4 mails métier demandés
-* templates email ajoutés/corrigés : intervention assignée, demande qualifiée, demande rejetée, intervention terminée
-* branchement des notifications dans le workflow demande/intervention après flush
-* ajout d'un plan de test manuel pour vérifier les envois via profiler Symfony ou Mailpit
-* correction de la config PHPUnit (APP_SECRET en test) pour éviter les faux 500
-* ajout NotificationServiceTest + mise à jour des tests fonctionnels génériques
-* suite PHPUnit verte : 17 tests, 46 assertions
+Le projet est au stade MVP avec workflows demande/intervention, reporting, notifications email et couverture de tests unitaires et fonctionnels sur les points sensibles. Un audit recent a aussi conduit au durcissement des controles d'acces multi-organisation et a la consolidation de la documentation locale conservee dans `docs/`.

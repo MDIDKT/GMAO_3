@@ -11,6 +11,8 @@ use App\Enum\StatutIntervention;
 use App\Form\InterventionPhotoType;
 use App\Form\InterventionType;
 use App\Repository\InterventionRepository;
+use App\Security\Voter\DemandeVoter;
+use App\Security\Voter\InterventionVoter;
 use App\Service\FileUploadService;
 use App\Service\InterventionService;
 use App\Service\NotificationService;
@@ -124,6 +126,8 @@ final class InterventionController extends AbstractController
     #[Route('/photo/{id}', name: 'app_intervention_photo_show', methods: ['GET'])]
     public function showPhoto(Photo $photo): BinaryFileResponse
     {
+        $this->denyAccessUnlessGrantedForPhoto($photo);
+
         $filename = $photo->getFileName();
         if ($filename === null || $filename === '') {
             throw $this->createNotFoundException('Fichier photo introuvable.');
@@ -146,6 +150,25 @@ final class InterventionController extends AbstractController
         }
 
         return $response;
+    }
+
+    private function denyAccessUnlessGrantedForPhoto(Photo $photo): void
+    {
+        $intervention = $photo->getIntervention();
+        if ($intervention instanceof Intervention) {
+            $this->denyAccessUnlessGranted(InterventionVoter::VIEW, $intervention);
+
+            return;
+        }
+
+        $demande = $photo->getDemande();
+        if ($demande instanceof Demande) {
+            $this->denyAccessUnlessGranted(DemandeVoter::VIEW, $demande);
+
+            return;
+        }
+
+        throw $this->createNotFoundException('Photo non rattachee a une ressource.');
     }
 
     #[Route('/{id}/photos', name: 'app_intervention_ajouter_photos', methods: ['POST'])]

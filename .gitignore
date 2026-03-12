@@ -8,6 +8,7 @@
 /vendor/
 /.DS_Store
 /.idea/
+/docs/
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###

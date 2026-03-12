@@ -11,6 +11,8 @@
     use App\Form\DemandeType;
     use App\Repository\DemandeRepository;
     use App\Repository\SiteRepository;
+    use App\Security\Voter\DemandeVoter;
+    use App\Security\Voter\InterventionVoter;
     use App\Service\FileUploadService;
     use App\Service\NotificationService;
     use App\Service\NumberingService;
@@ -154,6 +156,8 @@
         #[Route('/photos/{id}', name: 'photo_show', methods: ['GET'])]
         public function showPhoto(Photo $photo): BinaryFileResponse
         {
+            $this->denyAccessUnlessGrantedForPhoto($photo);
+
             $filename = $photo->getFileName();
             if ($filename === null || $filename === '') {
                 throw $this->createNotFoundException('Fichier photo introuvable.');
@@ -176,6 +180,25 @@
             }
 
             return $response;
+        }
+
+        private function denyAccessUnlessGrantedForPhoto(Photo $photo): void
+        {
+            $demande = $photo->getDemande();
+            if ($demande instanceof Demande) {
+                $this->denyAccessUnlessGranted(DemandeVoter::VIEW, $demande);
+
+                return;
+            }
+
+            $intervention = $photo->getIntervention();
+            if ($intervention !== null) {
+                $this->denyAccessUnlessGranted(InterventionVoter::VIEW, $intervention);
+
+                return;
+            }
+
+            throw $this->createNotFoundException('Photo non rattachee a une ressource.');
         }
 
         #[Route('/{id}/qualifier', name: 'app_demande_qualifier', methods: ['POST'])]

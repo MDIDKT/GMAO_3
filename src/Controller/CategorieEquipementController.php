@@ -65,6 +65,8 @@ final class CategorieEquipementController extends AbstractController
     #[Route('/{id}', name: 'app_categorie_equipement_show', methods: ['GET'])]
     public function show(CategorieEquipement $categorie): Response
     {
+        $this->denyAccessUnlessSameOrganisation($categorie);
+
         return $this->render('categorie_equipement/show.html.twig', [
             'categorie' => $categorie,
         ]);
@@ -73,6 +75,8 @@ final class CategorieEquipementController extends AbstractController
     #[Route('/{id}/edit', name: 'app_categorie_equipement_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, CategorieEquipement $categorie, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessSameOrganisation($categorie);
+
         $form = $this->createForm(CategorieEquipementType::class, $categorie);
         $form->handleRequest($request);
 
@@ -93,6 +97,8 @@ final class CategorieEquipementController extends AbstractController
     #[Route('/{id}', name: 'app_categorie_equipement_delete', methods: ['POST'])]
     public function delete(Request $request, CategorieEquipement $categorie, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessSameOrganisation($categorie);
+
         if ($this->isCsrfTokenValid('delete' . $categorie->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($categorie);
             $entityManager->flush();
@@ -101,5 +107,17 @@ final class CategorieEquipementController extends AbstractController
         }
 
         return $this->redirectToRoute('app_categorie_equipement_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    private function denyAccessUnlessSameOrganisation(CategorieEquipement $categorie): void
+    {
+        $currentUser = $this->getUser();
+        if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
+            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+        }
+
+        if ($categorie->getOrganisation() !== $currentUser->getOrganisation()) {
+            throw $this->createAccessDeniedException('Acces interdit a cette categorie.');
+        }
     }
 }

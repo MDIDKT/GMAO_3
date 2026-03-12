@@ -1,175 +1,230 @@
-# Audit Complet — GMAO MVP
-> Date : 06/03/2026 | Stack : Symfony 8 · PHP 8.4 · MySQL 8 · Tailwind v4.1
+# Audit complet du projet GMAO
 
----
+Date : 12/03/2026
+Perimetre audite : code Symfony, configuration, base locale, tests, documentation fonctionnelle
+Reference de cadrage : `docs/GMAO-Plan/GMAO-Plan/GMAO_MVP_Spec_v1_2.md`
 
-## 1. Inventaire du projet
+## 1. Synthese executive
 
-### Entites (9)
-| Entite | Champs principaux | Relations |
-|--------|------------------|-----------|
-| Organisation | nom (unique), actif | OneToMany: users, sites, catEquipements, equipements, demandes, interventions |
-| User | email (unique), roles, password, nom, prenom, actif, invitationToken, tokenExpiresAt | ManyToOne: Organisation · OneToMany: demandes, photos, interventions |
-| Site | nom, adresse, codePostal, ville, telephone, email, actif | ManyToOne: Organisation · OneToMany: batiments, equipements, demandes |
-| Batiment | nom, etage, actif | ManyToOne: Site · OneToMany: equipements, demandes |
-| CategorieEquipement | nom, description | ManyToOne: Organisation · OneToMany: equipements |
-| Equipement | nom, marque, modele, numeroDeSerie, statut (enum), actif | ManyToOne: Site, Batiment, Categorie, Organisation |
-| Demande | numero (unique), titre, description, priorite (enum), statut (enum), motifRejet | ManyToOne: Site, Batiment, Equipement, User, Organisation · OneToMany: photos, interventions |
-| Intervention | numero (unique), statut (enum), datePlanifiee, dateDebut, dateFin, dureeMinutes, compteRendu | ManyToOne: Demande, technicien (User), planificateur (User), Organisation · OneToMany: photos |
-| Photo | fileName, originalName, mimeType, taille, typePhoto (enum) | ManyToOne: Demande, Intervention, uploadPar (User) |
+Le projet est globalement exploitable en mode MVP.
+Les verifications techniques de base passent :
 
-### Enums (5)
-| Enum | Valeurs |
-|------|---------|
-| StatutEquipement | EN_SERVICE, HORS_SERVICE, EN_PANNE |
-| Priorite | P1_URGENTE, P2_HAUTE, P3_NORMALE, P4_BASSE |
-| StatutDemande | NOUVEAU, A_QUALIFIER, QUALIFIE, PLANIFIE, EN_COURS, CLOTURE, REJETEE |
-| StatutIntervention | A_PLANIFIER, PLANIFIE, EN_COURS, TERMINEE, VALIDEE |
-| TypePhoto | SIGNALEMENT, AVANT, APRES, COMPLEMENT |
+- `php bin/phpunit` : OK, 17 tests, 46 assertions
+- `php bin/console lint:container` : OK
+- `php bin/console lint:twig templates` : OK
+- `php bin/console lint:yaml config` : OK
+- `php bin/console doctrine:schema:validate` : OK
 
-### Controllers (15)
-| Controller | Route | Acces |
-|------------|-------|-------|
-| SecurityController | /login, /logout | PUBLIC |
-| ActivationController | /activation/{token} | PUBLIC |
-| HomeController | / | ROLE_USER (redirige par role) |
-| DashboardController | /dashboard | PLANIFICATEUR, ADMIN |
-| AdminUserController | /admin/user/inviter | ADMIN |
-| SiteController | /site (CRUD) | ADMIN |
-| BatimentController | /batiment (CRUD) | ADMIN |
-| EquipementController | /equipement (CRUD + filtres) | ADMIN |
-| CategorieEquipementController | /admin/categories-equipement (CRUD) | ADMIN |
-| DemandeController | /demande (CRUD + qualifier/rejeter) | DEMANDEUR, PLANIFICATEUR, ADMIN |
-| MesDemandesController | /mes-demandes | DEMANDEUR |
-| InterventionController | /intervention (CRUD + demarrer/terminer/valider + photos) | PLANIFICATEUR, ADMIN, TECHNICIEN |
-| MesInterventionsController | /mes-interventions | TECHNICIEN |
-| ReportingController | /reporting | PLANIFICATEUR, ADMIN |
+Conclusion :
 
-### Services (3)
-| Service | Responsabilite |
-|---------|---------------|
-| NumberingService | Generation des numeros DEM-YYYY-NNNN et INT-YYYY-NNNN |
-| InterventionService | Logique metier : createIntervention, demarrer, terminer (cascade statuts) |
-| FileUploadService | Upload securise dans var/uploads/photos/ |
+- le socle Symfony est sain ;
+- les grands flux metier existent ;
+- le projet n'est pas encore parfaitement conforme au cadrage initial ;
+- plusieurs ecarts concernent la securite multi-tenant et la coherence du jeu de donnees de demo.
 
-### Voters (2)
-| Voter | Attributs proteges |
-|-------|-------------------|
-| InterventionVoter | VIEW, EDIT, DEMARRER, TERMINER, AJOUTER_PHOTO, DELETE, VALIDER |
-| DemandeVoter | VIEW, EDIT, DELETE |
+## 2. Inventaire reel du projet
 
-### Repositories avec methodes custom
-| Repository | Methodes cles |
-|------------|--------------|
-| DemandeRepository | findByFilters, countP1Ouvertes, countAQualifier, countByStatut, delaiMoyenTraitement, countBySiteAndPriorite |
-| InterventionRepository | getQueryBuilderByFilters, countInterventionsDuJour, countEnRetard, countByTechnicien |
-| SiteRepository | getQueryBuilderByOrganisation, paginateSites, countActive |
-| BatimentRepository | getQueryBuilderByOrganisation, paginateBatiments, countActive |
-| EquipementRepository | getQueryBuilderByFilters (site+categorie+statut), paginateEquipements |
+Code :
 
-### Fixtures (9)
-| Fixture | Donnees |
-|---------|---------|
-| OrganisationFixtures | 4 organisations (3 actives, 1 inactive) |
-| UserFixtures | 15 utilisateurs, 4 roles, mot de passe Test1234! |
-| SiteFixtures | 20 sites (5 par org) |
-| BatimentFixtures | 60 batiments (3 par site) |
-| CategorieEquipementFixtures | 32 categories (8 par org) |
-| EquipementFixtures | 100 equipements (25 par org) |
-| DemandeFixtures | 40 demandes (20 par org), tous statuts |
-| InterventionFixtures | 24 interventions (12 par org), tous statuts |
-| AppFixtures | Vide (generee par defaut) |
+- 9 entites
+- 14 controllers
+- 9 form types
+- 4 services
+- 2 voters
+- 54 templates Twig
+- 1 migration
+- 5 fichiers de tests pour 17 tests
 
----
+Base locale observee au 12/03/2026 :
 
-## 2. Conformite CDC — Jour par Jour
+- 4 organisations
+- 15 utilisateurs
+- 20 sites
+- 60 batiments
+- 32 categories equipement
+- 100 equipements
+- 81 demandes
+- 50 interventions
+- 2 photos
 
-| Jour | Objectif | Statut | Remarque |
-|------|----------|--------|----------|
-| 1 | Init projet + Symfony + DB + Tailwind | ✅ 100% | Projet fonctionnel |
-| 2 | Organisation + User + Login | ✅ 100% | Form login + security.yaml |
-| 3 | Blocage compte inactif + Mailer | ✅ 100% | UserChecker + null://null |
-| 4 | Invitation admin (token) | ✅ 100% | AdminUserController + email template |
-| 5 | Activation / mot de passe | ✅ 100% | ActivationController + SetPasswordType |
-| 6 | Sites + Batiments CRUD | ✅ 100% | Filtre par organisation |
-| 7 | Categories + Equipements + filtres | ✅ 100% | 3 filtres cumulables |
-| 8 | Enums + entite Demande | ✅ 100% | 5 enums + motifRejet |
-| 9 | CRUD Demande + numerotation | ✅ 100% | NumberingService DEM-YYYY-NNNN |
-| 10 | Photos demande | ✅ 100% | FileUploadService + var/uploads/ |
-| 11 | Filtres + pagination | ✅ 100% | KnpPaginator + filtres GET |
-| 12 | Intervention CRUD + numerotation | ✅ 100% | NumberingService INT-YYYY-NNNN |
-| 13 | Workflow intervention (demarrer/terminer) | ✅ 100% | InterventionService + cascade statuts |
-| 14 | Photos intervention (AVANT/APRES) | ✅ 100% | InterventionPhotoType + galerie groupee |
-| 15 | Voters anti-IDOR | ✅ 100% | InterventionVoter + DemandeVoter |
-| 16 | Dashboard par role + KPI | ✅ 100% | Redirection par role + compteurs dynamiques |
-| 17 | Reporting 4 KPI | ✅ 100% | countByStatut, delaiMoyen, parTechnicien, parSitePriorite |
-| 18 | Fixtures + README | ✅ 100% | doctrine-fixtures-bundle (pas Foundry, choix MVP) |
-| 19 | Scenario demo + durcissement | 🔄 En cours | Tests manuels en cours, 4 corrections appliquees |
+Remarque :
 
----
+- le cadrage et les fixtures visent un jeu de demo propre de 40 demandes et 24 interventions ;
+- la base locale n'est plus sur un etat de demo "reset" ;
+- elle contient des ajouts et des formats historiques melanges.
 
-## 3. Points forts
+## 3. Conformite fonctionnelle au MVP
 
-- **Architecture propre** : separation controller / service / repository
-- **Multi-tenant** : organisation_id sur chaque entite, filtre systematique
-- **Securite en 2 couches** : access_control (role sur route) + Voters (ownership sur ressource)
-- **Workflow metier** : cascades de statuts automatiques (demande suit intervention)
-- **Numerotation unique** : service dedie avec prefixe + annee + sequence
-- **Upload securise** : fichiers hors public/, servis par controller protege
-- **Pagination uniforme** : 5 par page sur toutes les listes
-- **Fixtures realistes** : 15 users, 100 equipements, 40 demandes, 24 interventions
+### Conforme ou quasi conforme
 
----
+- Authentification par formulaire : OK
+- Blocage des comptes inactifs : OK
+- Invitation admin + activation par token : OK
+- CRUD sites / batiments / categories / equipements : OK
+- Creation des demandes avec photos : OK
+- Filtres et pagination sur les listes principales : OK
+- Creation d'interventions et workflow demarrer / terminer / valider : OK
+- Reporting 4 KPI avec filtres : OK
+- Separation par roles et redirection par role sur `/` : OK
+- Protection metier sur demandes et interventions via voters : OK
 
-## 4. Points d'attention / Dettes techniques
+### Partiellement conforme
 
-| # | Sujet | Severite | Detail |
-|---|-------|----------|--------|
-| 1 | Numerotation non transactionnelle | Faible (MVP) | En cas d'acces concurrent, collision possible. Post-MVP : table counters avec verrou |
-| 2 | Pas de tests automatises | Moyenne | Aucun PHPUnit/Panther. Acceptable en MVP mais a ajouter avant production |
-| 3 | N+1 potentiel | Faible | Pas de JOIN FETCH dans les QueryBuilder. A verifier via le Profiler |
-| 4 | Pas de validation cote entite | Faible | Les contraintes sont dans les FormTypes, pas sur les entites (Assert) |
-| 5 | Mailer en null:// | Normal (dev) | Emails non envoyes, visibles uniquement dans le profiler |
-| 6 | Tailwind via CDN | Normal (MVP) | Pas de build CSS, acceptable en dev. Production : build avec Vite |
-| 7 | Pas d'audit trail | Faible | Aucun log des changements de statut (qui a fait quoi, quand) |
-| 8 | Mot de passe unique fixtures | Normal (dev) | Test1234! pour tous les comptes, acceptable en dev uniquement |
+- Dashboard : fonctionne, mais la version livree est plus courte que la version documentee
+- Fixtures de demo : presentes, mais le contenu ne respecte pas totalement le format et les roles attendus
+- Documentation : historiquement riche mais devenue redondante et contradictoire
 
----
+## 4. Ecarts confirmes
 
-## 5. Securite
+### Critique 1 - Acces direct non protege aux photos
 
-### Ce qui est en place
-- [x] Login avec password hashe (bcrypt/argon2)
-- [x] UserChecker bloque les comptes inactifs
-- [x] Token d'invitation cryptographique (random_bytes)
-- [x] Expiration token 48h
-- [x] access_control sur toutes les routes
-- [x] Voters anti-IDOR sur Demande et Intervention
-- [x] Upload hors public/ avec controller protege
-- [x] CSRF sur toutes les actions POST (delete, demarrer, terminer, valider)
-- [x] Filtrage multi-tenant dans tous les repositories
+Constat :
 
-### Ce qui manque (post-MVP)
-- [ ] Rate limiting sur /login
-- [ ] Validation MIME cote serveur (verifier le contenu reel, pas juste l'extension)
-- [ ] CSP headers
-- [ ] HTTPS force
-- [ ] Audit log des actions sensibles
+- `src/Controller/DemandeController.php:154-179` sert les photos de demande sans `denyAccessUnlessGranted()`
+- `src/Controller/InterventionController.php:124-149` sert les photos d'intervention sans voter ni verification d'organisation
 
----
+Impact :
 
-## 6. Compteurs finaux
+- un utilisateur authentifie pouvant atteindre la route peut tester des IDs de photo ;
+- la protection "hors public/" existe bien, mais elle est contournee par l'absence de controle d'acces metier sur le controller ;
+- c'est un ecart direct avec le cadrage MVP, qui demandait un controller protege par voter.
 
-| Element | Nombre |
-|---------|--------|
-| Entites | 9 |
-| Controllers | 15 |
-| Services | 3 |
-| Voters | 2 |
-| Enums | 5 |
-| Form Types | 9 |
-| Templates Twig | 48 |
-| Fixtures | 9 |
-| Migrations | 10 |
-| Routes | ~35 |
-| Lignes PHP estimees | ~3500 |
+Verdict : non conforme et a corriger en priorite.
+
+### Haute 2 - CRUD admin referentiel sans verrou tenant sur les fiches
+
+Constat :
+
+- `src/Controller/SiteController.php:73-107`
+- `src/Controller/BatimentController.php:73-113`
+- `src/Controller/EquipementController.php:110-149`
+- `src/Controller/CategorieEquipementController.php:65-103`
+
+Les index sont filtres par organisation, mais les actions `show`, `edit` et `delete` ne verifient pas que la ressource appartient a l'organisation de l'admin connecte.
+
+Impact :
+
+- un admin d'une organisation peut potentiellement consulter ou modifier une fiche d'une autre organisation en changeant l'ID dans l'URL ;
+- cela contredit l'isolation multi-tenant documentee.
+
+Verdict : non conforme et a corriger rapidement.
+
+### Haute 3 - La liste des equipements exclut les equipements sans batiment
+
+Constat :
+
+- `src/Entity/Equipement.php:37-47` autorise `site`, `batiment` et `organisation` a `null`
+- `src/Form/EquipementType.php:41-56` rend `batiment` optionnel
+- `src/Repository/EquipementRepository.php:92-98` et `143-166` utilisent `innerJoin('e.batiment', 'b')`
+
+Impact :
+
+- un equipement valide rattache a un site mais sans batiment disparait des listes et des compteurs ;
+- le modele et l'UI disent "batiment facultatif", mais le repository impose en pratique "batiment obligatoire".
+
+Verdict : incoherence fonctionnelle confirmee.
+
+### Moyenne 4 - Les fixtures ne respectent pas totalement le cadrage MVP
+
+Constat dans le code :
+
+- `src/DataFixtures/DemandeFixtures.php:196-204` genere `DEM-0001`, `DEM-0002`, etc.
+- `src/DataFixtures/InterventionFixtures.php:139-145` genere `INT-0001`, `INT-0002`, etc.
+- `src/Service/NumberingService.php:19-35` attend pourtant le format `DEM-YYYY-NNNN` / `INT-YYYY-NNNN`
+- `src/DataFixtures/InterventionFixtures.php:109-145` prend les utilisateurs dans la liste complete de l'organisation, sans filtrer les roles
+
+Constat sur la base locale :
+
+- 79 demandes utilisent encore un format `DEM-000X`
+- 48 interventions utilisent encore un format `INT-000X`
+- 31 interventions ont un "technicien" qui n'a pas `ROLE_TECHNICIEN`
+- 25 interventions ont un "planificateur" qui n'a ni `ROLE_PLANIFICATEUR` ni `ROLE_ADMIN`
+
+Impact :
+
+- le jeu de demo brouille la validation du MVP ;
+- certaines pages de reporting et de workflow reposent sur des donnees qui ne representent pas le metier attendu ;
+- les captures, tests manuels et demos peuvent etre trompeurs.
+
+Verdict : non bloquant pour le code, mais bloquant pour une demo propre.
+
+### Moyenne 5 - Le schema Doctrine est plus permissif que le MLD cible
+
+Constat :
+
+- `src/Entity/Batiment.php:27-28` : `site` est nullable
+- `src/Entity/CategorieEquipement.php:25-26` : `organisation` est nullable
+- `src/Entity/Equipement.php:37-47` : `site` et `organisation` sont nullable
+
+Impact :
+
+- la contrainte "chaque entite metier doit rester rattachee a son tenant / son parent" n'est pas forcee en base ;
+- des scripts, fixtures ou imports peuvent produire des donnees orphelines sans erreur ;
+- cela affaiblit la robustesse multi-tenant.
+
+Verdict : ecart structurel par rapport au MLD initial.
+
+### Moyenne 6 - Dashboard plus court que l'attendu documente
+
+Constat :
+
+- `src/Controller/DashboardController.php:26-31` n'injecte que 4 compteurs
+- `templates/dashboard/dashborad.html.twig:16-59` n'affiche que 4 KPI + 2 blocs simples
+
+Alors que la documentation de suivi et les plans de test mentionnaient aussi des compteurs globaux demandes / interventions plus riches.
+
+Impact :
+
+- le dashboard ne contredit pas le MVP minimal ;
+- en revanche, il ne suit plus l'attendu documente dans les autres fichiers du projet.
+
+Verdict : ecart documentaire / fonctionnel mineur, mais reel.
+
+### Basse 7 - Incoherences documentaires et de configuration
+
+Constat :
+
+- `config/packages/security.yaml:53-64` laisse `/` en `PUBLIC_ACCESS`, alors que le cadrage initial reservait le public a `/login` et `/activation`
+- `src/Controller/AdminUserController.php:61-72` utilise un expediteur mail hardcode (`mdidkt@alwaysdata.net`) au lieu du parametre env deja centralise dans `config/services.yaml:28-30`
+- l'ancien `docs/AUDIT-COMPLET.md` ne reflechissait plus l'etat reel du code
+
+Impact :
+
+- risque faible sur le fonctionnement ;
+- confusion forte sur l'etat attendu du projet.
+
+Verdict : a harmoniser, sans urgence critique.
+
+## 5. Points forts confirmes
+
+- Architecture Symfony propre et lisible
+- Separation controller / repository / service bien respectee sur le coeur metier
+- Voters presentes pour les demandes et interventions
+- Upload hors `public/`
+- Workflow intervention coherent et teste
+- Reporting calcule en repository, pas en Twig
+- Schema Doctrine en sync avec le code courant
+
+## 6. Risques residuels
+
+- Les tests existent mais couvrent surtout le socle, pas les cas multi-tenant sensibles
+- L'etat de la base locale ne permet plus une validation demo propre sans reset
+- Le projet depend encore fortement de conventions de formulaire la ou certaines contraintes devraient etre enforcees en entite / base
+
+## 7. Priorites recommandees
+
+1. Proteger les routes de lecture des photos avec un voter ou une verification sur la demande / intervention parente.
+2. Ajouter un verrou d'organisation sur `show`, `edit`, `delete` pour Site, Batiment, Equipement et CategorieEquipement.
+3. Corriger `EquipementRepository` pour partir de `e.site` et passer `batiment` en `leftJoin`.
+4. Refaire les fixtures de demo pour respecter les roles et le format des numeros.
+5. Rehausser les contraintes Doctrine sur les relations qui doivent etre obligatoires selon le MLD.
+6. Aligner le dashboard documente et le dashboard reel, ou simplifier clairement la documentation.
+
+## 8. Nettoyage documentaire realise dans ce passage
+
+- `docs/GMAO-visuel` laisse intact, comme demande
+- audit reecrit sur des constats verifiables
+- fusion des documents redondants dans `docs`
+- creation d'un fichier MVP canonique en Markdown dans `docs/GMAO-Plan/GMAO-Plan`
+- suppression des variantes parasites, PDF doublons et artefacts de conversion
+

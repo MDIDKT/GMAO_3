@@ -32,9 +32,9 @@ class EquipementRepository extends ServiceEntityRepository
     public function findSite(Organisation $organisation, ?bool $actif = null): array
     {
         $qb = $this->createQueryBuilder('e')
-            ->innerJoin('e.batiment', 'b')
-            ->innerJoin('b.site', 's')
-            ->andWhere('s.organisation = :organisation')
+            ->leftJoin('e.site', 's')
+            ->addSelect('s')
+            ->andWhere('e.organisation = :organisation')
             ->setParameter('organisation', $organisation);
         if (null !== $actif) {
             $qb->andWhere('e.actif = :actif')
@@ -51,10 +51,9 @@ class EquipementRepository extends ServiceEntityRepository
     public function findCategorie(Organisation $organisation, ?bool $actif = null): array
     {
         $qb = $this->createQueryBuilder('e')
-            ->innerJoin('e.batiment', 'b')
-            ->innerJoin('b.site', 's')
-            ->innerJoin('e.categorie', 'c')
-            ->andWhere('s.organisation = :organisation')
+            ->leftJoin('e.categorie', 'c')
+            ->addSelect('c')
+            ->andWhere('e.organisation = :organisation')
             ->setParameter('organisation', $organisation);
         if (null !== $actif) {
             $qb->andWhere('e.actif = :actif')
@@ -71,9 +70,7 @@ class EquipementRepository extends ServiceEntityRepository
     public function findStatut(Organisation $organisation, ?bool $actif = null): array
     {
         $qb = $this->createQueryBuilder('e')
-            ->innerJoin('e.batiment', 'b')
-            ->innerJoin('b.site', 's')
-            ->andWhere('s.organisation = :organisation')
+            ->andWhere('e.organisation = :organisation')
             ->setParameter('organisation', $organisation);
         if (null !== $actif) {
             $qb->andWhere('e.actif = :actif')
@@ -90,15 +87,18 @@ class EquipementRepository extends ServiceEntityRepository
         ?bool $actif = null
     ): QueryBuilder {
         $qb = $this->createQueryBuilder('e')
-            ->innerJoin('e.batiment', 'b')
-            ->innerJoin('b.site', 's')
+            ->leftJoin('e.site', 's')
+            ->addSelect('s')
+            ->leftJoin('e.batiment', 'b')
+            ->addSelect('b')
             ->leftJoin('e.categorie', 'c')
-            ->andWhere('s.organisation = :organisation')
+            ->addSelect('c')
+            ->andWhere('e.organisation = :organisation')
             ->setParameter('organisation', $organisation)
             ->orderBy('e.id', 'DESC');
 
         if (null !== $site) {
-            $qb->andWhere('s = :site')
+            $qb->andWhere('e.site = :site')
                 ->setParameter('site', $site);
         }
 
@@ -144,9 +144,7 @@ class EquipementRepository extends ServiceEntityRepository
     {
         return (int) $this->createQueryBuilder('e')
             ->select('COUNT(e.id)')
-            ->innerJoin('e.batiment', 'b')
-            ->innerJoin('b.site', 's')
-            ->andWhere('s.organisation = :organisation')
+            ->andWhere('e.organisation = :organisation')
             ->setParameter('organisation', $organisation)
             ->andWhere('e.actif = :actif')
             ->setParameter('actif', true)
@@ -158,9 +156,7 @@ class EquipementRepository extends ServiceEntityRepository
     {
         return (int) $this->createQueryBuilder('e')
             ->select('COUNT(e.id)')
-            ->innerJoin('e.batiment', 'b')
-            ->innerJoin('b.site', 's')
-            ->andWhere('s.organisation = :organisation')
+            ->andWhere('e.organisation = :organisation')
             ->setParameter('organisation', $organisation)
             ->getQuery()
             ->getSingleScalarResult();

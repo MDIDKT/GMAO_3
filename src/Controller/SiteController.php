@@ -73,6 +73,8 @@ final class SiteController extends AbstractController
     #[Route('/{id}', name: 'app_site_show', methods: ['GET'])]
     public function show(Site $site): Response
     {
+        $this->denyAccessUnlessSameOrganisation($site);
+
         return $this->render('site/show.html.twig', [
             'site' => $site,
         ]);
@@ -81,6 +83,8 @@ final class SiteController extends AbstractController
     #[Route('/{id}/edit', name: 'app_site_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Site $site, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessSameOrganisation($site);
+
         $form = $this->createForm(SiteType::class, $site);
         $form->handleRequest($request);
 
@@ -99,11 +103,25 @@ final class SiteController extends AbstractController
     #[Route('/{id}', name: 'app_site_delete', methods: ['POST'])]
     public function delete(Request $request, Site $site, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessSameOrganisation($site);
+
         if ($this->isCsrfTokenValid('delete'.$site->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($site);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_site_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    private function denyAccessUnlessSameOrganisation(Site $site): void
+    {
+        $currentUser = $this->getUser();
+        if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
+            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+        }
+
+        if ($site->getOrganisation() !== $currentUser->getOrganisation()) {
+            throw $this->createAccessDeniedException('Acces interdit a ce site.');
+        }
     }
 }
