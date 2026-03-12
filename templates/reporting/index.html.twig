@@ -6,11 +6,11 @@
 {% block page_content %}
 
     {# ── Filtres ── #}
-    <form method="GET" action="{{ path('app_reporting') }}" class="bg-white dark:bg-fonddeux rounded-lg shadow dark:shadow-none p-4 mb-6">
+    <form method="GET" action="{{ path('app_reporting') }}" class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 mb-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
                 <label for="site" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Site</label>
-                <select name="site" id="site" class="w-full rounded-lg border-gray-300 dark:border-white/10 shadow-sm dark:shadow-none text-sm dark:bg-fondun dark:text-white">
+                <select name="site" id="site" class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm dark:shadow-none text-sm bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white">
                     <option value="">Tous les sites</option>
                     {% for s in sites %}
                         <option value="{{ s.id }}" {{ selectedSite == s.id ? 'selected' : '' }}>{{ s.nom }}</option>
@@ -20,16 +20,16 @@
             <div>
                 <label for="date_debut" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Date debut</label>
                 <input type="date" name="date_debut" id="date_debut" value="{{ dateDebut }}"
-                       class="w-full rounded-lg border-gray-300 dark:border-white/10 shadow-sm dark:shadow-none text-sm dark:bg-fondun dark:text-white">
+                       class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm dark:shadow-none text-sm bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white">
             </div>
             <div>
                 <label for="date_fin" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Date fin</label>
                 <input type="date" name="date_fin" id="date_fin" value="{{ dateFin }}"
-                       class="w-full rounded-lg border-gray-300 dark:border-white/10 shadow-sm dark:shadow-none text-sm dark:bg-fondun dark:text-white">
+                       class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm dark:shadow-none text-sm bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white">
             </div>
             <div>
                 <button type="submit"
-                        class="w-full bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition">
+                        class="w-full bg-primary text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-primary/90 transition">
                     Filtrer
                 </button>
             </div>
@@ -40,7 +40,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
 
         {# KPI 1 #}
-        <div class="bg-white dark:bg-fonddeux rounded-lg shadow dark:shadow-none p-6">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Demandes par statut</h3>
             {% if demandesParStatut is empty %}
                 <p class="text-gray-500 dark:text-gray-400 text-sm">Aucune demande pour cette periode.</p>
@@ -78,7 +78,7 @@
         </div>
 
         {# KPI 2 #}
-        <div class="bg-white dark:bg-fonddeux rounded-lg shadow dark:shadow-none p-6">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Delai moyen de traitement</h3>
             <div class="flex items-center justify-center h-32">
                 {% if delaiMoyen is not null %}
@@ -103,7 +103,7 @@
     </div>
 
     {# ── KPI 3 : Interventions par technicien ── #}
-    <div class="bg-white dark:bg-fonddeux rounded-lg shadow dark:shadow-none p-6 mb-6">
+    <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 mb-6">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Interventions par technicien</h3>
         {% if interventionsParTechnicien is empty %}
             <p class="text-gray-500 dark:text-gray-400 text-sm">Aucune intervention assignee pour cette periode.</p>
@@ -130,7 +130,7 @@
     </div>
 
     {# ── KPI 4 : Demandes par site et priorite ── #}
-    <div class="bg-white dark:bg-fonddeux rounded-lg shadow dark:shadow-none p-6">
+    <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Demandes par site et priorite</h3>
         {% if demandesParSitePriorite is empty %}
             <p class="text-gray-500 dark:text-gray-400 text-sm">Aucune demande pour cette periode.</p>

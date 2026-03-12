@@ -14,47 +14,130 @@
 
 {% block page_content %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 border-l-4 border-danger">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-danger">
             <p class="text-gray-600 dark:text-gray-300 text-sm font-medium mb-1">Demandes P1 ouvertes</p>
             <p class="text-3xl font-bold text-gray-800 dark:text-white">{{ countP1Ouvertes }}</p>
             <p class="text-xs text-gray-500 mt-2">Necessitent une attention immediate</p>
         </div>
-        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 border-l-4 border-warning">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-warning">
             <p class="text-gray-600 dark:text-gray-300 text-sm font-medium mb-1">A qualifier</p>
             <p class="text-3xl font-bold text-gray-800 dark:text-white">{{ countAQualifier }}</p>
             <p class="text-xs text-gray-500 mt-2">Demandes en attente</p>
         </div>
-        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 border-l-4 border-primary">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-primary">
             <p class="text-gray-600 dark:text-gray-300 text-sm font-medium mb-1">Interventions aujourd'hui</p>
             <p class="text-3xl font-bold text-gray-800 dark:text-white">{{ countInterventionsDuJour }}</p>
             <p class="text-xs text-gray-500 mt-2">Planifiees pour aujourd'hui</p>
         </div>
-        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 border-l-4 border-success">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-success">
             <p class="text-gray-600 dark:text-gray-300 text-sm font-medium mb-1">En retard</p>
             <p class="text-3xl font-bold text-gray-800 dark:text-white">{{ countInterventionsEnRetard }}</p>
             <p class="text-xs text-gray-500 mt-2">Interventions non cloturees</p>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none">
-            <div class="p-6 border-b border-gray-200 dark:border-white/10 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Demandes prioritaires</h3>
-                <a href="{{ path('app_demande_index', {priorite: 'P1_URGENTE'}) }}" class="text-sm text-primary hover:text-primary/80 font-medium">Voir tout &rarr;</a>
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <section class="bg-white dark:bg-fonddeux rounded-[1.75rem] shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-5 sm:p-6">
+            <div class="flex items-center justify-between gap-4 mb-5">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Demandes prioritaires</h3>
+                <a href="{{ path('app_demande_index', {priorite: 'p1_URGENTE'}) }}" class="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary/80">
+                    <span>Voir tout</span>
+                    <span aria-hidden="true">&rarr;</span>
+                </a>
             </div>
-            <div class="p-6 text-center text-gray-500 text-sm">
-                {{ countP1Ouvertes }} demande(s) P1 en attente
-            </div>
-        </div>
 
-        <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none">
-            <div class="p-6 border-b border-gray-200 dark:border-white/10 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Interventions du jour</h3>
-                <a href="{{ path('app_intervention_index') }}" class="text-sm text-primary hover:text-primary/80 font-medium">Voir tout &rarr;</a>
+            <div class="space-y-3">
+                {% for demande in priorityDemandes %}
+                    {% set statutClass = 'bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-900/40 dark:text-slate-300 dark:border-slate-800/60' %}
+                    {% if demande.statut %}
+                        {% if demande.statut.value == 'EN_COURS' %}
+                            {% set statutClass = 'bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800/40' %}
+                        {% elseif demande.statut.value == 'A_QUALIFIER' %}
+                            {% set statutClass = 'bg-yellow-100 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800/40' %}
+                        {% elseif demande.statut.value == 'QUALIFIE' or demande.statut.value == 'PLANIFIE' %}
+                            {% set statutClass = 'bg-orange-100 text-orange-800 border border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800/40' %}
+                        {% endif %}
+                    {% endif %}
+
+                    <a href="{{ path('app_demande_show', {'id': demande.id}) }}"
+                       class="group flex items-center justify-between gap-4 rounded-2xl bg-gray-50 dark:bg-fondun px-4 py-4 border border-gray-200 dark:border-white/5 hover:border-primary/30 dark:hover:border-fondcinq/30 hover:shadow-sm transition">
+                        <div class="min-w-0 flex items-start gap-3">
+                            <span class="mt-2 h-2.5 w-2.5 rounded-full bg-danger shrink-0"></span>
+                            <div class="min-w-0">
+                                <p class="text-base font-semibold text-gray-900 dark:text-white truncate">{{ demande.titre }}</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
+                                    {{ demande.numero ?: ('DEM-' ~ demande.id) }} · {{ demande.priorite ? demande.priorite.label() : 'Priorite non definie' }}
+                                </p>
+                            </div>
+                        </div>
+                        <span class="shrink-0 inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ statutClass }}">
+                            {{ demande.statut ? demande.statut.label() : 'Sans statut' }}
+                        </span>
+                    </a>
+                {% else %}
+                    <div class="rounded-2xl bg-gray-50 dark:bg-fondun border border-dashed border-gray-300 dark:border-white/10 px-4 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+                        Aucune demande P1 ouverte pour le moment.
+                    </div>
+                {% endfor %}
             </div>
-            <div class="p-6 text-center text-gray-500 text-sm">
+        </section>
+
+        <section class="bg-white dark:bg-fonddeux rounded-[1.75rem] shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-5 sm:p-6 min-h-[20rem] flex flex-col">
+            <div class="flex items-center justify-between gap-4 mb-5">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Interventions du jour</h3>
+                <a href="{{ path('app_intervention_index') }}" class="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary/80">
+                    <span>Voir tout</span>
+                    <span aria-hidden="true">&rarr;</span>
+                </a>
+            </div>
+
+            <div class="space-y-3">
+                {% for intervention in interventionsDuJour %}
+                    {% set statutClass = 'bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-900/40 dark:text-slate-300 dark:border-slate-800/60' %}
+                    {% if intervention.statut %}
+                        {% if intervention.statut.value == 'EN_COURS' %}
+                            {% set statutClass = 'bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800/40' %}
+                        {% elseif intervention.statut.value == 'PLANIFIE' %}
+                            {% set statutClass = 'bg-orange-100 text-orange-800 border border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800/40' %}
+                        {% elseif intervention.statut.value == 'A_PLANIFIER' %}
+                            {% set statutClass = 'bg-gray-100 text-gray-700 border border-gray-200 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-800/40' %}
+                        {% elseif intervention.statut.value == 'TERMINEE' or intervention.statut.value == 'VALIDEE' %}
+                            {% set statutClass = 'bg-green-100 text-green-800 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800/40' %}
+                        {% endif %}
+                    {% endif %}
+
+                    <a href="{{ path('app_intervention_show', {'id': intervention.id}) }}"
+                       class="group flex items-center justify-between gap-4 rounded-2xl bg-gray-50 dark:bg-fondun px-4 py-4 border border-gray-200 dark:border-white/5 hover:border-primary/30 dark:hover:border-fondcinq/30 hover:shadow-sm transition">
+                        <div class="min-w-0 flex items-start gap-3">
+                            <span class="mt-2 h-2.5 w-2.5 rounded-full bg-primary shrink-0"></span>
+                            <div class="min-w-0">
+                                <p class="text-base font-semibold text-gray-900 dark:text-white truncate">
+                                    {{ intervention.demande ? intervention.demande.titre : ('Intervention ' ~ (intervention.numero ?: intervention.id)) }}
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
+                                    {{ intervention.numero ?: ('INT-' ~ intervention.id) }} ·
+                                    {% if intervention.technicien %}
+                                        Tech: {{ intervention.technicien.prenom|slice(0, 1) }}. {{ intervention.technicien.nom }}
+                                    {% else %}
+                                        Technicien non assigne
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <span class="shrink-0 inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ statutClass }}">
+                            {{ intervention.statut ? intervention.statut.label() : 'Sans statut' }}
+                        </span>
+                    </a>
+                {% else %}
+                    <div class="rounded-2xl bg-gray-50 dark:bg-fondun border border-dashed border-gray-300 dark:border-white/10 px-4 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+                        Aucune intervention planifiee aujourd'hui.
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-auto pt-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 {{ countInterventionsDuJour }} intervention(s) planifiee(s) aujourd'hui
             </div>
-        </div>
+        </section>
     </div>
 {% endblock %}

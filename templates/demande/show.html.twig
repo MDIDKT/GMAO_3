@@ -7,12 +7,12 @@
     {% if demande.statut and demande.statut.value != 'CLOTURE' and demande.statut.value != 'REJETEE'
           and (is_granted('ROLE_PLANIFICATEUR') or is_granted('ROLE_ADMIN')) %}
         <a href="{{ path('app_intervention_new', {'demande': demande.id}) }}"
-           class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition font-medium mr-2">
+           class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary/90 transition font-medium mr-2">
             Planifier une intervention
         </a>
     {% endif %}
     <a href="{{ path('app_demande_edit', {'id': demande.id}) }}"
-       class="px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
+       class="px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
         Modifier
     </a>
 {% endblock %}
@@ -43,7 +43,7 @@
     {% endif %}
 
     <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6">
+        <div class="lg:col-span-2 bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
             <div class="flex items-start justify-between mb-6">
                 <div>
                     <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Informations de la demande</h3>
@@ -109,7 +109,7 @@
                                 <a href="{{ path('photo_show', {'id': photo.id}) }}" target="_blank">
                                     <img src="{{ path('photo_show', {'id': photo.id}) }}"
                                          alt="{{ photo.originalName ?: 'Photo' }}"
-                                         class="h-56 w-56 object-cover rounded-lg border border-gray-200 dark:border-white/10 hover:opacity-80 transition">
+                                         class="h-56 w-56 object-cover rounded-xl border border-gray-200 dark:border-white/10 hover:opacity-80 transition">
                                 </a>
                             {% endfor %}
                         </div>
@@ -119,26 +119,26 @@
         </div>
 
         <div class="space-y-6">
-            <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 border-l-4 border-primary">
+            <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-primary">
                 <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">ID demande</p>
                 <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ demande.id }}</p>
             </div>
-            <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 border-l-4 border-secondary">
+            <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-secondary">
                 <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Creee le</p>
                 <p class="text-lg font-semibold text-gray-800 dark:text-white mt-1">{{ demande.createdAt ? demande.createdAt|date('d/m/Y H:i') : '-' }}</p>
                 <p class="text-sm text-gray-500 mt-2">Maj: {{ demande.updatedAt ? demande.updatedAt|date('d/m/Y H:i') : '-' }}</p>
             </div>
-            <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6">
+            <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
                 <div class="flex flex-col gap-3">
                     <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_PLANIFICATEUR') ? path('app_demande_index') : path('app_demande_mes_demandes') }}"
-                       class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
+                       class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
                         Retour a la liste
                     </a>
                     {% if demande.statut and demande.statut.value == 'A_QUALIFIER' and (is_granted('ROLE_PLANIFICATEUR') or is_granted('ROLE_ADMIN')) %}
                         <form method="post" action="{{ path('app_demande_qualifier', {'id': demande.id}) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('qualifier' ~ demande.id) }}">
                             <button type="submit"
-                                    class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-medium">
+                                    class="w-full px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl transition font-medium">
                                 Qualifier
                             </button>
                         </form>
@@ -148,9 +148,9 @@
                         <form method="post" action="{{ path('app_demande_rejeter', {'id': demande.id}) }}" onsubmit="return this.motif_rejet.value.trim() !== '' || (alert('Le motif de rejet est obligatoire.'), false);">
                             <input type="hidden" name="_token" value="{{ csrf_token('rejeter' ~ demande.id) }}">
                             <textarea name="motif_rejet" rows="2" placeholder="Motif de rejet (obligatoire)"
-                                      class="w-full px-3 py-2 border border-gray-300 dark:border-white/10 rounded-lg text-sm mb-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-fondun dark:text-white"></textarea>
+                                      class="w-full px-3 py-2 border border-gray-300 dark:border-white/10 rounded-xl text-sm mb-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white"></textarea>
                             <button type="submit"
-                                    class="w-full px-4 py-2 bg-danger hover:bg-danger/90 text-white rounded-lg transition font-medium">
+                                    class="w-full px-4 py-2 bg-danger hover:bg-danger/90 text-white rounded-xl transition font-medium">
                                 Rejeter
                             </button>
                         </form>
@@ -161,7 +161,7 @@
             </div>
 
             {% if demande.motifRejet %}
-                <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 border-l-4 border-danger">
+                <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-danger">
                     <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Motif de rejet</p>
                     <p class="text-sm text-gray-800 dark:text-white mt-2 whitespace-pre-line">{{ demande.motifRejet }}</p>
                 </div>

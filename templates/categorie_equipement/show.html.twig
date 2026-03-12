@@ -5,37 +5,37 @@
 
 {% block page_actions %}
     <a href="{{ path('app_categorie_equipement_edit', {'id': categorie.id}) }}"
-       class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+       class="px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
         Modifier
     </a>
 {% endblock %}
 
 {% block page_content %}
     <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
-            <h3 class="text-xl font-bold text-gray-800 mb-6">Informations de la categorie</h3>
+        <div class="lg:col-span-2 bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-6">Informations de la categorie</h3>
             <div class="space-y-4">
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-1">Nom</p>
-                    <p class="text-gray-800">{{ categorie.nom }}</p>
+                    <p class="text-gray-800 dark:text-white">{{ categorie.nom }}</p>
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-1">Description</p>
-                    <p class="text-gray-800 whitespace-pre-line">{{ categorie.description ?: '-' }}</p>
+                    <p class="text-gray-800 dark:text-white whitespace-pre-line">{{ categorie.description ?: '-' }}</p>
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-1">Organisation</p>
-                    <p class="text-gray-800">{{ categorie.organisation ? categorie.organisation.nom : '-' }}</p>
+                    <p class="text-gray-800 dark:text-white">{{ categorie.organisation ? categorie.organisation.nom : '-' }}</p>
                 </div>
             </div>
 
             {% if categorie.equipements|length > 0 %}
-                <div class="mt-6 border-t border-gray-200 pt-4">
+                <div class="mt-6 border-t border-gray-200 dark:border-white/10 pt-4">
                     <p class="text-sm font-medium text-gray-500 mb-3">Equipements associes ({{ categorie.equipements|length }})</p>
                     <div class="space-y-2">
                         {% for equipement in categorie.equipements %}
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                <span class="text-sm font-medium text-gray-800">{{ equipement.nom }}</span>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-fondun rounded-xl border border-gray-200 dark:border-white/10">
+                                <span class="text-sm font-medium text-gray-800 dark:text-white">{{ equipement.nom }}</span>
                                 <a href="{{ path('app_equipement_show', {'id': equipement.id}) }}"
                                    class="text-sm text-primary hover:text-primary/80">Voir</a>
                             </div>
@@ -46,14 +46,14 @@
         </div>
 
         <div class="space-y-6">
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
-                <p class="text-sm text-gray-600 font-medium">Equipements</p>
-                <p class="text-3xl font-bold text-gray-800 mt-1">{{ categorie.equipements|length }}</p>
+            <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-primary">
+                <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Equipements</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ categorie.equipements|length }}</p>
             </div>
-            <div class="bg-white rounded-xl shadow-md p-6">
+            <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
                 <div class="flex flex-col gap-3">
                     <a href="{{ path('app_categorie_equipement_index') }}"
-                       class="text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                       class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
                         Retour a la liste
                     </a>
                     {{ include('categorie_equipement/_delete_form.html.twig') }}

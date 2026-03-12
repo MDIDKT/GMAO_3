@@ -5,7 +5,7 @@
 
 {% block page_actions %}
     <a href="{{ path('app_site_new') }}"
-       class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition flex items-center space-x-2">
+       class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl font-medium transition flex items-center space-x-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
@@ -16,12 +16,12 @@
 {% block page_content %}
     {% set inactiveCount = totalCount - activeCount %}
 
-    <div class="bg-fondsix rounded-xl shadow-md p-6 mb-6">
+    <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 mb-6">
         <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
                 <label for="actif" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Statut</label>
                 <select id="actif" name="actif"
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-fondun dark:border-white/10 dark:text-white dark:placeholder-gray-500">
+                        class="block w-full px-3 py-2 border border-gray-300 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white dark:placeholder-gray-500">
                     <option value="" {{ selectedActif == '' ? 'selected' : '' }}>Tous</option>
                     <option value="1" {{ selectedActif == '1' ? 'selected' : '' }}>Actifs</option>
                     <option value="0" {{ selectedActif == '0' ? 'selected' : '' }}>Inactifs</option>
@@ -29,13 +29,13 @@
             </div>
             <div class="flex items-end">
                 <button type="submit"
-                        class="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-medium">
+                        class="w-full px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary/90 transition font-medium">
                     Filtrer
                 </button>
             </div>
             <div class="flex items-end">
                 <a href="{{ path('app_site_index') }}"
-                   class="w-full text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
+                   class="w-full text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
                     Reinitialiser
                 </a>
             </div>
@@ -43,21 +43,21 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-fondsix rounded-xl shadow p-4 border-l-4 border-success">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-success">
             <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Sites actifs</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ activeCount }}</p>
         </div>
-        <div class="bg-fondsix rounded-xl shadow p-4 border-l-4 border-gray-400">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-muted">
             <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Sites inactifs</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ inactiveCount }}</p>
         </div>
-        <div class="bg-fondsix rounded-xl shadow p-4 border-l-4 border-primary">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-primary">
             <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Total sites</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ totalCount }}</p>
         </div>
     </div>
 
-    <div class="bg-fondsix rounded-xl shadow-md overflow-hidden">
+    <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-fondun">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ totalCount }} sites trouves</p>
         </div>
@@ -79,7 +79,7 @@
                     </th>
                 </tr>
                 </thead>
-                <tbody class="bg-fondsix divide-y divide-gray-200 dark:divide-white/10">
+                <tbody class="bg-white dark:bg-fonddeux divide-y divide-gray-200 dark:divide-white/10">
                 {% for site in pagination %}
                     <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition">
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -106,7 +106,7 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="6" class="px-6 py-10 text-center text-gray-500">Aucun site trouve.</td>
+                        <td colspan="6" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400">Aucun site trouve.</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -116,22 +116,22 @@
 
     {% if pagination.pageCount > 1 %}
         <div class="mt-6 flex justify-center">
-            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+            <nav class="relative z-0 inline-flex rounded-xl shadow-sm -space-x-px overflow-hidden">
                 {% if pagination.currentPageNumber > 1 %}
                     <a href="{{ path('app_site_index', {page: pagination.currentPageNumber - 1, actif: selectedActif}) }}"
-                       class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-white/10 bg-fondsix text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5">
+                       class="relative inline-flex items-center px-3 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5">
                         Precedent
                     </a>
                 {% endif %}
                 {% for page in 1..pagination.pageCount %}
                     <a href="{{ path('app_site_index', {page: page, actif: selectedActif}) }}"
-                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-white/10 bg-fondsix text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/30' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5' }}">
+                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-fondcinq bg-fondcinq/10 dark:bg-fondcinq/15 dark:text-fondcinq' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5' }}">
                         {{ page }}
                     </a>
                 {% endfor %}
                 {% if pagination.currentPageNumber < pagination.pageCount %}
                     <a href="{{ path('app_site_index', {page: pagination.currentPageNumber + 1, actif: selectedActif}) }}"
-                       class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-white/10 bg-fondsix text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5">
+                       class="relative inline-flex items-center px-3 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5">
                         Suivant
                     </a>
                 {% endif %}

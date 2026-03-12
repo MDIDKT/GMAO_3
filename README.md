@@ -9,6 +9,7 @@ Application web de gestion de maintenance assistee par ordinateur construite ave
 - Demandes de maintenance avec priorite, qualification, rejet et photos
 - Interventions avec planification, demarrage, cloture, validation et photos avant/apres
 - Dashboards et reporting avec KPI metier
+- Interface responsive avec sidebar mobile et bascule dark/light
 - Notifications email metier sur les etapes clefs
 - Tests unitaires et fonctionnels sur les workflows sensibles
 
@@ -106,4 +107,4 @@ docs/       documentation locale du projet
 
 ## Etat du projet
 
-Le projet est au stade MVP avec workflows demande/intervention, reporting, notifications email et couverture de tests unitaires et fonctionnels sur les points sensibles. Un audit recent a aussi conduit au durcissement des controles d'acces multi-organisation et a la consolidation de la documentation locale conservee dans `docs/`.
+Le projet est au stade MVP avec workflows demande/intervention, reporting, notifications email et couverture de tests unitaires et fonctionnels sur les points sensibles. L'interface principale repose sur un layout responsive desktop/mobile avec theme sombre et clair, une sidebar harmonisee, des cartes KPI a accent colore coherent en dark comme en light, et un dashboard qui remonte maintenant de vraies demandes prioritaires et interventions du jour dans des blocs de synthese. Un audit recent a aussi conduit au durcissement des controles d'acces multi-organisation, et la navigation mobile a ete revalidee en navigateur apres correction du drawer ferme qui captait encore les clics.

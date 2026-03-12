@@ -7,12 +7,12 @@
 {% endblock %}
 
 {% block page_content %}
-    <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md p-6 mb-6">
+    <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 mb-6">
         <form method="get" class="flex flex-wrap items-end gap-4">
             <div class="flex-1 min-w-[200px]">
                 <label for="statut" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Statut</label>
                 <select id="statut" name="statut"
-                        class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary focus:border-primary dark:bg-fondun dark:border-white/10 dark:text-white">
+                        class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm focus:ring-primary focus:border-primary bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white">
                     <option value="">Tous les statuts</option>
                     {% for st in statuts %}
                         <option
@@ -22,9 +22,9 @@
             </div>
             <div class="flex gap-3">
                 <a href="{{ path('app_intervention_index') }}"
-                   class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-fondun rounded-lg hover:bg-gray-200 dark:hover:bg-white/5 transition">Réinitialiser</a>
+                   class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-fondun rounded-xl hover:bg-gray-200 dark:hover:bg-white/5 transition">Réinitialiser</a>
                 <button type="submit"
-                        class="px-6 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition">
+                        class="px-6 py-2 text-sm font-medium text-white bg-primary rounded-xl hover:bg-primary/90 transition">
                     Filtrer
                 </button>
             </div>
@@ -32,21 +32,21 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white dark:bg-fonddeux rounded-xl shadow p-4 border-l-4 border-danger">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-danger">
             <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">A planifier</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ aPlanifierCount }}</p>
         </div>
-        <div class="bg-white dark:bg-fonddeux rounded-xl shadow p-4 border-l-4 border-warning">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-warning">
             <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">En cours</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ enCoursCount }}</p>
         </div>
-        <div class="bg-white dark:bg-fonddeux rounded-xl shadow p-4 border-l-4 border-success">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-success">
             <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Terminees / Validees</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ termineeCount }}</p>
         </div>
     </div>
 
-    <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md overflow-hidden">
+    <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-fondun">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ totalCount }} interventions trouvees</p>
         </div>
@@ -140,7 +140,7 @@
                 {% endif %}
                 {% for page in 1..pagination.pageCount %}
                     <a href="{{ path('app_intervention_index', {page: page, statut: selectedStatut}) }}"
-                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/30' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5' }}">
+                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-fondcinq bg-fondcinq/10 dark:bg-fondcinq/15 dark:text-fondcinq' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5' }}">
                         {{ page }}
                     </a>
                 {% endfor %}

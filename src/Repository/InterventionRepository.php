@@ -103,6 +103,27 @@ class InterventionRepository extends ServiceEntityRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * @return Intervention[]
+     */
+    public function findDashboardInterventionsDuJour(Organisation $organisation, int $limit = 3): array
+    {
+        return $this->createQueryBuilder('i')
+            ->leftJoin('i.demande', 'd')->addSelect('d')
+            ->leftJoin('i.technicien', 't')->addSelect('t')
+            ->andWhere('i.organisation = :organisation')
+            ->setParameter('organisation', $organisation)
+            ->andWhere('i.datePlanifiee >= :dateToday')
+            ->setParameter('dateToday', new DateTime('today'))
+            ->andWhere('i.datePlanifiee < :dateTomorrow')
+            ->setParameter('dateTomorrow', new DateTime('tomorrow'))
+            ->orderBy('i.datePlanifiee', 'ASC')
+            ->addOrderBy('i.id', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function countInterventionsEnRetard(Organisation $organisation)
     {
         $qb = $this->createQueryBuilder('i');

@@ -5,7 +5,7 @@
 
 {% block page_actions %}
     <a href="{{ path('app_demande_new') }}"
-       class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition flex items-center space-x-2">
+       class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl font-medium transition flex items-center space-x-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
@@ -15,17 +15,17 @@
 
 {% block page_content %}
     <div class="mb-6">
-        <ul class="flex flex-wrap gap-2 border-b border-gray-200">
+        <ul class="flex flex-wrap gap-2 border-b border-gray-200 dark:border-white/10">
             <li>
                 <a href="{{ path('app_demande_mes_demandes') }}"
-                   class="inline-block px-4 py-2 rounded-t-lg {{ statut is null ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-gray-900' }}">
+                   class="inline-block px-4 py-2 rounded-t-xl {{ statut is null ? 'text-fondcinq border-b-2 border-fondcinq' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white' }}">
                     Toutes
                 </a>
             </li>
             {% for s in statuts %}
                 <li>
                     <a href="{{ path('app_demande_mes_demandes', {statut: s.value}) }}"
-                       class="inline-block px-4 py-2 rounded-t-lg {{ statut == s ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-gray-900' }}">
+                       class="inline-block px-4 py-2 rounded-t-xl {{ statut == s ? 'text-fondcinq border-b-2 border-fondcinq' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white' }}">
                         {{ s.label }}
                     </a>
                 </li>
@@ -34,13 +34,13 @@
     </div>
 
     {% if pagination.items is empty %}
-        <div class="bg-white rounded-lg shadow p-8 text-center">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-8 text-center">
             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
             </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">Aucune demande</h3>
-            <p class="mt-1 text-sm text-gray-500">Vous n'avez pas encore de demande soumise.</p>
+            <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Aucune demande</h3>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Vous n'avez pas encore de demande soumise.</p>
         </div>
     {% else %}
         <div class="grid gap-4">
@@ -60,10 +60,10 @@
                     {% endif %}
                 {% endif %}
 
-                <div class="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-6">
+                <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 hover:shadow-md dark:hover:border-white/20 transition p-6">
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex-1">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                 Demande #{{ demande.numero }}
                             </h3>
                             <span
@@ -73,7 +73,7 @@
                         </div>
                     </div>
 
-                    <div class="space-y-2 text-sm text-gray-600 mb-4">
+                    <div class="space-y-2 text-sm text-gray-600 dark:text-gray-300 mb-4">
                         <div class="flex items-center">
                             <svg class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor">
@@ -106,7 +106,7 @@
 
                     <div class="flex gap-2">
                         <a href="{{ path('app_demande_show', {id: demande.id}) }}"
-                           class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                           class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-white/10 shadow-sm text-sm leading-4 font-medium rounded-xl text-gray-700 dark:text-gray-200 bg-white dark:bg-fondun hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-primary">
                             Voir détails
                         </a>
                     </div>
@@ -116,24 +116,24 @@
 
         {% if pagination.pageCount > 1 %}
             <div class="mt-6 flex justify-center">
-                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                <nav class="relative z-0 inline-flex rounded-xl shadow-sm -space-x-px overflow-hidden" aria-label="Pagination">
                     {% if pagination.currentPageNumber > 1 %}
                         <a href="{{ path('app_demande_mes_demandes', {page: pagination.currentPageNumber - 1, statut: statut ? statut.value : null}) }}"
-                           class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                           class="relative inline-flex items-center px-3 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5">
                             Précédent
                         </a>
                     {% endif %}
 
                     {% for page in 1..pagination.pageCount %}
                         <a href="{{ path('app_demande_mes_demandes', {page: page, statut: statut ? statut.value : null}) }}"
-                           class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50' }}">
+                           class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-fondcinq bg-fondcinq/10 dark:bg-fondcinq/15 dark:text-fondcinq' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5' }}">
                             {{ page }}
                         </a>
                     {% endfor %}
 
                     {% if pagination.currentPageNumber < pagination.pageCount %}
                         <a href="{{ path('app_demande_mes_demandes', {page: pagination.currentPageNumber + 1, statut: statut ? statut.value : null}) }}"
-                           class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                           class="relative inline-flex items-center px-3 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5">
                             Suivant
                         </a>
                     {% endif %}
@@ -142,4 +142,3 @@
         {% endif %}
     {% endif %}
 {% endblock %}
-

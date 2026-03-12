@@ -4,18 +4,18 @@
 {% block page_subtitle %}Detail du site{% endblock %}
 
 {% block page_actions %}
-    <a href="{{ path('app_site_edit', {'id': site.id}) }}" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+    <a href="{{ path('app_site_edit', {'id': site.id}) }}" class="px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
         Modifier
     </a>
 {% endblock %}
 
 {% block page_content %}
     <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+        <div class="lg:col-span-2 bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
             <div class="flex items-start justify-between mb-6">
                 <div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Informations du site</h3>
-                    <span class="px-3 py-1 text-sm font-semibold rounded-full {{ site.actif ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Informations du site</h3>
+                    <span class="px-3 py-1 text-sm font-semibold rounded-full {{ site.actif ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' : 'bg-gray-100 dark:bg-fondun text-gray-800 dark:text-white' }}">
                         {{ site.actif ? 'Actif' : 'Inactif' }}
                     </span>
                 </div>
@@ -29,47 +29,47 @@
             <div class="space-y-4">
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-1">Nom</p>
-                    <p class="text-gray-800">{{ site.nom }}</p>
+                    <p class="text-gray-800 dark:text-white">{{ site.nom }}</p>
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-1">Adresse</p>
-                    <p class="text-gray-800">{{ site.adresse ?: '-' }}</p>
+                    <p class="text-gray-800 dark:text-white">{{ site.adresse ?: '-' }}</p>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <p class="text-sm font-medium text-gray-500 mb-1">Code postal</p>
-                        <p class="text-gray-800">{{ site.codePostal }}</p>
+                        <p class="text-gray-800 dark:text-white">{{ site.codePostal }}</p>
                     </div>
                     <div>
                         <p class="text-sm font-medium text-gray-500 mb-1">Ville</p>
-                        <p class="text-gray-800">{{ site.ville ?: '-' }}</p>
+                        <p class="text-gray-800 dark:text-white">{{ site.ville ?: '-' }}</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <p class="text-sm font-medium text-gray-500 mb-1">Telephone</p>
-                        <p class="text-gray-800">{{ site.telephone ?: '-' }}</p>
+                        <p class="text-gray-800 dark:text-white">{{ site.telephone ?: '-' }}</p>
                     </div>
                     <div>
                         <p class="text-sm font-medium text-gray-500 mb-1">Email</p>
-                        <p class="text-gray-800">{{ site.email ?: '-' }}</p>
+                        <p class="text-gray-800 dark:text-white">{{ site.email ?: '-' }}</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="space-y-6">
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
-                <p class="text-sm text-gray-600 font-medium">ID site</p>
-                <p class="text-3xl font-bold text-gray-800 mt-1">{{ site.id }}</p>
+            <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-primary">
+                <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">ID site</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ site.id }}</p>
             </div>
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-secondary">
-                <p class="text-sm text-gray-600 font-medium">Organisation</p>
-                <p class="text-lg font-semibold text-gray-800 mt-1">{{ site.organisation.nom }}</p>
+            <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-secondary">
+                <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Organisation</p>
+                <p class="text-lg font-semibold text-gray-800 dark:text-white mt-1">{{ site.organisation.nom }}</p>
             </div>
-            <div class="bg-white rounded-xl shadow-md p-6">
+            <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
                 <div class="flex flex-col gap-3">
-                    <a href="{{ path('app_site_index') }}" class="text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                    <a href="{{ path('app_site_index') }}" class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
                         Retour a la liste
                     </a>
                     {{ include('site/_delete_form.html.twig') }}

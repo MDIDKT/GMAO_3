@@ -28,6 +28,8 @@
                 'countAQualifier' => $demandeRepository->countAQualifier($organisation),
                 'countInterventionsDuJour' => $interventionRepository->countInterventionsDuJour($organisation),
                 'countInterventionsEnRetard' => $interventionRepository->countInterventionsEnRetard($organisation),
+                'priorityDemandes' => $demandeRepository->findDashboardPriorityDemandes($organisation),
+                'interventionsDuJour' => $interventionRepository->findDashboardInterventionsDuJour($organisation),
             ]);
         }
 

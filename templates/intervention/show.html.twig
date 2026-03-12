@@ -5,7 +5,7 @@
 
 {% block page_actions %}
     <a href="{{ path('app_intervention_edit', {'id': intervention.id}) }}"
-       class="px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
+       class="px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
         Modifier
     </a>
 {% endblock %}
@@ -27,7 +27,7 @@
     {% endif %}
 
     <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+        <div class="lg:col-span-2 bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
             <div class="flex items-start justify-between mb-6">
                 <div>
                     <h3 class="text-xl font-bold text-gray-800 mb-2">Informations de l'intervention</h3>
@@ -127,7 +127,7 @@
                                             <a href="{{ path('app_intervention_photo_show', {'id': photo.id}) }}" target="_blank">
                                                 <img src="{{ path('app_intervention_photo_show', {'id': photo.id}) }}"
                                                      alt="{{ photo.originalName ?: 'Photo' }}"
-                                                     class="h-24 w-24 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition">
+                                                     class="h-24 w-24 object-cover rounded-xl border border-gray-200 dark:border-white/10 hover:opacity-80 transition">
                                             </a>
                                         {% endfor %}
                                     </div>
@@ -144,7 +144,7 @@
                         {{ form_start(photoForm, {'attr': {'enctype': 'multipart/form-data', 'class': 'space-y-3'}}) }}
                             {{ form_row(photoForm.typePhoto) }}
                             {{ form_row(photoForm.photos) }}
-                            <button type="submit" class="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg transition font-medium text-sm">
+                            <button type="submit" class="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl transition font-medium text-sm">
                                 Envoyer
                             </button>
                         {{ form_end(photoForm) }}
@@ -154,19 +154,19 @@
         </div>
 
         <div class="space-y-6">
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
-                <p class="text-sm text-gray-600 font-medium">ID intervention</p>
-                <p class="text-3xl font-bold text-gray-800 mt-1">{{ intervention.id }}</p>
+            <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-primary">
+                <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">ID intervention</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ intervention.id }}</p>
             </div>
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-secondary">
-                <p class="text-sm text-gray-600 font-medium">Creee le</p>
-                <p class="text-lg font-semibold text-gray-800 mt-1">{{ intervention.createdAt ? intervention.createdAt|date('d/m/Y H:i') : '-' }}</p>
+            <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-secondary">
+                <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Creee le</p>
+                <p class="text-lg font-semibold text-gray-800 dark:text-white mt-1">{{ intervention.createdAt ? intervention.createdAt|date('d/m/Y H:i') : '-' }}</p>
                 <p class="text-sm text-gray-500 mt-2">Maj: {{ intervention.updatedAt ? intervention.updatedAt|date('d/m/Y H:i') : '-' }}</p>
             </div>
-            <div class="bg-white rounded-xl shadow-md p-6">
+            <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
                 <div class="flex flex-col gap-3">
                     <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_PLANIFICATEUR') ? path('app_intervention_index') : path('app_intervention_mes_interventions') }}"
-                       class="text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                       class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
                         Retour a la liste
                     </a>
 
@@ -174,7 +174,7 @@
                         <form method="post" action="{{ path('app_intervention_demarrer', {'id': intervention.id}) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('demarrer' ~ intervention.id) }}">
                             <button type="submit"
-                                    class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-medium">
+                                    class="w-full px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl transition font-medium">
                                 Démarrer
                             </button>
                         </form>
@@ -184,13 +184,13 @@
                         <form method="post" action="{{ path('app_intervention_terminer', {'id': intervention.id}) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('terminer' ~ intervention.id) }}">
                             <div class="mb-3">
-                                <label for="compteRendu" class="block text-sm font-medium text-gray-700 mb-1">Compte rendu *</label>
+                                <label for="compteRendu" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Compte rendu *</label>
                                 <textarea id="compteRendu" name="compte_rendu" rows="3" required
-                                          class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 text-sm"
+                                          class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm focus:ring-green-500 focus:border-green-500 text-sm bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white"
                                           placeholder="Decrivez les travaux realises...">{{ intervention.compteRendu }}</textarea>
                             </div>
                             <button type="submit"
-                                    class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition font-medium">
+                                    class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition font-medium">
                                 Terminer
                             </button>
                         </form>
@@ -200,7 +200,7 @@
                         <form method="post" action="{{ path('app_intervention_valider', {'id': intervention.id}) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('valider' ~ intervention.id) }}">
                             <button type="submit"
-                                    class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition font-medium">
+                                    class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition font-medium">
                                 Valider
                             </button>
                         </form>

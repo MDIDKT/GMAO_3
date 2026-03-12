@@ -133,6 +133,27 @@
             return $qb->getQuery()->getSingleScalarResult();
         }
 
+        /**
+         * @return Demande[]
+         */
+        public function findDashboardPriorityDemandes(Organisation $organisation, int $limit = 3): array
+        {
+            return $this->createQueryBuilder('d')
+                ->leftJoin('d.site', 's')->addSelect('s')
+                ->leftJoin('d.batiment', 'b')->addSelect('b')
+                ->andWhere('d.organisation = :organisation')
+                ->setParameter('organisation', $organisation)
+                ->andWhere('d.priorite = :priorite')
+                ->setParameter('priorite', Priorite::P1_URGENTE)
+                ->andWhere('d.statut NOT IN (:exclus)')
+                ->setParameter('exclus', [StatutDemande::CLOTURE, StatutDemande::REJETEE])
+                ->orderBy('d.createdAt', 'DESC')
+                ->addOrderBy('d.id', 'DESC')
+                ->setMaxResults($limit)
+                ->getQuery()
+                ->getResult();
+        }
+
         public function countAQualifier(Organisation $organisation): int
         {
             $qb = $this->createQueryBuilder('d');

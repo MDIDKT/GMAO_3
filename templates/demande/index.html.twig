@@ -5,7 +5,7 @@
 
 {% block page_actions %}
     <a href="{{ path('app_demande_new') }}"
-       class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition flex items-center space-x-2">
+       class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl font-medium transition flex items-center space-x-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
@@ -14,11 +14,11 @@
 {% endblock %}
 
 {% block page_content %}
-    <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none p-6 mb-6">
+    <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 mb-6">
         <form method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
             <div>
                 <label for="site" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Site</label>
-                <select id="site" name="site" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary focus:border-primary dark:bg-fondun dark:border-white/10 dark:text-white">
+                <select id="site" name="site" class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm focus:ring-primary focus:border-primary bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white">
                     <option value="">Tous les sites</option>
                     {% for s in sites %}
                         <option value="{{ s.id }}" {{ site and site.id == s.id ? 'selected' : '' }}>{{ s.nom }}</option>
@@ -27,7 +27,7 @@
             </div>
             <div>
                 <label for="priorite" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Priorité</label>
-                <select id="priorite" name="priorite" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary focus:border-primary dark:bg-fondun dark:border-white/10 dark:text-white">
+                <select id="priorite" name="priorite" class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm focus:ring-primary focus:border-primary bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white">
                     <option value="">Toutes les priorités</option>
                     {% for p in priorites %}
                         <option value="{{ p.value }}" {{ priorite and priorite.value == p.value ? 'selected' : '' }}>{{ p.label() }}</option>
@@ -36,7 +36,7 @@
             </div>
             <div>
                 <label for="statut" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Statut</label>
-                <select id="statut" name="statut" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary focus:border-primary dark:bg-fondun dark:border-white/10 dark:text-white">
+                <select id="statut" name="statut" class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm focus:ring-primary focus:border-primary bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white">
                     <option value="">Tous les statuts</option>
                     {% for st in statuts %}
                         <option value="{{ st.value }}" {{ statut and statut.value == st.value ? 'selected' : '' }}>{{ st.label() }}</option>
@@ -45,31 +45,31 @@
             </div>
             <div>
                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Recherche</label>
-                <input type="text" id="search" name="search" value="{{ search }}" placeholder="Titre ou description..." class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary focus:border-primary dark:bg-fondun dark:border-white/10 dark:text-white dark:placeholder-gray-500">
+                <input type="text" id="search" name="search" value="{{ search }}" placeholder="Titre ou description..." class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm focus:ring-primary focus:border-primary bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white dark:placeholder-gray-500">
             </div>
             <div class="md:col-span-2 lg:col-span-4 flex justify-end gap-3">
-                <a href="{{ path('app_demande_index') }}" class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-fondun rounded-lg hover:bg-gray-200 dark:hover:bg-white/5 transition">Réinitialiser</a>
-                <button type="submit" class="px-6 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition">Filtrer</button>
+                <a href="{{ path('app_demande_index') }}" class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-fondun rounded-xl hover:bg-gray-200 dark:hover:bg-white/5 transition">Réinitialiser</a>
+                <button type="submit" class="px-6 py-2 text-sm font-medium text-white bg-primary rounded-xl hover:bg-primary/90 transition">Filtrer</button>
             </div>
         </form>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white dark:bg-fonddeux rounded-xl shadow dark:shadow-none p-4 border-l-4 border-danger">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-danger">
             <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Demandes urgentes</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ urgentCount }}</p>
         </div>
-        <div class="bg-white dark:bg-fonddeux rounded-xl shadow dark:shadow-none p-4 border-l-4 border-warning">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-warning">
             <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Demandes ouvertes</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ openCount }}</p>
         </div>
-        <div class="bg-white dark:bg-fonddeux rounded-xl shadow dark:shadow-none p-4 border-l-4 border-success">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-success">
             <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Demandes cloturees</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ closedCount }}</p>
         </div>
     </div>
 
-    <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none overflow-hidden">
+    <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-fondun">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ totalCount }} demandes trouvees</p>
         </div>
@@ -180,7 +180,7 @@
                 {% endif %}
                 {% for page in 1..pagination.pageCount %}
                     <a href="{{ path('app_demande_index', {page: page, site: selectedSite, priorite: selectedPriorite, statut: selectedStatut, search: selectedSearch}) }}"
-                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5' }}">
+                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium {{ page == pagination.currentPageNumber ? 'text-fondcinq bg-fondcinq/10 dark:bg-fondcinq/15 dark:text-fondcinq' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5' }}">
                         {{ page }}
                     </a>
                 {% endfor %}

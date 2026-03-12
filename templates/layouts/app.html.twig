@@ -94,10 +94,10 @@
             <div class="drawer-panel absolute left-0 top-0 bottom-0 w-72 bg-white dark:bg-fonddeux shadow-2xl flex flex-col rounded-r-2xl overflow-hidden">
                 <div class="soft-separator p-5 flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 bg-gradient-to-br from-fondcinq to-fondquatre rounded-xl flex items-center justify-center shadow-sm">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <div class="w-9 h-9 bg-gradient-to-br from-fondcinq to-fondquatre rounded-xl flex items-center justify-center shadow-sm ring-1 ring-black/5 dark:ring-0">
+                            <svg class="w-5 h-5 text-fondun dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         </div>
-                        <span class="font-bold text-lg dark:text-white">GMAO SaaS</span>
+                        <span class="font-bold text-lg text-gray-900 dark:text-white">GMAO SaaS</span>
                     </div>
                     <button onclick="closeDrawer()" class="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10">
                         <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -112,7 +112,7 @@
                             <span class="text-white font-semibold text-xs">{{ initials }}</span>
                         </div>
                         <div class="min-w-0 flex-1">
-                            <p class="text-sm font-medium dark:text-white truncate">{{ userFullName }}</p>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ userFullName }}</p>
                             <p class="text-xs text-gray-500 truncate">{{ app.user ? app.user.userIdentifier : '' }}</p>
                         </div>
                         <a href="{{ path('app_logout') }}" class="text-gray-400 hover:text-fondcinq transition p-1" title="Se deconnecter">
@@ -127,10 +127,10 @@
         <aside id="sidebar" class="sidebar-collapsed hidden lg:flex flex-col bg-white dark:bg-fonddeux sidebar-glow shrink-0 z-40 relative">
             <div class="soft-separator p-4 flex items-center justify-between">
                 <div class="flex items-center gap-2.5 min-w-0 cursor-pointer" onclick="if(!sidebarExpanded)toggleSidebar()">
-                    <div class="w-9 h-9 bg-gradient-to-br from-fondcinq to-fondquatre rounded-xl flex items-center justify-center shrink-0 shadow-sm">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <div class="w-9 h-9 bg-gradient-to-br from-fondcinq to-fondquatre rounded-xl flex items-center justify-center shrink-0 shadow-sm ring-1 ring-black/5 dark:ring-0">
+                        <svg class="w-5 h-5 text-fondun dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     </div>
-                    <span class="sidebar-label font-bold text-base dark:text-white whitespace-nowrap">GMAO</span>
+                    <span class="sidebar-label font-bold text-base text-gray-900 dark:text-white whitespace-nowrap">GMAO</span>
                 </div>
                 <button onclick="toggleSidebar()" class="sidebar-label w-7 h-7 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 transition shrink-0" title="Replier">
                     <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
@@ -147,7 +147,7 @@
                         <span class="text-white font-semibold text-xs">{{ initials }}</span>
                     </div>
                     <div class="sidebar-label min-w-0">
-                        <p class="text-sm font-medium dark:text-white truncate">{{ userFullName }}</p>
+                        <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ userFullName }}</p>
                         <p class="text-xs text-gray-500 truncate">
                             <a href="{{ path('app_logout') }}" class="hover:text-fondcinq transition">Deconnexion</a>
                         </p>
@@ -165,7 +165,7 @@
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                         </button>
                         <div>
-                            <h2 class="text-xl font-bold dark:text-white">{% block page_heading %}{{ block('page_title') }}{% endblock %}</h2>
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white">{% block page_heading %}{{ block('page_title') }}{% endblock %}</h2>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{% block page_subtitle %}Gestion de maintenance{% endblock %}</p>
                         </div>
                     </div>
