@@ -7,9 +7,6 @@
 {% block body_class %}bg-gray-100 dark:bg-fondun min-h-screen flex items-center justify-center p-4{% endblock %}
 
 {% block body %}
-    {% set inputClass = 'block w-full px-4 py-3 bg-gray-50 dark:bg-fondun border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-fondcinq focus:border-fondcinq transition' %}
-    {% set labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2' %}
-
     <div class="w-full max-w-md">
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-fondcinq to-fondquatre rounded-2xl mb-4 shadow-lg">
@@ -23,16 +20,10 @@
 
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-white/10">
             {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
-                <div>
-                    {{ form_label(form.plainPassword.first, null, {'label_attr': {'class': labelClass}}) }}
-                    {{ form_widget(form.plainPassword.first, {'attr': {'class': inputClass}}) }}
-                    {{ form_errors(form.plainPassword.first) }}
-                </div>
-                <div>
-                    {{ form_label(form.plainPassword.second, null, {'label_attr': {'class': labelClass}}) }}
-                    {{ form_widget(form.plainPassword.second, {'attr': {'class': inputClass}}) }}
-                    {{ form_errors(form.plainPassword.second) }}
-                </div>
+                {{ form_errors(form) }}
+                {{ form_errors(form.plainPassword) }}
+                {{ form_row(form.plainPassword.first) }}
+                {{ form_row(form.plainPassword.second) }}
                 <button type="submit" class="w-full bg-fondcinq hover:bg-fondcinq/90 text-white dark:text-fondun font-semibold py-3 px-4 rounded-lg transition">
                     Valider
                 </button>

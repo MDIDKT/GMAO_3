@@ -1,56 +1,27 @@
-{% set inputClass = 'block w-full px-4 py-3 border border-gray-300 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white dark:placeholder-gray-500' %}
-{% set labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %}
 {% set cancelPath = cancel_path|default(path('app_demande_index')) %}
 
-{{ form_start(form, {'attr': {'class': 'space-y-6', 'enctype': 'multipart/form-data'}}) }}
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+{{ form_errors(form) }}
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-        {{ form_label(form.titre, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.titre, {'attr': {'class': inputClass, 'placeholder': 'Objet de la demande'}}) }}
-        {{ form_errors(form.titre) }}
-    </div>
+    {{ form_row(form.titre, {'attr': {'placeholder': 'Objet de la demande'}}) }}
 </div>
 
-<div>
-    {{ form_label(form.description, null, {'label_attr': {'class': labelClass}}) }}
-    {{ form_widget(form.description, {'attr': {'class': inputClass, 'rows': 5, 'placeholder': 'Description de la panne ou du besoin'}}) }}
-    {{ form_errors(form.description) }}
+{{ form_row(form.description, {'attr': {'rows': 5, 'placeholder': 'Description de la panne ou du besoin'}}) }}
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {{ form_row(form.priorite) }}
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-        {{ form_label(form.priorite, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.priorite, {'attr': {'class': inputClass}}) }}
-        {{ form_errors(form.priorite) }}
-    </div>
+    {{ form_row(form.site) }}
+    {{ form_row(form.batiment) }}
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-        {{ form_label(form.site, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.site, {'attr': {'class': inputClass}}) }}
-        {{ form_errors(form.site) }}
-    </div>
-    <div>
-        {{ form_label(form.batiment, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.batiment, {'attr': {'class': inputClass}}) }}
-        {{ form_errors(form.batiment) }}
-    </div>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-        {{ form_label(form.equipement, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.equipement, {'attr': {'class': inputClass}}) }}
-        {{ form_errors(form.equipement) }}
-    </div>
+    {{ form_row(form.equipement) }}
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-        {{ form_label(form.photos, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.photos, {'attr': {'class': inputClass}}) }}
-        {{ form_errors(form.photos) }}
-    </div>
+    {{ form_row(form.photos) }}
 </div>
 
 <div class="border-t border-gray-200 dark:border-white/10 pt-6 flex items-center justify-between">

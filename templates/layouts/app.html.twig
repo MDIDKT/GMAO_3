@@ -17,7 +17,8 @@
     {# ======== Sidebar nav items macro ======== #}
     {% macro navItems(route, activeClass, inactiveClass, isGrantedAdmin, isGrantedPlanif, isGrantedTech, isGrantedDemandeur, showLabels) %}
         {% if isGrantedAdmin or isGrantedPlanif %}
-            <a href="{{ path('app_Dashboard') }}" class="{{ route == 'app_Dashboard' ? activeClass : inactiveClass }}" title="Dashboard">
+            <a href="{{ path('app_dashboard_index') }}"
+               class="{{ route == 'app_dashboard' ? activeClass : inactiveClass }}" title="Dashboard">
                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 {% if showLabels %}<span>Dashboard</span>{% else %}<span class="sidebar-label whitespace-nowrap">Dashboard</span>{% endif %}
             </a>
@@ -79,7 +80,8 @@
 
             <div class="nav-divider"></div>
 
-            <a href="{{ path('app_admin_user_inviter') }}" class="{{ route starts with 'app_admin_user_' ? activeClass : inactiveClass }}" title="Utilisateurs">
+            <a href="{{ path('app_admin_user_index') }}"
+               class="{{ route starts with 'app_admin_user_' ? activeClass : inactiveClass }}" title="Utilisateurs">
                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 {% if showLabels %}<span>Utilisateurs</span>{% else %}<span class="sidebar-label whitespace-nowrap">Utilisateurs</span>{% endif %}
             </a>
@@ -113,11 +115,14 @@
                         </div>
                         <div class="min-w-0 flex-1">
                             <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ userFullName }}</p>
-                            <p class="text-xs text-gray-500 truncate">{{ app.user ? app.user.userIdentifier : '' }}</p>
+                            <div class="flex items-center gap-2 text-xs text-gray-500 truncate">
+                                <a href="{{ path('app_profile_index') }}" class="hover:text-primary transition">Mon
+                                    profil</a>
+                                <span class="text-gray-300 dark:text-gray-600">•</span>
+                                <a href="{{ path('app_logout') }}"
+                                   class="hover:text-fondcinq transition">Déconnexion</a>
+                            </div>
                         </div>
-                        <a href="{{ path('app_logout') }}" class="text-gray-400 hover:text-fondcinq transition p-1" title="Se deconnecter">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                        </a>
                     </div>
                 </div>
             </div>
@@ -148,9 +153,12 @@
                     </div>
                     <div class="sidebar-label min-w-0">
                         <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ userFullName }}</p>
-                        <p class="text-xs text-gray-500 truncate">
-                            <a href="{{ path('app_logout') }}" class="hover:text-fondcinq transition">Deconnexion</a>
-                        </p>
+                        <div class="flex items-center gap-2 text-xs text-gray-500 truncate">
+                            <a href="{{ path('app_profile_index') }}" class="hover:text-primary transition">Mon
+                                profil</a>
+                            <span class="text-gray-300 dark:text-gray-600">•</span>
+                            <a href="{{ path('app_logout') }}" class="hover:text-fondcinq transition">Déconnexion</a>
+                        </div>
                     </div>
                 </div>
             </div>

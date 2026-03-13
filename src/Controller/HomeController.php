@@ -12,7 +12,7 @@
         public function index(): Response
         {
             if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_PLANIFICATEUR')) {
-                return $this->redirectToRoute('app_Dashboard');
+                return $this->redirectToRoute('app_dashboard_index');
             } elseif ($this->isGranted('ROLE_TECHNICIEN')) {
                 return $this->redirectToRoute('app_intervention_mes_interventions');
             } elseif ($this->isGranted('ROLE_DEMANDEUR')) {

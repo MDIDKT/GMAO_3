@@ -1,0 +1,87 @@
+{% use 'form_div_layout.html.twig' with
+    form_label as base_form_label,
+    form_widget_simple as base_form_widget_simple,
+    textarea_widget as base_textarea_widget,
+    choice_widget_collapsed as base_choice_widget_collapsed,
+    checkbox_widget as base_checkbox_widget
+%}
+
+{% block form_row %}
+    {% set row_attr = row_attr|merge({
+        class: ('space-y-2 ' ~ (row_attr.class|default('')))|trim
+    }) %}
+    <div{% with { attr: row_attr } %}{{ block('attributes') }}{% endwith %}>
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
+
+{% block checkbox_row %}
+    {% set row_attr = row_attr|merge({
+        class: ('space-y-2 ' ~ (row_attr.class|default('')))|trim
+    }) %}
+    <div{% with { attr: row_attr } %}{{ block('attributes') }}{% endwith %}>
+        <div class="flex items-center gap-2">
+            {{ form_widget(form) }}
+            {{ form_label(form) }}
+        </div>
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
+
+{% block form_label %}
+    {% if label is not same as(false) %}
+        {% set label_attr = label_attr|merge({
+            class: ('block text-sm font-medium text-gray-700 dark:text-gray-200 ' ~ (label_attr.class|default('')))|trim
+        }) %}
+    {% endif %}
+
+    {{ block('base_form_label') }}
+{% endblock %}
+
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        <div class="space-y-1 text-sm text-red-600 dark:text-red-400">
+            {% for error in errors %}
+                <div>{{ error.message|trans(error.messageParameters, 'validators') }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block form_widget_simple %}
+    {% if type is defined and type == 'hidden' %}
+        {{ block('base_form_widget_simple') }}
+    {% else %}
+        {% set base_class = type is defined and type == 'file'
+            ? 'block w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm text-gray-900 transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-primary/90 focus:ring-2 focus:ring-primary focus:border-primary dark:border-white/10 dark:bg-fondun dark:text-white'
+            : 'block w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 transition focus:ring-2 focus:ring-primary focus:border-primary dark:border-white/10 dark:bg-fondun dark:text-white dark:placeholder-gray-500'
+        %}
+        {% set attr = attr|merge({
+            class: (base_class ~ ' ' ~ (attr.class|default('')))|trim
+        }) %}
+        {{ block('base_form_widget_simple') }}
+    {% endif %}
+{% endblock %}
+
+{% block textarea_widget %}
+    {% set attr = attr|merge({
+        class: ('block w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 transition focus:ring-2 focus:ring-primary focus:border-primary dark:border-white/10 dark:bg-fondun dark:text-white dark:placeholder-gray-500 ' ~ (attr.class|default('')))|trim
+    }) %}
+    {{ block('base_textarea_widget') }}
+{% endblock %}
+
+{% block choice_widget_collapsed %}
+    {% set attr = attr|merge({
+        class: ('block w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 transition focus:ring-2 focus:ring-primary focus:border-primary dark:border-white/10 dark:bg-fondun dark:text-white dark:placeholder-gray-500 ' ~ (attr.class|default('')))|trim
+    }) %}
+    {{ block('base_choice_widget_collapsed') }}
+{% endblock %}
+
+{% block checkbox_widget %}
+    {% set attr = attr|merge({
+        class: ('h-4 w-4 rounded border-gray-300 bg-gray-50 text-primary focus:ring-primary dark:border-white/10 dark:bg-fondun ' ~ (attr.class|default('')))|trim
+    }) %}
+    {{ block('base_checkbox_widget') }}
+{% endblock %}

@@ -1,34 +1,11 @@
-{% set inputClass = 'block w-full px-4 py-3 border border-gray-300 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white dark:placeholder-gray-500' %}
-{% set labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %}
 {% set cancelPath = cancel_path|default(path('app_batiment_index')) %}
 
 {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
-    <div>
-        {{ form_label(form.nom, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.nom, {'attr': {'class': inputClass, 'placeholder': 'Ex: Batiment A'}}) }}
-        {{ form_errors(form.nom) }}
-    </div>
-
-    <div>
-        {{ form_label(form.etage, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.etage, {'attr': {'class': inputClass, 'placeholder': 'RDC / R+1'}}) }}
-        {{ form_errors(form.etage) }}
-    </div>
-
-    <div>
-        {{ form_label(form.site, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.site, {'attr': {'class': inputClass}}) }}
-        {{ form_errors(form.site) }}
-    </div>
-
-    <div>
-        <label class="{{ labelClass }}">Statut</label>
-        <div class="flex items-center gap-2">
-            {{ form_widget(form.actif, {'attr': {'class': 'h-4 w-4 text-primary border-gray-300 dark:border-white/10 rounded focus:ring-primary bg-gray-50 dark:bg-fondun'}}) }}
-            {{ form_label(form.actif, 'Actif', {'label_attr': {'class': 'text-sm text-gray-700 dark:text-gray-200 mb-0'}}) }}
-        </div>
-        {{ form_errors(form.actif) }}
-    </div>
+    {{ form_errors(form) }}
+    {{ form_row(form.nom, {'attr': {'placeholder': 'Ex: Batiment A'}}) }}
+    {{ form_row(form.etage, {'attr': {'placeholder': 'RDC / R+1'}}) }}
+    {{ form_row(form.site) }}
+    {{ form_row(form.actif, {'label': 'Actif'}) }}
 
     <div class="border-t border-gray-200 dark:border-white/10 pt-6 flex items-center justify-between">
         <a href="{{ cancelPath }}" class="px-6 py-3 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">

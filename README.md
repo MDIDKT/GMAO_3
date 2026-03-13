@@ -95,11 +95,20 @@ php bin/console lint:twig templates
 php bin/console doctrine:schema:validate --skip-sync
 ```
 
+## Conventions Twig / Tailwind
+
+- Les formulaires Symfony utilisent un theme Twig global : `templates/form/tailwind_theme.html.twig`
+- Par defaut, utiliser `{{ form_row(form.champ) }}`
+- Ne separer `form_label()`, `form_widget()` et `form_errors()` qu'en cas de besoin de layout specifique
+- Laisser `form_start()` gerer automatiquement le `multipart/form-data`
+- En Tailwind v4, preferer `shrink-0` a `flex-shrink-0`
+
 ## Structure
 
 ```text
 src/        logique metier, controllers, services, voters, repositories
 templates/  vues Twig
+templates/form/  theme global des formulaires Symfony
 tests/      tests unitaires et fonctionnels
 public/     point d'entree HTTP et assets compiles
 docs/       documentation locale du projet

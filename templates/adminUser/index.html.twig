@@ -1,0 +1,137 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block page_title %}Utilisateurs{% endblock %}
+{% block page_subtitle %}Gestion des membres de votre organisation{% endblock %}
+
+{% block page_actions %}
+    <a href="{{ path('app_admin_user_inviter') }}"
+       class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl font-medium transition flex items-center space-x-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        <span>Inviter un utilisateur</span>
+    </a>
+{% endblock %}
+
+{% block page_content %}
+    <div
+        class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-fondun">
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ users|length }} utilisateurs trouvés</p>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 dark:bg-fondun border-b border-gray-200 dark:border-white/10">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Utilisateur
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle
+                        actuel
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Changer
+                        Rôle
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-fonddeux divide-y divide-gray-200 dark:divide-white/10">
+                {% for user in users %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div
+                                    class="shrink-0 h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">
+                                    {{ user.prenom|first|upper }}{{ user.nom|first|upper }}
+                                </div>
+                                <div class="ml-4">
+                                    <div
+                                        class="text-sm font-medium text-gray-900 dark:text-white">{{ user.prenom }} {{ user.nom }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ user.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-200">
+                            {% if 'ROLE_ADMIN' in user.roles %}
+                                <span
+                                    class="px-2 py-1 text-xs font-semibold rounded bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400">Admin</span>
+                            {% elseif 'ROLE_PLANIFICATEUR' in user.roles %}
+                                <span
+                                    class="px-2 py-1 text-xs font-semibold rounded bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400">Planificateur</span>
+                            {% else %}
+                                <span
+                                    class="px-2 py-1 text-xs font-semibold rounded bg-gray-100 dark:bg-fondun text-gray-800 dark:text-white">Technicien</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span
+                                class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ user.actif ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400' }}">
+                                {{ user.actif ? 'Actif' : 'Inactif' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            {% if user != app.user %}
+                                <form action="{{ path('app_admin_user_role', {'id': user.id}) }}" method="post"
+                                      class="flex items-center space-x-2">
+                                    <select name="role" aria-label="Changer le rôle de l'utilisateur"
+                                            class="block w-full px-2 py-1 text-sm border border-gray-300 dark:border-white/10 rounded-lg focus:ring-primary bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white">
+                                        <option
+                                            value="ROLE_USER" {{ 'ROLE_USER' in user.roles and 'ROLE_PLANIFICATEUR' not in user.roles and 'ROLE_ADMIN' not in user.roles ? 'selected' : '' }}>
+                                            Technicien
+                                        </option>
+                                        <option
+                                            value="ROLE_PLANIFICATEUR" {{ 'ROLE_PLANIFICATEUR' in user.roles ? 'selected' : '' }}>
+                                            Planificateur
+                                        </option>
+                                        <option
+                                            value="ROLE_ADMIN" {{ 'ROLE_ADMIN' in user.roles ? 'selected' : '' }}>
+                                            Admin
+                                        </option>
+                                    </select>
+                                    <button type="submit" class="p-1 text-primary hover:text-primary/80 transition"
+                                            title="Mettre à jour le rôle">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            {% else %}
+                                <span class="text-xs text-gray-400 italic">Modification impossible (Soi-même)</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex items-center gap-3">
+                                {% if user != app.user %}
+                                    <form action="{{ path('app_admin_user_toggle', {'id': user.id}) }}" method="post">
+                                        <button type="submit"
+                                                class="{{ user.actif ? 'text-orange-600 hover:text-orange-700' : 'text-green-600 hover:text-green-700' }} transition">
+                                            {{ user.actif ? 'Désactiver' : 'Activer' }}
+                                        </button>
+                                    </form>
+                                    <form action="{{ path('app_admin_user_delete', {'id': user.id}) }}" method="post"
+                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                        <button type="submit" class="text-red-600 hover:text-red-700 transition">
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400">Aucun
+                            utilisateur trouve.
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

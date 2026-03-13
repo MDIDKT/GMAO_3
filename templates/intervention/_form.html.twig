@@ -1,28 +1,15 @@
-{% set inputClass = 'block w-full px-4 py-3 border border-gray-300 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white dark:placeholder-gray-500' %}
-{% set labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %}
 {% set cancelPath = cancel_path|default(path('app_intervention_index')) %}
 
 {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+{{ form_errors(form) }}
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-        {{ form_label(form.technicien, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.technicien, {'attr': {'class': inputClass}}) }}
-        {{ form_errors(form.technicien) }}
-    </div>
-    <div>
-        {{ form_label(form.datePlanifiee, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.datePlanifiee, {'attr': {'class': inputClass}}) }}
-        {{ form_errors(form.datePlanifiee) }}
-    </div>
+    {{ form_row(form.technicien) }}
+    {{ form_row(form.datePlanifiee) }}
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-        {{ form_label(form.planificateur, null, {'label_attr': {'class': labelClass}}) }}
-        {{ form_widget(form.planificateur, {'attr': {'class': inputClass}}) }}
-        {{ form_errors(form.planificateur) }}
-    </div>
+    {{ form_row(form.planificateur) }}
 </div>
 
 <div class="border-t border-gray-200 dark:border-white/10 pt-6 flex items-center justify-between">

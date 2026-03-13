@@ -4,9 +4,6 @@
 {% block page_subtitle %}Creation d'un compte par invitation{% endblock %}
 
 {% block page_content %}
-    {% set inputClass = 'block w-full px-4 py-3 border border-gray-300 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white dark:placeholder-gray-500' %}
-    {% set labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %}
-
     <div class="max-w-3xl mx-auto">
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10">
             <div class="px-8 py-6 border-b border-gray-200 dark:border-white/10">
@@ -21,28 +18,13 @@
                 {% endfor %}
 
                 {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
-                    <div>
-                        {{ form_label(form.email, null, {'label_attr': {'class': labelClass}}) }}
-                        {{ form_widget(form.email, {'attr': {'class': inputClass}}) }}
-                        {{ form_errors(form.email) }}
-                    </div>
+                    {{ form_errors(form) }}
+                    {{ form_row(form.email) }}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            {{ form_label(form.nom, null, {'label_attr': {'class': labelClass}}) }}
-                            {{ form_widget(form.nom, {'attr': {'class': inputClass}}) }}
-                            {{ form_errors(form.nom) }}
-                        </div>
-                        <div>
-                            {{ form_label(form.prenom, null, {'label_attr': {'class': labelClass}}) }}
-                            {{ form_widget(form.prenom, {'attr': {'class': inputClass}}) }}
-                            {{ form_errors(form.prenom) }}
-                        </div>
+                        {{ form_row(form.nom) }}
+                        {{ form_row(form.prenom) }}
                     </div>
-                    <div>
-                        {{ form_label(form.roles, null, {'label_attr': {'class': labelClass}}) }}
-                        {{ form_widget(form.roles, {'attr': {'class': inputClass}}) }}
-                        {{ form_errors(form.roles) }}
-                    </div>
+                    {{ form_row(form.roles) }}
                     <div class="border-t border-gray-200 dark:border-white/10 pt-6">
                         <button type="submit" class="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl transition font-medium">
                             Envoyer l'invitation

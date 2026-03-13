@@ -148,8 +148,15 @@
             $this->denyAccessUnlessSameOrganisation($equipement);
 
             if ($this->isCsrfTokenValid('delete' . $equipement->getId(), $request->getPayload()->getString('_token'))) {
+                // Verifier les dependances avant suppression
+                if ($equipement->getDemandes()->count() > 0) {
+                    $this->addFlash('danger', 'Impossible de supprimer cet equipement : il est lie a ' . $equipement->getDemandes()->count() . ' demande(s).');
+                    return $this->redirectToRoute('app_equipement_show', ['id' => $equipement->getId()]);
+                }
+
                 $entityManager->remove($equipement);
                 $entityManager->flush();
+                $this->addFlash('success', 'L\'equipement ' . $equipement->getNom() . ' a ete supprime avec succes.');
             }
 
             return $this->redirectToRoute('app_equipement_index', [], Response::HTTP_SEE_OTHER);

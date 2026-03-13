@@ -1,0 +1,69 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block page_title %}Mon Profil{% endblock %}
+{% block page_subtitle %}Consultez et modifiez vos informations personnelles{% endblock %}
+
+{% block page_content %}
+    <div class="max-w-4xl mx-auto space-y-6">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 overflow-hidden">
+            <div class="px-8 py-6 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-fondun flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary text-2xl font-bold border-2 border-primary/20">
+                        {{ user.prenom|first|upper }}{{ user.nom|first|upper }}
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ user.prenom }} {{ user.nom }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ user.email }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="{{ path('app_profile_edit') }}" class="px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium text-sm">
+                        Modifier
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">Informations Professionnelles</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Organisation</p>
+                            <p class="text-base font-medium text-gray-900 dark:text-white mt-1">
+                                {{ user.organisation ? user.organisation.nom : 'Aucune organisation' }}
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Rôle</p>
+                            <div class="mt-1">
+                                {% if 'ROLE_ADMIN' in user.roles %}
+                                    <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400 border border-purple-200 dark:border-purple-800/50">Administrateur</span>
+                                {% elseif 'ROLE_PLANIFICATEUR' in user.roles %}
+                                    <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50">Planificateur</span>
+                                {% else %}
+                                    <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-gray-100 dark:bg-fondun text-gray-800 dark:text-white border border-gray-200 dark:border-white/10">Technicien / Demandeur</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">Compte et Sécurité</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Membre depuis le</p>
+                            <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ user.createdAt ? user.createdAt|date('d/m/Y') : 'Inconnu' }}</p>
+                        </div>
+                        <div class="pt-2">
+                            <a href="{{ path('app_profile_password') }}" class="text-sm font-medium text-primary hover:underline flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                Changer mon mot de passe
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

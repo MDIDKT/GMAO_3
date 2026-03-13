@@ -100,9 +100,14 @@ final class CategorieEquipementController extends AbstractController
         $this->denyAccessUnlessSameOrganisation($categorie);
 
         if ($this->isCsrfTokenValid('delete' . $categorie->getId(), $request->getPayload()->getString('_token'))) {
+            // Verifier les dependances avant suppression
+            if ($categorie->getEquipements()->count() > 0) {
+                $this->addFlash('danger', 'Impossible de supprimer cette categorie : elle contient encore ' . $categorie->getEquipements()->count() . ' equipement(s).');
+                return $this->redirectToRoute('app_categorie_equipement_show', ['id' => $categorie->getId()]);
+            }
+
             $entityManager->remove($categorie);
             $entityManager->flush();
-
             $this->addFlash('success', 'Categorie supprimee.');
         }
 

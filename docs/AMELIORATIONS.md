@@ -1,4 +1,4 @@
-# Plan d'ameliorations du MVP
+sy# Plan d'ameliorations du MVP
 
 Objectif : faire passer le projet de "MVP fonctionnel" a "base solide pour pre-production".
 

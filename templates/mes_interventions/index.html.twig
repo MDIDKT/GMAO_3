@@ -35,18 +35,18 @@
     {% else %}
         <div class="grid gap-4">
             {% for intervention in pagination.items %}
-                {% set statutClass = 'bg-gray-100 text-gray-800' %}
+                {% set statutClass = 'bg-gray-100 dark:bg-fondun text-gray-800 dark:text-white' %}
                 {% if intervention.statut %}
                     {% if intervention.statut.value == 'A_PLANIFIER' %}
-                        {% set statutClass = 'bg-gray-100 text-gray-800' %}
+                        {% set statutClass = 'bg-gray-100 dark:bg-fondun text-gray-800 dark:text-white' %}
                     {% elseif intervention.statut.value == 'PLANIFIE' %}
-                        {% set statutClass = 'bg-yellow-100 text-yellow-800' %}
+                        {% set statutClass = 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400' %}
                     {% elseif intervention.statut.value == 'EN_COURS' %}
-                        {% set statutClass = 'bg-blue-100 text-blue-800' %}
+                        {% set statutClass = 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400' %}
                     {% elseif intervention.statut.value == 'TERMINEE' %}
-                        {% set statutClass = 'bg-green-100 text-green-800' %}
+                        {% set statutClass = 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' %}
                     {% elseif intervention.statut.value == 'VALIDEE' %}
-                        {% set statutClass = 'bg-emerald-100 text-emerald-800' %}
+                        {% set statutClass = 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400' %}
                     {% endif %}
                 {% endif %}
 

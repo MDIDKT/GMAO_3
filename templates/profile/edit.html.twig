@@ -1,0 +1,30 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block page_title %}Modifier mon profil{% endblock %}
+{% block page_subtitle %}Mettez à jour vos informations personnelles{% endblock %}
+
+{% block page_content %}
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10">
+            <div class="px-8 py-6 border-b border-gray-200 dark:border-white/10">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Informations personnelles</h3>
+            </div>
+            <div class="p-8">
+                {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+                    {{ form_errors(form) }}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {{ form_row(form.prenom) }}
+                        {{ form_row(form.nom) }}
+                    </div>
+
+                    <div class="flex items-center justify-between border-t border-gray-200 dark:border-white/10 pt-6">
+                        <a href="{{ path('app_profile_index') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:underline">Annuler</a>
+                        <button type="submit" class="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl transition font-medium">
+                            Enregistrer les modifications
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

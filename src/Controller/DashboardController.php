@@ -13,7 +13,7 @@
     #[IsGranted('ROLE_PLANIFICATEUR')]
     final class DashboardController extends AbstractController
     {
-        #[Route('/dashboard', name: 'app_Dashboard')]
+        #[Route('/dashboard', name: 'app_dashboard_index')]
         public function index(DemandeRepository $demandeRepository, InterventionRepository $interventionRepository): Response
         {
             $user = $this->getUser();
@@ -23,7 +23,7 @@
 
             $organisation = $user->getOrganisation();
 
-            return $this->render('dashboard/dashborad.html.twig', [
+            return $this->render('dashboard/dashboard.html.twig', [
                 'countP1Ouvertes' => $demandeRepository->countP1Ouvertes($organisation),
                 'countAQualifier' => $demandeRepository->countAQualifier($organisation),
                 'countInterventionsDuJour' => $interventionRepository->countInterventionsDuJour($organisation),

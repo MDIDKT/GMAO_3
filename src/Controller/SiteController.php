@@ -60,7 +60,7 @@ final class SiteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($site);
             $entityManager->flush();
-
+            $this->addFlash('success', 'Le site ' . $site->getNom() . ' a été créée avec succès.');
             return $this->redirectToRoute('app_site_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -90,7 +90,7 @@ final class SiteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
+            $this->addFlash('success', 'Le site ' . $site->getNom() . ' a été modifié avec succès.');
             return $this->redirectToRoute('app_site_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -106,8 +106,23 @@ final class SiteController extends AbstractController
         $this->denyAccessUnlessSameOrganisation($site);
 
         if ($this->isCsrfTokenValid('delete'.$site->getId(), $request->getPayload()->getString('_token'))) {
+            // Verifier les dependances avant suppression
+            if ($site->getBatiments()->count() > 0) {
+                $this->addFlash('danger', 'Impossible de supprimer ce site : il contient encore ' . $site->getBatiments()->count() . ' batiment(s).');
+                return $this->redirectToRoute('app_site_show', ['id' => $site->getId()]);
+            }
+            if ($site->getDemandes()->count() > 0) {
+                $this->addFlash('danger', 'Impossible de supprimer ce site : il est lie a ' . $site->getDemandes()->count() . ' demande(s).');
+                return $this->redirectToRoute('app_site_show', ['id' => $site->getId()]);
+            }
+            if ($site->getEquipements()->count() > 0) {
+                $this->addFlash('danger', 'Impossible de supprimer ce site : il contient encore ' . $site->getEquipements()->count() . ' equipement(s).');
+                return $this->redirectToRoute('app_site_show', ['id' => $site->getId()]);
+            }
+
             $entityManager->remove($site);
             $entityManager->flush();
+            $this->addFlash('success', 'Le site ' . $site->getNom() . ' a ete supprime avec succes.');
         }
 
         return $this->redirectToRoute('app_site_index', [], Response::HTTP_SEE_OTHER);
