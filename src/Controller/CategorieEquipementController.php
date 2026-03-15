@@ -6,6 +6,7 @@ use App\Entity\CategorieEquipement;
 use App\Entity\User;
 use App\Form\CategorieEquipementType;
 use App\Repository\CategorieEquipementRepository;
+use App\Security\Voter\CategorieEquipementVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,7 +66,7 @@ final class CategorieEquipementController extends AbstractController
     #[Route('/{id}', name: 'app_categorie_equipement_show', methods: ['GET'])]
     public function show(CategorieEquipement $categorie): Response
     {
-        $this->denyAccessUnlessSameOrganisation($categorie);
+        $this->denyAccessUnlessGranted(CategorieEquipementVoter::VIEW, $categorie);
 
         return $this->render('categorie_equipement/show.html.twig', [
             'categorie' => $categorie,
@@ -75,7 +76,7 @@ final class CategorieEquipementController extends AbstractController
     #[Route('/{id}/edit', name: 'app_categorie_equipement_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, CategorieEquipement $categorie, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessSameOrganisation($categorie);
+        $this->denyAccessUnlessGranted(CategorieEquipementVoter::EDIT, $categorie);
 
         $form = $this->createForm(CategorieEquipementType::class, $categorie);
         $form->handleRequest($request);
@@ -97,7 +98,7 @@ final class CategorieEquipementController extends AbstractController
     #[Route('/{id}', name: 'app_categorie_equipement_delete', methods: ['POST'])]
     public function delete(Request $request, CategorieEquipement $categorie, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessSameOrganisation($categorie);
+        $this->denyAccessUnlessGranted(CategorieEquipementVoter::DELETE, $categorie);
 
         if ($this->isCsrfTokenValid('delete' . $categorie->getId(), $request->getPayload()->getString('_token'))) {
             // Verifier les dependances avant suppression
@@ -114,15 +115,4 @@ final class CategorieEquipementController extends AbstractController
         return $this->redirectToRoute('app_categorie_equipement_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    private function denyAccessUnlessSameOrganisation(CategorieEquipement $categorie): void
-    {
-        $currentUser = $this->getUser();
-        if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
-            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
-        }
-
-        if ($categorie->getOrganisation() !== $currentUser->getOrganisation()) {
-            throw $this->createAccessDeniedException('Acces interdit a cette categorie.');
-        }
-    }
 }

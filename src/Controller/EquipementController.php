@@ -9,6 +9,7 @@
     use App\Repository\CategorieEquipementRepository;
     use App\Repository\EquipementRepository;
     use App\Repository\SiteRepository;
+    use App\Security\Voter\EquipementVoter;
     use Doctrine\ORM\EntityManagerInterface;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Request;
@@ -110,7 +111,7 @@
         #[Route('/{id}', name: 'app_equipement_show', methods: ['GET'])]
         public function show(Equipement $equipement): Response
         {
-            $this->denyAccessUnlessSameOrganisation($equipement);
+            $this->denyAccessUnlessGranted(EquipementVoter::VIEW, $equipement);
 
             return $this->render('equipement/show.html.twig', [
                 'equipement' => $equipement,
@@ -120,7 +121,7 @@
         #[Route('/{id}/edit', name: 'app_equipement_edit', methods: ['GET', 'POST'])]
         public function edit(Request $request, Equipement $equipement, EntityManagerInterface $entityManager): Response
         {
-            $this->denyAccessUnlessSameOrganisation($equipement);
+            $this->denyAccessUnlessGranted(EquipementVoter::EDIT, $equipement);
 
             $currentUser = $this->getUser();
             if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
@@ -145,7 +146,7 @@
         #[Route('/{id}', name: 'app_equipement_delete', methods: ['POST'])]
         public function delete(Request $request, Equipement $equipement, EntityManagerInterface $entityManager): Response
         {
-            $this->denyAccessUnlessSameOrganisation($equipement);
+            $this->denyAccessUnlessGranted(EquipementVoter::DELETE, $equipement);
 
             if ($this->isCsrfTokenValid('delete' . $equipement->getId(), $request->getPayload()->getString('_token'))) {
                 // Verifier les dependances avant suppression
@@ -162,15 +163,4 @@
             return $this->redirectToRoute('app_equipement_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        private function denyAccessUnlessSameOrganisation(Equipement $equipement): void
-        {
-            $currentUser = $this->getUser();
-            if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
-                throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
-            }
-
-            if ($equipement->getOrganisation() !== $currentUser->getOrganisation()) {
-                throw $this->createAccessDeniedException('Acces interdit a cet equipement.');
-            }
-        }
     }

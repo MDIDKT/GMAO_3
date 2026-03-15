@@ -6,6 +6,7 @@
     use App\Entity\User;
     use App\Form\BatimentType;
     use App\Repository\BatimentRepository;
+    use App\Security\Voter\BatimentVoter;
     use Doctrine\ORM\EntityManagerInterface;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Request;
@@ -73,30 +74,17 @@
         #[Route('/{id}', name: 'app_batiment_show', methods: ['GET'])]
         public function show(Batiment $batiment): Response
         {
-            $this->denyAccessUnlessSameOrganisation($batiment);
+            $this->denyAccessUnlessGranted(BatimentVoter::VIEW, $batiment);
 
             return $this->render('batiment/show.html.twig', [
                 'batiment' => $batiment,
             ]);
         }
 
-        private function denyAccessUnlessSameOrganisation(Batiment $batiment): void
-        {
-            $currentUser = $this->getUser();
-            if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
-                throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
-            }
-
-            $site = $batiment->getSite();
-            if ($site === null || $site->getOrganisation() !== $currentUser->getOrganisation()) {
-                throw $this->createAccessDeniedException('Acces interdit à ce batiment.');
-            }
-        }
-
         #[Route('/{id}/edit', name: 'app_batiment_edit', methods: ['GET', 'POST'])]
         public function edit(Request $request, Batiment $batiment, EntityManagerInterface $entityManager): Response
         {
-            $this->denyAccessUnlessSameOrganisation($batiment);
+            $this->denyAccessUnlessGranted(BatimentVoter::EDIT, $batiment);
 
             $currentUser = $this->getUser();
             if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
@@ -121,7 +109,7 @@
         #[Route('/{id}', name: 'app_batiment_delete', methods: ['POST'])]
         public function delete(Request $request, Batiment $batiment, EntityManagerInterface $entityManager): Response
         {
-            $this->denyAccessUnlessSameOrganisation($batiment);
+            $this->denyAccessUnlessGranted(BatimentVoter::DELETE, $batiment);
 
             if ($this->isCsrfTokenValid('delete' . $batiment->getId(), $request->getPayload()->getString('_token'))) {
                 // Verifier les dependances avant suppression

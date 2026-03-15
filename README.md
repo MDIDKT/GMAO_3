@@ -116,7 +116,7 @@ docs/       documentation locale du projet
 
 ## Etat du projet
 
-Le projet est au stade MVP avec workflows demande/intervention, reporting, notifications email et couverture de tests unitaires et fonctionnels sur les points sensibles. L'interface principale repose sur un layout responsive desktop/mobile avec theme sombre et clair, une sidebar harmonisee, des cartes KPI a accent colore coherent en dark comme en light, et un dashboard qui remount de vraies demandes prioritaires et interventions du jour dans des blocs de synthese. Un audit recent a aussi conduit au durcissement des controles d'acces multi-organisation, et la navigation mobile a ete revalidee en navigateur apres correction du drawer ferme qui captait encore les clics.
+Le projet est au stade MVP avec workflows demande/intervention, reporting, notifications email et couverture de tests unitaires et fonctionnels sur les points sensibles. L'interface principale repose sur un layout responsive desktop/mobile avec theme sombre et clair, une sidebar harmonisee, des cartes KPI a accent colore coherent en dark comme en light, et un dashboard qui remount de vraies demandes prioritaires et interventions du jour dans des blocs de synthese. Un audit recent a aussi conduit au durcissement des controles d'acces multi-organisation via 4 Voters dedies (SiteVoter, BatimentVoter, EquipementVoter, CategorieEquipementVoter) pour eliminer les verifications redondantes dans les controllers, et la navigation mobile a ete revalidee en navigateur apres correction du drawer ferme qui captait encore les clics.
 
 ## Gestion des photos
 

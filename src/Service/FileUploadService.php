@@ -4,6 +4,7 @@
 
     use InvalidArgumentException;
     use Symfony\Component\HttpFoundation\File\UploadedFile;
+    use Symfony\Component\Validator\Constraints as Assert;
 
     class FileUploadService
     {
@@ -13,6 +14,11 @@
         {
         }
 
+        #[Assert\File(
+            maxSize: '5M',
+            mimeTypes: ['image/jpeg', 'image/png', 'image/gif'],
+            mimeTypesMessage: 'Veuillez télécharger une image valide (JPEG, PNG, GIF).',
+        )]
         public function upload(UploadedFile $file): string
         {
             $newFilename = uniqid() . '.' . $file->guessExtension();
