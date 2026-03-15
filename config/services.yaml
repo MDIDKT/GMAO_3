@@ -26,6 +26,10 @@ services:
         arguments:
             $uploadDirectory: '%upload_directory%'
 
+    App\Entity\Photo:
+        arguments:
+            $fileUploadService: '@App\Service\FileUploadService'
+
     App\Service\NotificationService:
         arguments:
             $fromAddress: '%mailer_from_address%'

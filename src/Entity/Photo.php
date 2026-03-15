@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Enum\TypePhoto;
 use App\Repository\PhotoRepository;
+use App\Service\FileUploadService;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PhotoRepository::class)]
@@ -46,9 +47,12 @@ class Photo
     #[ORM\ManyToOne(inversedBy: 'photos')]
     private ?Intervention $intervention = null;
 
-    public function __construct()
+    private ?FileUploadService $fileUploadService = null;
+
+    public function __construct(?FileUploadService $fileUploadService = null)
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->fileUploadService = $fileUploadService;
     }
 
     public function getId(): ?int
@@ -157,6 +161,14 @@ class Photo
     {
         if ($this->createdAt === null) {
             $this->createdAt = new \DateTimeImmutable();
+        }
+    }
+
+    #[ORM\PreRemove]
+    public function onPreRemove(): void
+    {
+        if ($this->fileUploadService !== null && $this->fileName !== null) {
+            $this->fileUploadService->delete($this->fileName);
         }
     }
 

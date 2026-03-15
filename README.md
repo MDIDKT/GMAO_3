@@ -116,4 +116,27 @@ docs/       documentation locale du projet
 
 ## Etat du projet
 
-Le projet est au stade MVP avec workflows demande/intervention, reporting, notifications email et couverture de tests unitaires et fonctionnels sur les points sensibles. L'interface principale repose sur un layout responsive desktop/mobile avec theme sombre et clair, une sidebar harmonisee, des cartes KPI a accent colore coherent en dark comme en light, et un dashboard qui remonte maintenant de vraies demandes prioritaires et interventions du jour dans des blocs de synthese. Un audit recent a aussi conduit au durcissement des controles d'acces multi-organisation, et la navigation mobile a ete revalidee en navigateur apres correction du drawer ferme qui captait encore les clics.
+Le projet est au stade MVP avec workflows demande/intervention, reporting, notifications email et couverture de tests unitaires et fonctionnels sur les points sensibles. L'interface principale repose sur un layout responsive desktop/mobile avec theme sombre et clair, une sidebar harmonisee, des cartes KPI a accent colore coherent en dark comme en light, et un dashboard qui remount de vraies demandes prioritaires et interventions du jour dans des blocs de synthese. Un audit recent a aussi conduit au durcissement des controles d'acces multi-organisation, et la navigation mobile a ete revalidee en navigateur apres correction du drawer ferme qui captait encore les clics.
+
+## Gestion des photos
+
+Les photos uploade sur les demandes et interventions sont gere de maniere transactionnelle :
+
+- Upload via `FileUploadService` : validation MIME (JPEG, PNG, WebP), limite 5MB par fichier
+- Stockage : `var/uploads/photos/` avec nom aleatoire (uniqid + extension)
+- Affichage : route `photo_show` avec verification d'acces via les Voters (anti-IDOR)
+- Suppression en cascade : quand une Demande ou Intervention est supprimee, Doctrine supprime via cascade les entites Photo, et un lifecycle callback `PreRemove` supprime les fichiers disque via `FileUploadService::delete()` (securise contre path traversal)
+
+## Comptes de demo
+
+Mot de passe unique : `Test1234!`
+
+| Email                   | Role            | Organisation        |
+|-------------------------|-----------------|---------------------|
+| admin@gmao.fr           | ROLE_ADMIN      | GMAO Industries     |
+| planificateur@gmao.fr   | ROLE_PLANIFICATEUR | GMAO Industries  |
+| tech1@gmao.fr           | ROLE_TECHNICIEN | GMAO Industries     |
+| tech2@gmao.fr           | ROLE_TECHNICIEN | GMAO Industries     |
+| demandeur@gmao.fr       | ROLE_DEMANDEUR  | GMAO Industries     |
+
+Voir `php bin/console doctrine:fixtures:load --append` pour tous les comptes.
