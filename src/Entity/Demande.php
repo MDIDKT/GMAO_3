@@ -23,11 +23,23 @@ class Demande
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'Le titre de la demande est obligatoire.')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Le titre de la demande doit comporter au moins {{ limit }} caractères.',
+        maxMessage: 'Le titre de la demande ne peut pas dépasser {{ limit }} caractères.'
+    )]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'La description de la demande est obligatoire.')]
+    #[Assert\Length(
+        min: 2,
+        max: 2000,
+        minMessage: 'La description de la demande doit comporter au moins {{ limit }} caractères.',
+        maxMessage: 'La description de la demande ne peut pas dépasser {{ limit }} caractères.'
+    )]
     private ?string $description = null;
 
     #[ORM\Column(enumType: Priorite::class)]

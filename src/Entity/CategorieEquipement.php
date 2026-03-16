@@ -7,6 +7,7 @@
     use Doctrine\Common\Collections\Collection;
     use Doctrine\DBAL\Types\Types;
     use Doctrine\ORM\Mapping as ORM;
+    use Symfony\Component\Validator\Constraints as Assert;
 
     #[ORM\Entity(repositoryClass: CategorieEquipementRepository::class)]
     class CategorieEquipement
@@ -16,9 +17,12 @@
         #[ORM\Column]
         private ?int $id = null;
 
+        #[Assert\NotBlank(message: 'Le nom de la catégorie d\'équipement est obligatoire.')]
+        #[Assert\Length(min: 2, max: 150, minMessage: 'Le nom de la catégorie d\'équipement doit comporter au moins {{ limit }} caractères.', maxMessage: 'Le nom de la catégorie d\'équipement ne peut pas dépasser {{ limit }} caractères.')]
         #[ORM\Column(length: 255)]
         private ?string $nom = null;
 
+        #[Assert\Length(max: 500, maxMessage: 'La description de la catégorie d\'équipement ne peut pas dépasser {{ limit }} caractères.')]
         #[ORM\Column(type: Types::TEXT, nullable: true)]
         private ?string $description = null;
 

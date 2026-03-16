@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
 class Site
@@ -16,21 +17,30 @@ class Site
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'Le nom du site est obligatoire.')]
+    #[Assert\Length(min: 2, max: 150, minMessage: 'Le nom du site doit comporter au moins {{ limit }} caractères.', maxMessage: 'Le nom du site ne peut pas dépasser {{ limit }} caractères.')]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
+    #[Assert\NotBlank(message: 'L\'adresse du site est obligatoire.')]
+    #[Assert\Length(min: 2, max: 250, minMessage: 'L\'adresse du site doit comporter au moins {{ limit }} caractères.', maxMessage: 'L\'adresse du site ne peut pas dépasser {{ limit }} caractères.')]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $adresse = null;
 
+    #[Assert\NotBlank(message: 'Le code postal est obligatoire.')]
+    #[Assert\Regex(pattern: '/^[0-9]{5}$/', message: 'Le code postal doit être composé de 5 chiffres.')]
     #[ORM\Column(length: 255)]
     private ?string $codePostal = null;
 
+    #[Assert\NotBlank(message: 'La ville est obligatoire.')]
+    #[Assert\Length(min: 2, max: 100, minMessage: 'La ville doit comporter au moins {{ limit }} caractères.', maxMessage: 'La ville ne peut pas dépasser {{ limit }} caractères.')]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $ville = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $telephone = null;
 
+    #[Assert\Email(message: 'L\'adresse email n\'est pas valide.')]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $email = null;
 

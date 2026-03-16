@@ -6,6 +6,7 @@ use App\Repository\BatimentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BatimentRepository::class)]
 class Batiment
@@ -15,6 +16,8 @@ class Batiment
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'Le nom du bâtiment est obligatoire.')]
+    #[Assert\Length(min: 2, max: 150, minMessage: 'Le nom du bâtiment doit comporter au moins {{ limit }} caractères.', maxMessage: 'Le nom du bâtiment ne peut pas dépasser {{ limit }} caractères.')]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 

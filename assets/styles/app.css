@@ -1,3 +1,182 @@
+@import "flowbite/dist/flowbite.min.css";
 @import "tailwindcss";
 
 @source not "../../public";
+@source "../../templates";
+
+@theme {
+    --color-primary: #CF9D7B;
+    --color-secondary: #64748B;
+    --color-success: #10B981;
+    --color-warning: #F59E0B;
+    --color-danger: #EF4444;
+    --color-fondun: #0C1519;
+    --color-fonddeux: #162127;
+    --color-fondtrois: #3A3534;
+    --color-fondquatre: #724B39;
+    --color-fondcinq: #CF9D7B;
+    --color-fondsix: #F2F0EE;
+    --font-sans: 'Inter var', sans-serif;
+}
+
+/* Sidebar transitions */
+.sidebar-expanded {
+    width: 240px;
+}
+
+.sidebar-collapsed {
+    width: 72px;
+}
+
+.sidebar-label {
+    transition: opacity 0.2s, width 0.2s;
+}
+
+.sidebar-collapsed .sidebar-label {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.sidebar-expanded .sidebar-label {
+    opacity: 1;
+}
+
+/* Mobile drawer */
+.drawer-overlay {
+    transition: opacity 0.3s;
+}
+
+.drawer-panel {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drawer-closed {
+    pointer-events: none;
+}
+
+.drawer-open {
+    pointer-events: auto;
+}
+
+.drawer-closed .drawer-overlay {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.drawer-closed .drawer-panel {
+    transform: translateX(-100%);
+}
+
+.drawer-open .drawer-overlay {
+    opacity: 1;
+}
+
+.drawer-open .drawer-panel {
+    transform: translateX(0);
+}
+
+/* Soft glow separators — light (default) */
+.sidebar-glow {
+    box-shadow: 4px 0 24px -4px rgba(0, 0, 0, 0.08);
+}
+
+.header-glow {
+    box-shadow: 0 2px 16px -2px rgba(0, 0, 0, 0.06);
+}
+
+.soft-separator {
+    position: relative;
+}
+
+.soft-separator::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 16px;
+    right: 16px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.06), transparent);
+}
+
+.nav-divider {
+    height: 1px;
+    margin: 12px 8px;
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.06), transparent);
+}
+
+.top-separator::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 16px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.06), transparent);
+}
+
+/* Smooth transitions */
+*, *::before, *::after {
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+/* Dark overrides — activé par prefers-color-scheme */
+@media (prefers-color-scheme: dark) {
+    .sidebar-glow {
+        box-shadow: 4px 0 24px -4px rgba(0, 0, 0, 0.4);
+    }
+
+    .header-glow {
+        box-shadow: 0 2px 16px -2px rgba(0, 0, 0, 0.3);
+    }
+
+    .soft-separator::after {
+        background: linear-gradient(90deg, transparent, rgba(207, 157, 123, 0.15), transparent);
+    }
+
+    .nav-divider {
+        background: linear-gradient(90deg, transparent, rgba(207, 157, 123, 0.12), transparent);
+    }
+
+    .top-separator::before {
+        background: linear-gradient(90deg, transparent, rgba(207, 157, 123, 0.15), transparent);
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #0C1519;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #3A3534;
+        border-radius: 3px;
+    }
+}
+
+/* KPI accent borders */
+.kpi-accent-danger {
+    border-left: 4px solid #EF4444 !important;
+}
+
+.kpi-accent-warning {
+    border-left: 4px solid #F59E0B !important;
+}
+
+.kpi-accent-success {
+    border-left: 4px solid #10B981 !important;
+}
+
+.kpi-accent-primary {
+    border-left: 4px solid #CF9D7B !important;
+}
+
+.kpi-accent-secondary {
+    border-left: 4px solid #64748B !important;
+}
+
+.kpi-accent-muted {
+    border-left: 4px solid #9CA3AF !important;
+}

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use LogicException;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OrganisationRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_ORGANISATION_NOM', fields: ['nom'])]
@@ -19,6 +20,11 @@ class Organisation
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'Le nom de l\'organisation est obligatoire.')]
+    #[Assert\Length(
+        max: 150,
+        maxMessage: 'Le nom de l\'organisation ne peut pas dépasser {{ limit }} caractères.'
+    )]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 

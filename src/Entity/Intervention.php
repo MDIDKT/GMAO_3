@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: InterventionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -25,18 +26,27 @@ class Intervention
     #[ORM\Column(nullable: true)]
     private ?\DateTime $datePlanifiee = null;
 
+
     #[ORM\Column(nullable: true)]
     private ?\DateTime $dateDebut = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTime $dateFin = null;
 
+    #[Assert\Length(
+        max: 2000,
+        maxMessage: 'Le compte rendu ne peut pas dépasser {{ limit }} caractères.'
+    )]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $compteRendu = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $dureeMinutes = null;
 
+    #[Assert\Length(
+        max: 2000,
+        maxMessage: 'Les notes ne peuvent pas dépasser {{ limit }} caractères.'
+    )]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 

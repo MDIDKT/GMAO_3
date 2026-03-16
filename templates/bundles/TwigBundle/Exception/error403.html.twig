@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accès interdit{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-fondun">
+        <div class="text-center px-6">
+            <p class="text-6xl font-bold text-danger">403</p>
+            <h1 class="mt-4 text-2xl font-semibold text-gray-800 dark:text-white">Accès interdit</h1>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Vous n'avez pas les droits nécessaires pour accéder à cette
+                page.</p>
+            <a href="/"
+               class="mt-6 inline-block px-6 py-3 bg-primary text-white rounded-xl hover:opacity-90 transition">
+                Retour à l'accueil
+            </a>
+        </div>
+    </div>
+{% endblock %}

@@ -7,6 +7,7 @@ use App\Repository\EquipementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EquipementRepository::class)]
 class Equipement
@@ -16,15 +17,19 @@ class Equipement
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'Le nom de l\'équipement est obligatoire.')]
+    #[Assert\Length(min: 2, max: 150, minMessage: 'Le nom de l\'équipement doit comporter au moins {{ limit }} caractères.', maxMessage: 'Le nom de l\'équipement ne peut pas dépasser {{ limit }} caractères.')]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
+    #[Assert\Length(min: 2, max: 100, maxMessage: 'La marque de l\'équipement ne peut pas dépasser {{ limit }} caractères.')]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $marque = null;
-
+    #[Assert\Length(min: 2, max: 100, maxMessage: 'Le modèle de l\'équipement ne peut pas dépasser {{ limit }} caractères.')]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $modele = null;
 
+    #[Assert\Length(min: 2, max: 100, maxMessage: 'Le numéro de série de l\'équipement ne peut pas dépasser {{ limit }} caractères.')]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $numeroDeSerie = null;
 

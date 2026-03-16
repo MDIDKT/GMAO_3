@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -22,6 +23,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'L\'adresse e-mail est obligatoire.')]
+    #[Assert\Email(message: 'L\'adresse e-mail "{{ value }}" n\'est pas valide.')]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
@@ -37,9 +40,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[Assert\NotBlank(message: 'Le nom est obligatoire.')]
+    #[Assert\Length(
+        min: 2,
+        max: 100,
+        minMessage: 'Le nom doit comporter au moins {{ limit }} caractères.',
+        maxMessage: 'Le nom ne peut pas dépasser {{ limit }} caractères.'
+    )]
     #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
+    #[Assert\NotBlank(message: 'Le prénom est obligatoire.')]
+    #[Assert\Length(
+        min: 2,
+        max: 100,
+        minMessage: 'Le prénom doit comporter au moins {{ limit }} caractères.',
+        maxMessage: 'Le prénom ne peut pas dépasser {{ limit }} caractères.'
+    )]
     #[ORM\Column(length: 100)]
     private ?string $prenom = null;
 
@@ -53,10 +70,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'datetime_immutable')]
     private ?DateTimeImmutable $createdAt = null;
+
     #[ORM\Column(type: 'datetime_immutable')]
     private ?DateTimeImmutable $updatedAt = null;
+
     #[ORM\Column(length: 64, nullable: true)]
     private ?string $invitationToken = null;
+
     #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $tokenExpiresAt = null;
 

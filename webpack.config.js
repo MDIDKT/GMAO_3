@@ -31,7 +31,7 @@ Encore
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
     .enableSingleRuntimeChunk()
-
+    .enablePostCssLoader()
     /*
      * FEATURE CONFIG
      *
@@ -47,6 +47,7 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
+
 
     // configure Babel
     // .configureBabel((config) => {
