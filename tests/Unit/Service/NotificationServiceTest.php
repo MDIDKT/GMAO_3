@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Service\NotificationService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -35,7 +36,9 @@ final class NotificationServiceTest extends TestCase
                 )
             );
 
-        $this->service = new NotificationService($this->mailer, $urlGenerator, 'noreply@example.test');
+        $logger = $this->createStub(LoggerInterface::class);
+        $this->service = new NotificationService($this->mailer, $urlGenerator, 'noreply@example.test', $logger);
+
     }
 
     public function testNotifyTechnicienAssigneEnvoieUnEmailAuTechnicien(): void

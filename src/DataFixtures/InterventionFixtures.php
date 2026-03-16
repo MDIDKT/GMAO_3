@@ -8,6 +8,7 @@ use App\Entity\Organisation;
 use App\Entity\User;
 use App\Enum\StatutDemande;
 use App\Enum\StatutIntervention;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -129,7 +130,7 @@ class InterventionFixtures extends Fixture implements DependentFixtureInterface
                 $demandesEligibles = $demandes;
             }
 
-            $now = new \DateTime();
+            $now = new DateTimeImmutable();
 
             foreach (self::INTERVENTIONS as $index => $data) {
                 $demande = $demandesEligibles[$index % count($demandesEligibles)];

@@ -7,9 +7,11 @@ namespace App\Service;
 use App\Entity\Demande;
 use App\Entity\Intervention;
 use App\Entity\User;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Throwable;
 
 final class NotificationService
 {
@@ -17,6 +19,7 @@ final class NotificationService
         private readonly MailerInterface $mailer,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly string $fromAddress,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -145,19 +148,22 @@ final class NotificationService
 
     private function sendToUser(User $user, string $subject, string $template, array $context): void
     {
-        $emailAddress = trim((string) $user->getEmail());
+        $emailAddress = trim((string)$user->getEmail());
         if ($emailAddress === '') {
             return;
         }
+        try {
+            $email = (new TemplatedEmail())
+                ->from($this->fromAddress)
+                ->to($emailAddress)
+                ->subject($subject)
+                ->htmlTemplate($template)
+                ->context($context);
 
-        $email = (new TemplatedEmail())
-            ->from($this->fromAddress)
-            ->to($emailAddress)
-            ->subject($subject)
-            ->htmlTemplate($template)
-            ->context($context);
-
-        $this->mailer->send($email);
+            $this->mailer->send($email);
+        } catch (Throwable $e) {
+            $this->logger->error('Email non envoyé à ' . $emailAddress . ' : ' . $e->getMessage());
+        }
     }
 
     private function generateInterventionUrl(Intervention $intervention): string

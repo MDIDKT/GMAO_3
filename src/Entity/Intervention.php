@@ -24,14 +24,14 @@ class Intervention
     private ?string $numero = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTime $datePlanifiee = null;
+    private ?DateTimeImmutable $datePlanifiee = null;
 
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTime $dateDebut = null;
+    private ?DateTimeImmutable $dateDebut = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTime $dateFin = null;
+    private ?DateTimeImmutable $dateFin = null;
 
     #[Assert\Length(
         max: 2000,
@@ -65,10 +65,10 @@ class Intervention
     private ?Organisation $organisation = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private ?DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(enumType: StatutIntervention::class)]
     private ?StatutIntervention $statut = null;
@@ -102,36 +102,36 @@ class Intervention
         return $this;
     }
 
-    public function getDatePlanifiee(): ?\DateTime
+    public function getDatePlanifiee(): ?DateTimeImmutable
     {
         return $this->datePlanifiee;
     }
 
-    public function setDatePlanifiee(?\DateTime $datePlanifiee): static
+    public function setDatePlanifiee(?DateTimeImmutable $datePlanifiee): static
     {
         $this->datePlanifiee = $datePlanifiee;
 
         return $this;
     }
 
-    public function getDateDebut(): ?\DateTime
+    public function getDateDebut(): ?DateTimeImmutable
     {
         return $this->dateDebut;
     }
 
-    public function setDateDebut(?\DateTime $dateDebut): static
+    public function setDateDebut(?DateTimeImmutable $dateDebut): static
     {
         $this->dateDebut = $dateDebut;
 
         return $this;
     }
 
-    public function getDateFin(): ?\DateTime
+    public function getDateFin(): ?DateTimeImmutable
     {
         return $this->dateFin;
     }
 
-    public function setDateFin(?\DateTime $dateFin): static
+    public function setDateFin(?DateTimeImmutable $dateFin): static
     {
         $this->dateFin = $dateFin;
 
@@ -222,24 +222,24 @@ class Intervention
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 

@@ -194,7 +194,7 @@ class InterventionRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('i')
             ->select('u.nom AS nom, u.prenom AS prenom, COUNT(i.id) AS total')
-            ->join('i.technicien', 'u')
+            ->leftJoin('i.technicien', 'u')
             ->andWhere('i.organisation = :org')
             ->setParameter('org', $organisation)
             ->groupBy('u.id, u.nom, u.prenom')

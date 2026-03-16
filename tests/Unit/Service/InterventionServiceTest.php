@@ -8,11 +8,13 @@ use App\Enum\StatutIntervention;
 use App\Service\InterventionService;
 use App\Service\NotificationService;
 use App\Service\NumberingService;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -49,6 +51,7 @@ final class InterventionServiceTest extends TestCase
         $demande = new Demande();
         $demande->addIntervention($intervention);
         $intervention->setStatut(StatutIntervention::EN_COURS);
+        $intervention->setDateDebut(new DateTimeImmutable('-1 hour'));
         $intervention->setCompteRendu('test');
 
         $this->service->terminerIntervention($intervention, $demande);
@@ -88,8 +91,8 @@ final class InterventionServiceTest extends TestCase
         $urlGenerator
             ->method('generate')
             ->willReturn('https://example.test/fallback');
-
-        $notificationService = new NotificationService($mailer, $urlGenerator, 'noreply@example.test');
+        $logger = $this->createStub(LoggerInterface::class);
+        $notificationService = new NotificationService($mailer, $urlGenerator, 'noreply@example.test', $logger);
         $this->service = new InterventionService($em, $numbering, $notificationService);
     }
 }
