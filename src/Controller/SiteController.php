@@ -23,7 +23,7 @@ final class SiteController extends AbstractController
     {
         $user = $this->getUser();
         if (!$user instanceof User || $user->getOrganisation() === null) {
-            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+            throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
         }
 
         $organisation = $user->getOrganisation();
@@ -50,7 +50,7 @@ final class SiteController extends AbstractController
     {
         $user = $this->getUser();
         if (!$user instanceof User || $user->getOrganisation() === null) {
-            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+            throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
         }
 
         $site = new Site();
@@ -61,7 +61,7 @@ final class SiteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($site);
             $entityManager->flush();
-            $this->addFlash('success', 'Le site ' . $site->getNom() . ' a été créée avec succès.');
+            $this->addFlash('success', 'Le site ' . $site->getNom() . ' a été créé avec succès.');
             return $this->redirectToRoute('app_site_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -107,23 +107,23 @@ final class SiteController extends AbstractController
         $this->denyAccessUnlessGranted(SiteVoter::DELETE, $site);
 
         if ($this->isCsrfTokenValid('delete'.$site->getId(), $request->getPayload()->getString('_token'))) {
-            // Verifier les dependances avant suppression
+            // Vérifier les dépendances avant suppression
             if ($site->getBatiments()->count() > 0) {
-                $this->addFlash('danger', 'Impossible de supprimer ce site : il contient encore ' . $site->getBatiments()->count() . ' batiment(s).');
+                $this->addFlash('danger', 'Impossible de supprimer ce site : il contient encore ' . $site->getBatiments()->count() . ' bâtiment(s).');
                 return $this->redirectToRoute('app_site_show', ['id' => $site->getId()]);
             }
             if ($site->getDemandes()->count() > 0) {
-                $this->addFlash('danger', 'Impossible de supprimer ce site : il est lie a ' . $site->getDemandes()->count() . ' demande(s).');
+                $this->addFlash('danger', 'Impossible de supprimer ce site : il est lié à ' . $site->getDemandes()->count() . ' demande(s).');
                 return $this->redirectToRoute('app_site_show', ['id' => $site->getId()]);
             }
             if ($site->getEquipements()->count() > 0) {
-                $this->addFlash('danger', 'Impossible de supprimer ce site : il contient encore ' . $site->getEquipements()->count() . ' equipement(s).');
+                $this->addFlash('danger', 'Impossible de supprimer ce site : il contient encore ' . $site->getEquipements()->count() . ' équipement(s).');
                 return $this->redirectToRoute('app_site_show', ['id' => $site->getId()]);
             }
 
             $entityManager->remove($site);
             $entityManager->flush();
-            $this->addFlash('success', 'Le site ' . $site->getNom() . ' a ete supprime avec succes.');
+            $this->addFlash('success', 'Le site ' . $site->getNom() . ' a été supprimé avec succès.');
         }
 
         return $this->redirectToRoute('app_site_index', [], Response::HTTP_SEE_OTHER);

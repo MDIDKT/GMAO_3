@@ -31,7 +31,11 @@ final class MesInterventionsController extends AbstractController
         return $this->render('mes_interventions/index.html.twig', [
             'pagination' => $pagination,
             'statut' => $statut,
-            'statuts' => StatutIntervention::cases(),
+            'statuts' => [
+                StatutIntervention::PLANIFIE,
+                StatutIntervention::EN_COURS,
+                StatutIntervention::TERMINEE,
+            ],
         ]);
 
     }

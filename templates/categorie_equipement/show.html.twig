@@ -1,7 +1,7 @@
 {% extends 'layouts/app.html.twig' %}
 
 {% block page_title %}{{ categorie.nom }}{% endblock %}
-{% block page_subtitle %}Detail de la categorie{% endblock %}
+{% block page_subtitle %}Détail de la catégorie{% endblock %}
 
 {% block page_actions %}
     <a href="{{ path('app_categorie_equipement_edit', {'id': categorie.id}) }}"
@@ -13,7 +13,7 @@
 {% block page_content %}
     <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-6">Informations de la categorie</h3>
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-6">Informations de la catégorie</h3>
             <div class="space-y-4">
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-1">Nom</p>
@@ -31,7 +31,7 @@
 
             {% if categorie.equipements|length > 0 %}
                 <div class="mt-6 border-t border-gray-200 dark:border-white/10 pt-4">
-                    <p class="text-sm font-medium text-gray-500 mb-3">Equipements associes ({{ categorie.equipements|length }})</p>
+                    <p class="text-sm font-medium text-gray-500 mb-3">Équipements associés ({{ categorie.equipements|length }})</p>
                     <div class="space-y-2">
                         {% for equipement in categorie.equipements %}
                             <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-fondun rounded-xl border border-gray-200 dark:border-white/10">
@@ -47,14 +47,14 @@
 
         <div class="space-y-6">
             <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-primary">
-                <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Equipements</p>
+                <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Équipements</p>
                 <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ categorie.equipements|length }}</p>
             </div>
             <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
                 <div class="flex flex-col gap-3">
                     <a href="{{ path('app_categorie_equipement_index') }}"
                        class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
-                        Retour a la liste
+                        Retour à la liste
                     </a>
                     {{ include('categorie_equipement/_delete_form.html.twig') }}
                 </div>

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Email envoyé{% endblock %}
+
+{% block html_class %}dark{% endblock %}
+
+{% block body_class %}bg-gray-100 dark:bg-fondun min-h-screen flex items-center justify-center p-4{% endblock %}
+
+{% block body %}
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-success to-emerald-600 rounded-2xl mb-4 shadow-lg">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"></path>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Email envoyé</h1>
+        </div>
+
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-white/10">
+            <div class="text-center">
+                <p class="text-gray-600 dark:text-gray-300 mb-4">
+                    Si un compte correspond à cette adresse email, un message vient d'être envoyé avec un lien pour réinitialiser votre mot de passe.
+                </p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mb-2">
+                    Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+                </p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">
+                    Si vous ne recevez pas d'email, vérifiez votre dossier spam ou
+                    <a href="{{ path('app_forgot_password_request') }}" class="text-fondcinq hover:underline font-medium">réessayez</a>.
+                </p>
+            </div>
+        </div>
+
+        <p class="text-center text-gray-500 text-sm mt-6">
+            <a href="{{ path('app_login') }}" class="text-fondcinq hover:underline">Retour à la connexion</a>
+        </p>
+    </div>
+{% endblock %}

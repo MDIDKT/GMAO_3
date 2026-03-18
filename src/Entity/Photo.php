@@ -162,6 +162,13 @@ class Photo
         if ($this->createdAt === null) {
             $this->createdAt = new \DateTimeImmutable();
         }
+
+        if ($this->demande !== null && $this->intervention !== null) {
+            throw new \LogicException('Une photo ne peut appartenir qu\'à une demande OU une intervention, pas les deux.');
+        }
+        if ($this->demande === null && $this->intervention === null) {
+            throw new \LogicException('Une photo doit appartenir à une demande ou une intervention.');
+        }
     }
 
     #[ORM\PreRemove]

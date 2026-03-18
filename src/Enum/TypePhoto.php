@@ -6,7 +6,7 @@
         case SIGNALEMENT = 'SIGNALEMENT';
         case AVANT = 'AVANT';
         case APRES = 'APRES';
-        case COMPLEMENT = 'COMPLEMENT';
+        case CONSTAT = 'CONSTAT';
 
         public function label(): string
         {
@@ -14,7 +14,7 @@
                 self::SIGNALEMENT => 'Signalement',
                 self::AVANT => 'Avant',
                 self::APRES => 'Après',
-                self::COMPLEMENT => 'Complement',
+                self::CONSTAT => 'Constat',
             };
         }
     }

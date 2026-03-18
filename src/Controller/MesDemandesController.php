@@ -33,7 +33,12 @@ final class MesDemandesController extends AbstractController
         return $this->render('mes_demandes/index.html.twig', [
             'pagination' => $pagination,
             'statut' => $statut,
-            'statuts' => StatutDemande::cases(),
+            'statuts' => [
+                StatutDemande::PLANIFIE,
+                StatutDemande::EN_COURS,
+                StatutDemande::CLOTURE,
+                StatutDemande::REJETEE,
+            ],
         ]);
     }
 }

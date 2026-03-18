@@ -20,21 +20,24 @@
                 ->add('email', EmailType::class, [
                     'label' => 'Adresse email',
                     'constraints' => [
-                        new NotBlank(message :'L\'email est obligatoire.'),
-                        new Email(message:'Adresse email invalide.'),
+                        new NotBlank(message: 'L\'email est obligatoire.'),
+                        new Email(message: 'Adresse email invalide.'),
                     ],
+                    'attr' => ['placeholder' => 'Ex: utilisateur@entreprise.com'],
                 ])
                 ->add('nom', TextType::class, [
                     'label' => 'Nom',
                     'constraints' => [
-                        new NotBlank(message : 'Le nom est obligatoire.'),
+                        new NotBlank(message: 'Le nom est obligatoire.'),
                     ],
+                    'attr' => ['maxlength' => 100, 'minlength' => 2, 'placeholder' => 'Ex: Dupont'],
                 ])
                 ->add('prenom', TextType::class, [
                     'label' => 'Prénom',
                     'constraints' => [
-                        new NotBlank(message :'Le prénom est obligatoire.'),
+                        new NotBlank(message: 'Le prénom est obligatoire.'),
                     ],
+                    'attr' => ['maxlength' => 100, 'minlength' => 2, 'placeholder' => 'Ex: Jean'],
                 ])
                 ->add('roles', ChoiceType::class, options: [
                     'label' => 'Rôles',
@@ -45,11 +48,8 @@
                         'Demandeur' => 'ROLE_DEMANDEUR',
                     ],
                     'placeholder' => '-- Choisir un rôle --',
-                    // Ce getter/setter gère la conversion string <-> array
-                    // car en base roles est un JSON array ["ROLE_XXX"]
                     'getter' => function (User $user): ?string {
                         $roles = $user->getRoles();
-                        // Retirer ROLE_USER (ajouté automatiquement par Symfony)
                         $filtered = array_filter($roles, fn($r) => $r !== 'ROLE_USER');
                         return $filtered ? reset($filtered) : null;
                     },

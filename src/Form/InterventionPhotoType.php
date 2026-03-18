@@ -6,6 +6,7 @@ use App\Enum\TypePhoto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\All;
@@ -30,7 +31,7 @@ class InterventionPhotoType extends AbstractType
                                 'image/png',
                                 'image/webp',
                             ],
-                            mimeTypesMessage: 'Seuls les formats JPEG, PNG et WebP sont acceptes.',
+                            mimeTypesMessage: 'Seuls les formats JPEG, PNG et WebP sont acceptés.',
                         ),
                     ]),
                 ],
@@ -38,8 +39,18 @@ class InterventionPhotoType extends AbstractType
         ->add('typePhoto', EnumType::class, [
             'class' => TypePhoto::class,
             'label' => 'Type de photo',
-            'choices' => [TypePhoto::AVANT, TypePhoto::APRES, TypePhoto::COMPLEMENT],
+            'choices' => [TypePhoto::AVANT, TypePhoto::APRES, TypePhoto::CONSTAT],
             'choice_label' => fn($choice) => $choice->label(),
+        ])
+        ->add('legende', TextareaType::class, [
+            'label' => 'Description (optionnel)',
+            'required' => false,
+            'mapped' => false,
+            'attr' => [
+                'rows' => 3,
+                'maxlength' => 500,
+                'placeholder' => 'Décrivez le constat observé...',
+            ],
         ])
         ;
     }

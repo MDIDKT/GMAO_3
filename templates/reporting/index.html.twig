@@ -18,7 +18,7 @@
                 </select>
             </div>
             <div>
-                <label for="date_debut" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Date debut</label>
+                <label for="date_debut" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Date début</label>
                 <input type="date" name="date_debut" id="date_debut" value="{{ dateDebut }}"
                        class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm dark:shadow-none text-sm bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white">
             </div>
@@ -36,14 +36,14 @@
         </div>
     </form>
 
-    {# ── KPI 1 : Demandes par statut + KPI 2 : Delai moyen ── #}
+    {# ── KPI 1 : Demandes par statut + KPI 2 : Délai moyen ── #}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
 
         {# KPI 1 #}
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Demandes par statut</h3>
             {% if demandesParStatut is empty %}
-                <p class="text-gray-500 dark:text-gray-400 text-sm">Aucune demande pour cette periode.</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Aucune demande pour cette période.</p>
             {% else %}
                 <div class="space-y-3">
                     {% set statutColors = {
@@ -57,12 +57,12 @@
                     } %}
                     {% set statutLabels = {
                         'NOUVEAU': 'Nouveau',
-                        'A_QUALIFIER': 'A qualifier',
-                        'QUALIFIE': 'Qualifie',
-                        'PLANIFIE': 'Planifie',
+                        'A_QUALIFIER': 'À qualifier',
+                        'QUALIFIE': 'Qualifié',
+                        'PLANIFIE': 'Planifié',
                         'EN_COURS': 'En cours',
-                        'CLOTURE': 'Cloture',
-                        'REJETEE': 'Rejetee'
+                        'CLOTURE': 'Clôturé',
+                        'REJETEE': 'Rejetée'
                     } %}
                     {% for row in demandesParStatut %}
                         {% set statutKey = row.statut.name is defined ? row.statut.name : row.statut %}
@@ -79,7 +79,7 @@
 
         {# KPI 2 #}
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Delai moyen de traitement</h3>
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Délai moyen de traitement</h3>
             <div class="flex items-center justify-center h-32">
                 {% if delaiMoyen is not null %}
                     {% if delaiMoyen >= 24 %}
@@ -95,10 +95,10 @@
                         </div>
                     {% endif %}
                 {% else %}
-                    <p class="text-gray-500 dark:text-gray-400 text-sm">Aucune demande cloturee pour cette periode.</p>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Aucune demande clôturée pour cette période.</p>
                 {% endif %}
             </div>
-            <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">Calcule sur les demandes cloturees (creation &rarr; cloture)</p>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">Calculé sur les demandes clôturées (création &rarr; clôture)</p>
         </div>
     </div>
 
@@ -106,7 +106,7 @@
     <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 mb-6">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Interventions par technicien</h3>
         {% if interventionsParTechnicien is empty %}
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Aucune intervention assignee pour cette periode.</p>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Aucune intervention assignée pour cette période.</p>
         {% else %}
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-white/10">
@@ -129,11 +129,11 @@
         {% endif %}
     </div>
 
-    {# ── KPI 4 : Demandes par site et priorite ── #}
+    {# ── KPI 4 : Demandes par site et priorité ── #}
     <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
-        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Demandes par site et priorite</h3>
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Demandes par site et priorité</h3>
         {% if demandesParSitePriorite is empty %}
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Aucune demande pour cette periode.</p>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Aucune demande pour cette période.</p>
         {% else %}
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-white/10">

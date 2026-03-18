@@ -41,24 +41,24 @@
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ enCoursCount }}</p>
         </div>
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-success">
-            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Terminees / Validees</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Terminées / Validées</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ termineeCount }}</p>
         </div>
     </div>
 
     <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-fondun">
-            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ totalCount }} interventions trouvees</p>
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ totalCount }} interventions trouvées</p>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-50 dark:bg-fondun border-b border-gray-200 dark:border-white/10">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numero</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numéro</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Demande</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Technicien</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date planifiee</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duree</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date planifiée</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durée</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
@@ -114,14 +114,16 @@
                             <div class="flex items-center gap-4">
                                 <a href="{{ path('app_intervention_show', {'id': intervention.id}) }}"
                                    class="text-primary hover:text-primary/80">Voir</a>
-                                <a href="{{ path('app_intervention_edit', {'id': intervention.id}) }}"
-                                   class="text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">Modifier</a>
+                                {% if is_granted('ROLE_PLANIFICATEUR') or is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('app_intervention_edit', {'id': intervention.id}) }}"
+                                       class="text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">Modifier</a>
+                                {% endif %}
                             </div>
                         </td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="7" class="px-6 py-10 text-center text-gray-500">Aucune intervention trouvee.</td>
+                        <td colspan="7" class="px-6 py-10 text-center text-gray-500">Aucune intervention trouvée.</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -135,7 +137,7 @@
                 {% if pagination.currentPageNumber > 1 %}
                     <a href="{{ path('app_intervention_index', {page: pagination.currentPageNumber - 1, statut: selectedStatut}) }}"
                        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5">
-                        Precedent
+                        Précédent
                     </a>
                 {% endif %}
                 {% for page in 1..pagination.pageCount %}

@@ -15,11 +15,19 @@ class ProfileType extends AbstractType
         $builder
             ->add('prenom', TextType::class, [
                 'label' => 'Prénom',
-                'attr' => ['placeholder' => 'Prénom'],
+                'attr' => [
+                    'placeholder' => 'Ex: Jean',
+                    'maxlength' => 100,
+                    'minlength' => 2,
+                ],
             ])
             ->add('nom', TextType::class, [
                 'label' => 'Nom',
-                'attr' => ['placeholder' => 'Nom'],
+                'attr' => [
+                    'placeholder' => 'Ex: Dupont',
+                    'maxlength' => 100,
+                    'minlength' => 2,
+                ],
             ]);
     }
 

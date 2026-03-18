@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mot de passe oublié{% endblock %}
+
+{% block html_class %}dark{% endblock %}
+
+{% block body_class %}bg-gray-100 dark:bg-fondun min-h-screen flex items-center justify-center p-4{% endblock %}
+
+{% block body %}
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-fondcinq to-fondquatre rounded-2xl mb-4 shadow-lg">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Mot de passe oublié</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">Réinitialisation de votre mot de passe</p>
+        </div>
+
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-white/10">
+            {% for flash_error in app.flashes('reset_password_error') %}
+                <div class="mb-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800/50 text-red-800 dark:text-red-400 rounded-xl p-4 text-sm">
+                    {{ flash_error }}
+                </div>
+            {% endfor %}
+
+            <div class="mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">Récupérer votre compte</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                    Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                </p>
+            </div>
+
+            {{ form_start(requestForm) }}
+                {{ form_row(requestForm.email, {
+                    label: 'Adresse email',
+                    attr: { placeholder: 'exemple@entreprise.com', autocomplete: 'email', autofocus: true }
+                }) }}
+
+                <div class="mt-6">
+                    <button
+                        type="submit"
+                        class="w-full bg-fondcinq hover:bg-fondcinq/90 text-white dark:text-fondun font-semibold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition"
+                    >
+                        Envoyer le lien de réinitialisation
+                    </button>
+                </div>
+            {{ form_end(requestForm) }}
+        </div>
+
+        <p class="text-center text-gray-500 text-sm mt-6">
+            <a href="{{ path('app_login') }}" class="text-fondcinq hover:underline">Retour à la connexion</a>
+        </p>
+    </div>
+{% endblock %}

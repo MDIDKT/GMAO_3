@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau mot de passe{% endblock %}
+
+{% block html_class %}dark{% endblock %}
+
+{% block body_class %}bg-gray-100 dark:bg-fondun min-h-screen flex items-center justify-center p-4{% endblock %}
+
+{% block body %}
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-fondcinq to-fondquatre rounded-2xl mb-4 shadow-lg">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Nouveau mot de passe</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">Choisissez votre nouveau mot de passe</p>
+        </div>
+
+        <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-white/10">
+            {{ form_start(resetForm) }}
+                {{ form_row(resetForm.plainPassword.first, {
+                    label: 'Nouveau mot de passe',
+                    attr: { placeholder: 'Minimum 12 caractères', autocomplete: 'new-password', autofocus: true }
+                }) }}
+
+                <div class="mt-4">
+                    {{ form_row(resetForm.plainPassword.second, {
+                        label: 'Confirmer le mot de passe',
+                        attr: { placeholder: 'Répétez le mot de passe', autocomplete: 'new-password' }
+                    }) }}
+                </div>
+
+                {{ form_errors(resetForm.plainPassword) }}
+
+                <div class="mt-6">
+                    <button
+                        type="submit"
+                        class="w-full bg-fondcinq hover:bg-fondcinq/90 text-white dark:text-fondun font-semibold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition"
+                    >
+                        Réinitialiser le mot de passe
+                    </button>
+                </div>
+            {{ form_end(resetForm) }}
+        </div>
+
+        <p class="text-center text-gray-500 text-sm mt-6">
+            <a href="{{ path('app_login') }}" class="text-fondcinq hover:underline">Retour à la connexion</a>
+        </p>
+    </div>
+{% endblock %}

@@ -23,7 +23,7 @@ final class CategorieEquipementController extends AbstractController
     {
         $user = $this->getUser();
         if (!$user instanceof User || $user->getOrganisation() === null) {
-            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+            throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
         }
 
         $organisation = $user->getOrganisation();
@@ -40,7 +40,7 @@ final class CategorieEquipementController extends AbstractController
     {
         $user = $this->getUser();
         if (!$user instanceof User || $user->getOrganisation() === null) {
-            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+            throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
         }
 
         $categorie = new CategorieEquipement();
@@ -52,7 +52,7 @@ final class CategorieEquipementController extends AbstractController
             $entityManager->persist($categorie);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Categorie creee avec succes.');
+            $this->addFlash('success', 'Catégorie créée avec succès.');
 
             return $this->redirectToRoute('app_categorie_equipement_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -84,7 +84,7 @@ final class CategorieEquipementController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            $this->addFlash('success', 'Categorie mise a jour.');
+            $this->addFlash('success', 'Catégorie mise à jour.');
 
             return $this->redirectToRoute('app_categorie_equipement_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -101,15 +101,15 @@ final class CategorieEquipementController extends AbstractController
         $this->denyAccessUnlessGranted(CategorieEquipementVoter::DELETE, $categorie);
 
         if ($this->isCsrfTokenValid('delete' . $categorie->getId(), $request->getPayload()->getString('_token'))) {
-            // Verifier les dependances avant suppression
+            // Vérifier les dépendances avant suppression
             if ($categorie->getEquipements()->count() > 0) {
-                $this->addFlash('danger', 'Impossible de supprimer cette categorie : elle contient encore ' . $categorie->getEquipements()->count() . ' equipement(s).');
+                $this->addFlash('danger', 'Impossible de supprimer cette catégorie : elle contient encore ' . $categorie->getEquipements()->count() . ' équipement(s).');
                 return $this->redirectToRoute('app_categorie_equipement_show', ['id' => $categorie->getId()]);
             }
 
             $entityManager->remove($categorie);
             $entityManager->flush();
-            $this->addFlash('success', 'Categorie supprimee.');
+            $this->addFlash('success', 'Catégorie supprimée.');
         }
 
         return $this->redirectToRoute('app_categorie_equipement_index', [], Response::HTTP_SEE_OTHER);

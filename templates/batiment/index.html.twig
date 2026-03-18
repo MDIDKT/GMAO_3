@@ -1,14 +1,14 @@
 {% extends 'layouts/app.html.twig' %}
 
-{% block page_title %}Batiments{% endblock %}
-{% block page_subtitle %}Gestion des batiments{% endblock %}
+{% block page_title %}Bâtiments{% endblock %}
+{% block page_subtitle %}Gestion des bâtiments{% endblock %}
 
 {% block page_actions %}
     <a href="{{ path('app_batiment_new') }}" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl font-medium transition flex items-center space-x-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
-        <span>Nouveau batiment</span>
+        <span>Nouveau bâtiment</span>
     </a>
 {% endblock %}
 
@@ -32,7 +32,7 @@
             </div>
             <div class="flex items-end">
                 <a href="{{ path('app_batiment_index') }}" class="w-full text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
-                    Reinitialiser
+                    Réinitialiser
                 </a>
             </div>
         </form>
@@ -40,29 +40,29 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-success">
-            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Batiments actifs</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Bâtiments actifs</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ activeCount }}</p>
         </div>
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-muted">
-            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Batiments inactifs</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Bâtiments inactifs</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ inactiveCount }}</p>
         </div>
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-primary">
-            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Total batiments</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Total bâtiments</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ totalCount }}</p>
         </div>
     </div>
 
     <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-fondun">
-            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ totalCount }} batiments trouves</p>
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ totalCount }} bâtiments trouves</p>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-50 dark:bg-fondun border-b border-gray-200 dark:border-white/10">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Etage</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Étage</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Site</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -88,7 +88,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="5" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400">Aucun batiment trouve.</td>
+                            <td colspan="5" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400">Aucun bâtiment trouvé.</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -102,7 +102,7 @@
                 {% if pagination.currentPageNumber > 1 %}
                     <a href="{{ path('app_batiment_index', {page: pagination.currentPageNumber - 1, actif: selectedActif}) }}"
                        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5">
-                        Precedent
+                        Précédent
                     </a>
                 {% endif %}
                 {% for page in 1..pagination.pageCount %}

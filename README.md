@@ -10,6 +10,8 @@ Application web de gestion de maintenance assistee par ordinateur construite ave
 - Interventions avec planification, demarrage, cloture, validation et photos avant/apres
 - Dashboards et reporting avec KPI metier
 - Interface responsive avec sidebar mobile et dark mode automatique (prefers-color-scheme)
+- Flux "mot de passe oublie" complet (demande, email, reinitialisation)
+- Validation HTML5 frontend alignee sur les contraintes Assert backend
 - Notifications email metier sur les etapes clefs
 - Tests unitaires et fonctionnels sur les workflows sensibles
 
@@ -118,7 +120,7 @@ docs/       documentation locale du projet
 
 Le projet est au stade MVP avec workflows demande/intervention, reporting, notifications email et couverture de tests unitaires et fonctionnels sur les points sensibles. L'interface principale repose sur un layout responsive desktop/mobile avec theme sombre et clair, une sidebar harmonisee, des cartes KPI a accent colore coherent en dark comme en light, et un dashboard qui remount de vraies demandes prioritaires et interventions du jour dans des blocs de synthese. Un audit recent a aussi conduit au durcissement des controles d'acces multi-organisation via 4 Voters dedies (SiteVoter, BatimentVoter, EquipementVoter, CategorieEquipementVoter) pour eliminer les verifications redondantes dans les controllers, et la navigation mobile a ete revalidee en navigateur apres correction du drawer ferme qui captait encore les clics.
 
-Les 8 entites du domaine sont protegees par des contraintes de validation Symfony (Assert NotBlank, Length, Email, Regex) avec messages en francais, garantissant l'integrite des donnees a chaque saisie utilisateur. Le frontend est entierement compile via Webpack Encore (Tailwind v4 + Flowbite v4, zero CDN). Le dark mode suit les preferences systeme de l'utilisateur. Les pages d'erreur 404, 403 et 500 sont personnalisees. La configuration de securite (APP_SECRET) et le serveur mail de dev (Mailpit) sont en place. Les dates metier de l'entite Intervention utilisent DateTimeImmutable pour eviter les mutations accidentelles. Le NotificationService gere les erreurs d'envoi sans bloquer les actions metier (try-catch + logging).
+Les 8 entites du domaine sont protegees par des contraintes de validation Symfony (Assert NotBlank, Length, Email, Regex) avec messages en francais, garantissant l'integrite des donnees a chaque saisie utilisateur. Les formulaires Symfony embarquent des attributs HTML5 (minlength, maxlength, pattern, placeholder) alignes sur les Assert backend pour un retour immediat cote navigateur. Le flux de reinitialisation de mot de passe est operationnel via SymfonyCasts ResetPasswordBundle. Le frontend est entierement compile via Webpack Encore (Tailwind v4 + Flowbite v4, zero CDN). Le dark mode suit les preferences systeme de l'utilisateur. Les pages d'erreur 404, 403 et 500 sont personnalisees. La configuration de securite (APP_SECRET) et le serveur mail de dev (Mailpit) sont en place. Les dates metier de l'entite Intervention utilisent DateTimeImmutable pour eviter les mutations accidentelles. Le NotificationService gere les erreurs d'envoi sans bloquer les actions metier (try-catch + logging).
 
 ## Gestion des photos
 

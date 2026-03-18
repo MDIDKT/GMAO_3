@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/intervention')]
 final class InterventionController extends AbstractController
@@ -37,12 +38,13 @@ final class InterventionController extends AbstractController
     ) {
     }
 
+    #[IsGranted('ROLE_PLANIFICATEUR')]
     #[Route(name: 'app_intervention_index', methods: ['GET'])]
     public function index(InterventionRepository $interventionRepository, Request $request): Response
     {
         $currentUser = $this->getUser();
         if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
-            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+            throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
         }
 
         $organisation = $currentUser->getOrganisation();
@@ -66,17 +68,18 @@ final class InterventionController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_PLANIFICATEUR')]
     #[Route('/new/{demande}', name: 'app_intervention_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Demande $demande, EntityManagerInterface $entityManager): Response
     {
         $currentUser = $this->getUser();
         if (!$currentUser instanceof User) {
-            throw $this->createAccessDeniedException('Utilisateur non authentifie.');
+            throw $this->createAccessDeniedException('Utilisateur non authentifié.');
         }
 
         $organisation = $currentUser->getOrganisation();
         if ($organisation === null) {
-            throw $this->createAccessDeniedException('Aucune organisation associee a cet utilisateur.');
+            throw $this->createAccessDeniedException('Aucune organisation associée à cet utilisateur.');
         }
 
         if ($demande->getOrganisation() !== $organisation) {
@@ -168,7 +171,7 @@ final class InterventionController extends AbstractController
             return;
         }
 
-        throw $this->createNotFoundException('Photo non rattachee a une ressource.');
+        throw $this->createNotFoundException('Photo non rattachée à une ressource.');
     }
 
     #[Route('/{id}/photos', name: 'app_intervention_ajouter_photos', methods: ['POST'])]
@@ -194,6 +197,7 @@ final class InterventionController extends AbstractController
                 $photoFiles = [$photoFiles];
             }
             $typePhoto = $form->get('typePhoto')->getData();
+            $legende = $form->get('legende')->getData();
 
             foreach ($photoFiles as $photoFile) {
                 if (!$photoFile instanceof UploadedFile || !$photoFile->isValid()) {
@@ -212,6 +216,9 @@ final class InterventionController extends AbstractController
                 $photo->setMimeType($mimeType);
                 $photo->setTaille($taille);
                 $photo->setTypePhoto($typePhoto);
+                if ($legende) {
+                    $photo->setLegende($legende);
+                }
                 $photo->setIntervention($intervention);
                 $photo->setUploadPar($currentUser);
                 $entityManager->persist($photo);
@@ -230,7 +237,7 @@ final class InterventionController extends AbstractController
         $this->denyAccessUnlessGranted('INTERVENTION_EDIT', $intervention);
         $currentUser = $this->getUser();
         if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
-            throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+            throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
         }
 
         $previousTechnicienId = $intervention->getTechnicien()?->getId();
@@ -304,7 +311,7 @@ final class InterventionController extends AbstractController
             $demande = $intervention->getDemande();
             try {
                 $this->interventionService->terminerIntervention($intervention, $demande);
-                $this->addFlash('success', 'Intervention terminee. Duree : ' . $intervention->getDureeMinutes() . ' minutes.');
+                $this->addFlash('success', 'Intervention terminée. Durée : ' . $intervention->getDureeMinutes() . ' minutes.');
             } catch (LogicException $e) {
                 $this->addFlash('danger', $e->getMessage());
             }
@@ -323,14 +330,14 @@ final class InterventionController extends AbstractController
 
         if ($this->isCsrfTokenValid('valider' . $intervention->getId(), $request->getPayload()->getString('_token'))) {
             if ($intervention->getStatut() !== StatutIntervention::TERMINEE) {
-                $this->addFlash('danger', 'Impossible de valider : l\'intervention n\'est pas terminee (statut actuel : ' . $intervention->getStatut()->label() . ').');
+                $this->addFlash('danger', 'Impossible de valider : l\'intervention n\'est pas terminée (statut actuel : ' . $intervention->getStatut()->label() . ').');
                 return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);
             }
 
             $intervention->setStatut(StatutIntervention::VALIDEE);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Intervention validee avec succes.');
+            $this->addFlash('success', 'Intervention validée avec succès.');
         }
 
         return $this->redirectToRoute('app_intervention_show', ['id' => $intervention->getId()]);

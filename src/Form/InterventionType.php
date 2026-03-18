@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Intervention;
 use App\Entity\User;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,7 +23,7 @@ class InterventionType extends AbstractType
                 'choice_label' => function ($user) {
                     return $user->getNom() . ' ' . $user->getPrenom();
                 },
-                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($organisation) {
+                'query_builder' => function (EntityRepository $er) use ($organisation) {
                     $qb = $er->createQueryBuilder('u');
                     if ($organisation) {
                         $qb->andWhere('u.organisation = :organisation')
@@ -40,7 +41,7 @@ class InterventionType extends AbstractType
                 'choice_label' => function ($user) {
                     return $user->getNom() . ' ' . $user->getPrenom();
                 },
-                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($organisation) {
+                'query_builder' => function (EntityRepository $er) use ($organisation) {
                     $qb = $er->createQueryBuilder('u');
                     if ($organisation) {
                         $qb->andWhere('u.organisation = :organisation')

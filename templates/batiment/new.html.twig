@@ -1,17 +1,17 @@
 {% extends 'layouts/app.html.twig' %}
 
-{% block page_title %}Nouveau batiment{% endblock %}
-{% block page_subtitle %}Creation d'un batiment{% endblock %}
+{% block page_title %}Nouveau bâtiment{% endblock %}
+{% block page_subtitle %}Création d'un bâtiment{% endblock %}
 
 {% block page_content %}
     <div class="max-w-3xl mx-auto">
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10">
             <div class="px-8 py-6 border-b border-gray-200 dark:border-white/10">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Informations du batiment</h3>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Informations du bâtiment</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Renseignez les informations principales</p>
             </div>
             <div class="p-8">
-                {{ include('batiment/_form.html.twig', {'button_label': 'Enregistrer le batiment', 'cancel_path': path('app_batiment_index')}) }}
+                {{ include('batiment/_form.html.twig', {'button_label': 'Enregistrer le bâtiment', 'cancel_path': path('app_batiment_index')}) }}
             </div>
         </div>
     </div>

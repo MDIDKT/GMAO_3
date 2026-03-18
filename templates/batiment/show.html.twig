@@ -1,7 +1,7 @@
 {% extends 'layouts/app.html.twig' %}
 
 {% block page_title %}{{ batiment.nom }}{% endblock %}
-{% block page_subtitle %}Detail du batiment{% endblock %}
+{% block page_subtitle %}Détail du bâtiment{% endblock %}
 
 {% block page_actions %}
     <a href="{{ path('app_batiment_edit', {'id': batiment.id}) }}" class="px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
@@ -14,7 +14,7 @@
         <div class="lg:col-span-2 bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
             <div class="flex items-start justify-between mb-6">
                 <div>
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Informations du batiment</h3>
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Informations du bâtiment</h3>
                     <span class="px-3 py-1 text-sm font-semibold rounded-full {{ batiment.actif ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' : 'bg-gray-100 dark:bg-fondun text-gray-800 dark:text-white' }}">
                         {{ batiment.actif ? 'Actif' : 'Inactif' }}
                     </span>
@@ -27,7 +27,7 @@
                     <p class="text-gray-800 dark:text-white">{{ batiment.nom }}</p>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-500 mb-1">Etage</p>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Étage</p>
                     <p class="text-gray-800 dark:text-white">{{ batiment.etage ?: '-' }}</p>
                 </div>
                 <div>
@@ -39,13 +39,13 @@
 
         <div class="space-y-6">
             <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-primary">
-                <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">ID batiment</p>
+                <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">ID bâtiment</p>
                 <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ batiment.id }}</p>
             </div>
             <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6">
                 <div class="flex flex-col gap-3">
                     <a href="{{ path('app_batiment_index') }}" class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
-                        Retour a la liste
+                        Retour à la liste
                     </a>
                     {{ include('batiment/_delete_form.html.twig') }}
                 </div>

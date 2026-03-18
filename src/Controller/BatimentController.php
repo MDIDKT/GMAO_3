@@ -23,7 +23,7 @@
         {
             $user = $this->getUser();
             if (!$user instanceof User || $user->getOrganisation() === null) {
-                throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+                throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
             }
 
             $organisation = $user->getOrganisation();
@@ -50,7 +50,7 @@
         {
             $currentUser = $this->getUser();
             if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
-                throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+                throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
             }
 
             $organisation = $currentUser->getOrganisation();
@@ -61,7 +61,7 @@
             if ($form->isSubmitted() && $form->isValid()) {
                 $entityManager->persist($batiment);
                 $entityManager->flush();
-                $this->addFlash('success', 'Le batiment ' . $batiment->getNom() . ' a été créée avec succès.');
+                $this->addFlash('success', 'Le bâtiment ' . $batiment->getNom() . ' a été créé avec succès.');
                 return $this->redirectToRoute('app_batiment_index', [], Response::HTTP_SEE_OTHER);
             }
 
@@ -88,7 +88,7 @@
 
             $currentUser = $this->getUser();
             if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
-                throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+                throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
             }
 
             $form = $this->createForm(BatimentType::class, $batiment, ['organisation' => $currentUser->getOrganisation()]);
@@ -96,7 +96,7 @@
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $entityManager->flush();
-                $this->addFlash('success', 'Le batiment ' . $batiment->getNom() . ' a été modifié avec succès.');
+                $this->addFlash('success', 'Le bâtiment ' . $batiment->getNom() . ' a été modifié avec succès.');
                 return $this->redirectToRoute('app_batiment_index', [], Response::HTTP_SEE_OTHER);
             }
 
@@ -112,19 +112,19 @@
             $this->denyAccessUnlessGranted(BatimentVoter::DELETE, $batiment);
 
             if ($this->isCsrfTokenValid('delete' . $batiment->getId(), $request->getPayload()->getString('_token'))) {
-                // Verifier les dependances avant suppression
+                // Vérifier les dépendances avant suppression
                 if ($batiment->getEquipements()->count() > 0) {
-                    $this->addFlash('danger', 'Impossible de supprimer ce batiment : il contient encore ' . $batiment->getEquipements()->count() . ' equipement(s).');
+                    $this->addFlash('danger', 'Impossible de supprimer ce bâtiment : il contient encore ' . $batiment->getEquipements()->count() . ' équipement(s).');
                     return $this->redirectToRoute('app_batiment_show', ['id' => $batiment->getId()]);
                 }
                 if ($batiment->getDemandes()->count() > 0) {
-                    $this->addFlash('danger', 'Impossible de supprimer ce batiment : il est lie a ' . $batiment->getDemandes()->count() . ' demande(s).');
+                    $this->addFlash('danger', 'Impossible de supprimer ce bâtiment : il est lié à ' . $batiment->getDemandes()->count() . ' demande(s).');
                     return $this->redirectToRoute('app_batiment_show', ['id' => $batiment->getId()]);
                 }
 
                 $entityManager->remove($batiment);
                 $entityManager->flush();
-                $this->addFlash('success', 'Le batiment ' . $batiment->getNom() . ' a ete supprime avec succes.');
+                $this->addFlash('success', 'Le bâtiment ' . $batiment->getNom() . ' a été supprimé avec succès.');
             }
             return $this->redirectToRoute('app_batiment_index', [], Response::HTTP_SEE_OTHER);
         }

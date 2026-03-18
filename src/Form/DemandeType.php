@@ -26,8 +26,14 @@ class DemandeType extends AbstractType
         $organisation = $options['organisation'] ?? null;
 
         $builder
-            ->add('titre', TextType::class)
-            ->add('description', TextareaType::class)
+            ->add('titre', TextType::class, [
+                'label' => 'Titre',
+                'attr' => ['maxlength' => 255, 'minlength' => 2, 'placeholder' => 'Décrivez le problème en quelques mots'],
+            ])
+            ->add('description', TextareaType::class, [
+                'label' => 'Description',
+                'attr' => ['maxlength' => 2000, 'minlength' => 2, 'rows' => 5, 'placeholder' => 'Détaillez le problème rencontré…'],
+            ])
             ->add('priorite', EnumType::class, [
                 'class' => Priorite::class,
                 'choice_label' => fn (Priorite $choice) => $choice->label(),
@@ -82,6 +88,7 @@ class DemandeType extends AbstractType
                 'multiple' => true,
                 'mapped' => false,
                 'required' => false,
+                'attr' => ['accept' => 'image/jpeg,image/png,image/webp'],
                 'constraints' => [
                     new All([
                         new File(
@@ -91,7 +98,7 @@ class DemandeType extends AbstractType
                                 'image/png',
                                 'image/webp',
                             ],
-                            mimeTypesMessage: 'Seuls les formats JPEG, PNG et WebP sont acceptes.',
+                            mimeTypesMessage: 'Seuls les formats JPEG, PNG et WebP sont acceptés.',
                         ),
                     ]),
                 ],

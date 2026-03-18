@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{# DEBUG: Ceci est bien layouts/app.html.twig 🟢 #}
+
 {% block title %}{% block page_title %}GMAO{% endblock %}{% endblock %}
 
 {% block html_class %}dark{% endblock %}
@@ -63,19 +65,24 @@
                 {% if showLabels %}<span>Sites</span>{% else %}<span class="sidebar-label whitespace-nowrap">Sites</span>{% endif %}
             </a>
 
-            <a href="{{ path('app_batiment_index') }}" class="{{ route starts with 'app_batiment_' ? activeClass : inactiveClass }}" title="Batiments">
+            <a href="{{ path('app_batiment_index') }}"
+               class="{{ route starts with 'app_batiment_' ? activeClass : inactiveClass }}" title="Bâtiments">
                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M5 21V7l8-4 6 3v15m-10 0V11h4v10"/></svg>
-                {% if showLabels %}<span>Batiments</span>{% else %}<span class="sidebar-label whitespace-nowrap">Batiments</span>{% endif %}
+                {% if showLabels %}<span>Bâtiments</span>{% else %}<span class="sidebar-label whitespace-nowrap">Bâtiments</span>{% endif %}
             </a>
 
-            <a href="{{ path('app_equipement_index') }}" class="{{ route starts with 'app_equipement_' ? activeClass : inactiveClass }}" title="Equipements">
+            <a href="{{ path('app_equipement_index') }}"
+               class="{{ route starts with 'app_equipement_' ? activeClass : inactiveClass }}" title="Équipements">
                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                {% if showLabels %}<span>Equipements</span>{% else %}<span class="sidebar-label whitespace-nowrap">Equipements</span>{% endif %}
+                {% if showLabels %}<span>Équipements</span>{% else %}<span class="sidebar-label whitespace-nowrap">Équipements</span>{% endif %}
             </a>
 
-            <a href="{{ path('app_categorie_equipement_index') }}" class="{{ route starts with 'app_categorie_equipement_' ? activeClass : inactiveClass }}" title="Categories">
+            <a href="{{ path('app_categorie_equipement_index') }}"
+               class="{{ route starts with 'app_categorie_equipement_' ? activeClass : inactiveClass }}"
+               title="Catégories">
                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
-                {% if showLabels %}<span>Categories equip.</span>{% else %}<span class="sidebar-label whitespace-nowrap">Categories equip.</span>{% endif %}
+                {% if showLabels %}<span>Catégories équip.</span>{% else %}<span
+                    class="sidebar-label whitespace-nowrap">Catégories équip.</span>{% endif %}
             </a>
 
             <div class="nav-divider"></div>

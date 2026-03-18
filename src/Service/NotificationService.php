@@ -32,7 +32,7 @@ final class NotificationService
 
         $this->sendToUser(
             $technicien,
-            'Nouvelle intervention assignee : ' . ($intervention->getNumero() ?? 'sans numero'),
+            'Nouvelle intervention assignée : ' . ($intervention->getNumero() ?? 'sans numéro'),
             'email/intervention_assignee.html.twig',
             [
                 'technicien' => $technicien,
@@ -54,7 +54,7 @@ final class NotificationService
 
         $this->sendToUser(
             $planificateur,
-            'Intervention demarree : ' . ($intervention->getNumero() ?? 'sans numero'),
+            'Intervention démarrée : ' . ($intervention->getNumero() ?? 'sans numéro'),
             'email/intervention_demarree.html.twig',
             [
                 'planificateur' => $planificateur,
@@ -77,7 +77,7 @@ final class NotificationService
 
         $this->sendToUser(
             $planificateur,
-            'Intervention terminee : ' . ($intervention->getNumero() ?? 'sans numero'),
+            'Intervention terminée : ' . ($intervention->getNumero() ?? 'sans numéro'),
             'email/intervention_terminee.html.twig',
             [
                 'planificateur' => $planificateur,
@@ -98,7 +98,7 @@ final class NotificationService
 
         $this->sendToUser(
             $demandeur,
-            'Votre demande a ete qualifiee : ' . ($demande->getNumero() ?? 'sans numero'),
+            'Votre demande a été qualifiée : ' . ($demande->getNumero() ?? 'sans numéro'),
             'email/demande_qualifiee.html.twig',
             [
                 'demandeur' => $demandeur,
@@ -117,7 +117,7 @@ final class NotificationService
 
         $this->sendToUser(
             $demandeur,
-            'Votre demande a ete traitee : ' . ($demande->getNumero() ?? 'sans numero'),
+            'Votre demande a été traitée : ' . ($demande->getNumero() ?? 'sans numéro'),
             'email/demande_cloturee.html.twig',
             [
                 'demandeur' => $demandeur,
@@ -136,7 +136,7 @@ final class NotificationService
 
         $this->sendToUser(
             $demandeur,
-            'Votre demande a ete rejetee : ' . ($demande->getNumero() ?? 'sans numero'),
+            'Votre demande a été rejetée : ' . ($demande->getNumero() ?? 'sans numéro'),
             'email/demande_rejetee.html.twig',
             [
                 'demandeur' => $demandeur,

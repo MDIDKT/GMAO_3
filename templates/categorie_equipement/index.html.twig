@@ -1,7 +1,7 @@
 {% extends 'layouts/app.html.twig' %}
 
-{% block page_title %}Categories d'equipement{% endblock %}
-{% block page_subtitle %}Gestion des categories{% endblock %}
+{% block page_title %}Catégories d'équipement{% endblock %}
+{% block page_subtitle %}Gestion des catégories{% endblock %}
 
 {% block page_actions %}
     <a href="{{ path('app_categorie_equipement_new') }}"
@@ -9,21 +9,21 @@
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
-        <span>Nouvelle categorie</span>
+        <span>Nouvelle catégorie</span>
     </a>
 {% endblock %}
 
 {% block page_content %}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-primary">
-            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Total categories</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Total catégories</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ pagination.totalItemCount }}</p>
         </div>
     </div>
 
     <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-fondun">
-            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ pagination.totalItemCount }} categories trouvees</p>
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ pagination.totalItemCount }} catégories trouvées</p>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -31,7 +31,7 @@
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipements</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Équipements</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
                 </thead>
@@ -54,7 +54,7 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="4" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400">Aucune categorie trouvee.</td>
+                        <td colspan="4" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400">Aucune catégorie trouvée.</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -68,7 +68,7 @@
                 {% if pagination.currentPageNumber > 1 %}
                     <a href="{{ path('app_categorie_equipement_index', {page: pagination.currentPageNumber - 1}) }}"
                        class="relative inline-flex items-center px-3 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5">
-                        Precedent
+                        Précédent
                     </a>
                 {% endif %}
                 {% for page in 1..pagination.pageCount %}

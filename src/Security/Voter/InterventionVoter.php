@@ -52,7 +52,11 @@
                 return true;
             }
 
-            return $intervention->getTechnicien() === $user;
+            // Le technicien assigné ne peut que : voir, démarrer, terminer, ajouter des photos
+            if ($intervention->getTechnicien() === $user) {
+                return in_array($attribute, [self::VIEW, self::DEMARRER, self::TERMINER, self::AJOUTER_PHOTO], true);
+            }
 
+            return false;
         }
     }

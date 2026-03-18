@@ -59,7 +59,7 @@ final class NotificationServiceTest extends TestCase
                     return false;
                 }
 
-                self::assertSame('Nouvelle intervention assignee : INT-2026-0001', $email->getSubject());
+                self::assertSame('Nouvelle intervention assignée : INT-2026-0001', $email->getSubject());
                 self::assertSame('tech@example.test', $email->getTo()[0]->getAddress());
                 self::assertSame('email/intervention_assignee.html.twig', $email->getHtmlTemplate());
                 self::assertSame('https://example.test/app_intervention_show/11', $email->getContext()['interventionUrl']);

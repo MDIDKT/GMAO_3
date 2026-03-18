@@ -1,14 +1,14 @@
 {% extends 'layouts/app.html.twig' %}
 
-{% block page_title %}Equipements{% endblock %}
-{% block page_subtitle %}Gestion des equipements{% endblock %}
+{% block page_title %}Équipements{% endblock %}
+{% block page_subtitle %}Gestion des équipements{% endblock %}
 
 {% block page_actions %}
     <a href="{{ path('app_equipement_new') }}" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl font-medium transition flex items-center space-x-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
-        <span>Nouvel equipement</span>
+        <span>Nouvel équipement</span>
     </a>
 {% endblock %}
 
@@ -27,7 +27,7 @@
                 </select>
             </div>
             <div>
-                <label for="categorie" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Categorie</label>
+                <label for="categorie" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Catégorie</label>
                 <select id="categorie" name="categorie" class="block w-full px-3 py-2 border border-gray-300 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white dark:placeholder-gray-500">
                     <option value="">Toutes</option>
                     {% for categorie in categories %}
@@ -57,7 +57,7 @@
                     Filtrer
                 </button>
                 <a href="{{ path('app_equipement_index') }}" class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
-                    Reset
+                    Réinitialiser
                 </a>
             </div>
         </form>
@@ -65,22 +65,22 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-success">
-            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Equipements actifs</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Équipements actifs</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ activeCount }}</p>
         </div>
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-muted">
-            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Equipements inactifs</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Équipements inactifs</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ inactiveCount }}</p>
         </div>
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-primary">
-            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Total equipements</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Total équipements</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ totalCount }}</p>
         </div>
     </div>
 
     <div class="bg-white dark:bg-fonddeux rounded-xl shadow-md dark:shadow-none overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-fondun">
-            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ totalCount }} equipements trouves</p>
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ totalCount }} équipements trouvés</p>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -88,8 +88,8 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marque</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Modele</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Serie</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Modèle</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Série</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actif</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -117,7 +117,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="7" class="px-6 py-10 text-center text-gray-500">Aucun equipement trouve.</td>
+                            <td colspan="7" class="px-6 py-10 text-center text-gray-500">Aucun équipement trouvé.</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -131,7 +131,7 @@
                 {% if pagination.currentPageNumber > 1 %}
                     <a href="{{ path('app_equipement_index', {page: pagination.currentPageNumber - 1, site: selectedSite, categorie: selectedCategorie, statut: selectedStatut, actif: selectedActif}) }}"
                        class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5">
-                        Precedent
+                        Précédent
                     </a>
                 {% endif %}
                 {% for page in 1..pagination.pageCount %}

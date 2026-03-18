@@ -10,6 +10,7 @@ use App\Enum\StatutIntervention;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
+use Psr\Log\LoggerInterface;
 
 readonly class InterventionService
 {
@@ -17,6 +18,7 @@ readonly class InterventionService
         private EntityManagerInterface $entityManager,
         private NumberingService $numberingService,
         private NotificationService $notificationService,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -40,7 +42,13 @@ readonly class InterventionService
         }
 
         $this->entityManager->persist($intervention);
-        $this->entityManager->flush();
+
+        try {
+            $this->entityManager->flush();
+        } catch (\Throwable $e) {
+            $this->logger->error('Erreur lors de la création de l\'intervention : ' . $e->getMessage());
+            throw new \RuntimeException('Impossible de créer l\'intervention. Veuillez réessayer.', 0, $e);
+        }
 
         $this->notificationService->notifyTechnicienAssigne($intervention);
     }
@@ -64,7 +72,13 @@ readonly class InterventionService
 
         $this->entityManager->persist($intervention);
         $this->entityManager->persist($demande);
-        $this->entityManager->flush();
+
+        try {
+            $this->entityManager->flush();
+        } catch (\Throwable $e) {
+            $this->logger->error('Erreur lors du démarrage de l\'intervention : ' . $e->getMessage());
+            throw new \RuntimeException('Impossible de démarrer l\'intervention. Veuillez réessayer.', 0, $e);
+        }
 
         $this->notificationService->notifyInterventionDemarree($intervention);
     }
@@ -109,7 +123,13 @@ readonly class InterventionService
 
         $this->entityManager->persist($intervention);
         $this->entityManager->persist($demande);
-        $this->entityManager->flush();
+
+        try {
+            $this->entityManager->flush();
+        } catch (\Throwable $e) {
+            $this->logger->error('Erreur lors de la clôture de l\'intervention : ' . $e->getMessage());
+            throw new \RuntimeException('Impossible de terminer l\'intervention. Veuillez réessayer.', 0, $e);
+        }
 
         $this->notificationService->notifyInterventionTerminee($intervention);
         if ($demande->getStatut() === StatutDemande::CLOTURE) {

@@ -2,8 +2,8 @@
 
 {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
     {{ form_errors(form) }}
-    {{ form_row(form.nom, {'attr': {'placeholder': 'Ex: Batiment Principal'}}) }}
-    {{ form_row(form.adresse, {'attr': {'rows': 3, 'placeholder': 'Adresse complete du site'}}) }}
+    {{ form_row(form.nom, {'attr': {'placeholder': 'Ex : Bâtiment Principal'}}) }}
+    {{ form_row(form.adresse, {'attr': {'rows': 3, 'placeholder': 'Adresse complète du site'}}) }}
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {{ form_row(form.codePostal, {'attr': {'placeholder': '75000'}}) }}

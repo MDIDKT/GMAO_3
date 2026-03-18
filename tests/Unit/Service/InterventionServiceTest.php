@@ -93,6 +93,6 @@ final class InterventionServiceTest extends TestCase
             ->willReturn('https://example.test/fallback');
         $logger = $this->createStub(LoggerInterface::class);
         $notificationService = new NotificationService($mailer, $urlGenerator, 'noreply@example.test', $logger);
-        $this->service = new InterventionService($em, $numbering, $notificationService);
+        $this->service = new InterventionService($em, $numbering, $notificationService, $logger);
     }
 }

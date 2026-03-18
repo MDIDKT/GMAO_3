@@ -1,17 +1,17 @@
 {% extends 'layouts/app.html.twig' %}
 
-{% block page_title %}Modifier le batiment{% endblock %}
-{% block page_subtitle %}Mise a jour des informations du batiment{% endblock %}
+{% block page_title %}Modifier le bâtiment{% endblock %}
+{% block page_subtitle %}Mise à jour des informations du bâtiment{% endblock %}
 
 {% block page_content %}
     <div class="max-w-3xl mx-auto space-y-6">
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10">
             <div class="px-8 py-6 border-b border-gray-200 dark:border-white/10">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Edition</h3>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Édition</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Modifiez les informations et enregistrez</p>
             </div>
             <div class="p-8">
-                {{ include('batiment/_form.html.twig', {'button_label': 'Mettre a jour', 'cancel_path': path('app_batiment_show', {'id': batiment.id})}) }}
+                {{ include('batiment/_form.html.twig', {'button_label': 'Mettre à jour', 'cancel_path': path('app_batiment_show', {'id': batiment.id})}) }}
             </div>
         </div>
 

@@ -32,7 +32,7 @@
         {
             $user = $this->getUser();
             if (!$user instanceof User || $user->getOrganisation() === null) {
-                throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+                throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
             }
 
             $organisation = $user->getOrganisation();
@@ -86,7 +86,7 @@
         {
             $currentUser = $this->getUser();
             if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
-                throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+                throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
             }
 
             $organisation = $currentUser->getOrganisation();
@@ -125,7 +125,7 @@
 
             $currentUser = $this->getUser();
             if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
-                throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+                throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
             }
 
             $form = $this->createForm(EquipementType::class, $equipement, ['organisation' => $currentUser->getOrganisation()]);
@@ -149,15 +149,15 @@
             $this->denyAccessUnlessGranted(EquipementVoter::DELETE, $equipement);
 
             if ($this->isCsrfTokenValid('delete' . $equipement->getId(), $request->getPayload()->getString('_token'))) {
-                // Verifier les dependances avant suppression
+                // Vérifier les dépendances avant suppression
                 if ($equipement->getDemandes()->count() > 0) {
-                    $this->addFlash('danger', 'Impossible de supprimer cet equipement : il est lie a ' . $equipement->getDemandes()->count() . ' demande(s).');
+                    $this->addFlash('danger', 'Impossible de supprimer cet équipement : il est lié à ' . $equipement->getDemandes()->count() . ' demande(s).');
                     return $this->redirectToRoute('app_equipement_show', ['id' => $equipement->getId()]);
                 }
 
                 $entityManager->remove($equipement);
                 $entityManager->flush();
-                $this->addFlash('success', 'L\'equipement ' . $equipement->getNom() . ' a ete supprime avec succes.');
+                $this->addFlash('success', 'L\'équipement ' . $equipement->getNom() . ' a été supprimé avec succès.');
             }
 
             return $this->redirectToRoute('app_equipement_index', [], Response::HTTP_SEE_OTHER);

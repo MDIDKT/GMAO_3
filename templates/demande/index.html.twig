@@ -64,30 +64,30 @@
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ openCount }}</p>
         </div>
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-4 kpi-accent-success">
-            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Demandes cloturees</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Demandes clôturées</p>
             <p class="text-2xl font-bold text-gray-800 dark:text-white mt-1">{{ closedCount }}</p>
         </div>
     </div>
 
     <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-fondun">
-            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ totalCount }} demandes trouvees</p>
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ totalCount }} demandes trouvées</p>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-50 dark:bg-fondun border-b border-gray-200 dark:border-white/10">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numero
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numéro
                     </th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priorite
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priorité
                     </th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut
                     </th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Site
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Creation
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Création
                     </th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions
                     </th>
@@ -161,7 +161,9 @@
                 {% else %}
                     <tr>
 
-                    <td colspan="7" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400">Aucune demande trouvee.</td>
+                        <td colspan="7" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400">Aucune demande
+                            trouvée.
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -175,7 +177,7 @@
                 {% if pagination.currentPageNumber > 1 %}
                     <a href="{{ path('app_demande_index', {page: pagination.currentPageNumber - 1, site: selectedSite, priorite: selectedPriorite, statut: selectedStatut, search: selectedSearch}) }}"
                        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-white/10 bg-white dark:bg-fonddeux text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5">
-                        Precedent
+                        Précédent
                     </a>
                 {% endif %}
                 {% for page in 1..pagination.pageCount %}

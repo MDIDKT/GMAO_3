@@ -39,7 +39,7 @@
         {
             $currentUser = $this->getUser();
             if (!$currentUser instanceof User || $currentUser->getOrganisation() === null) {
-                throw $this->createAccessDeniedException('Utilisateur non rattache a une organisation.');
+                throw $this->createAccessDeniedException('Utilisateur non rattaché à une organisation.');
             }
 
             $organisation = $currentUser->getOrganisation();
@@ -88,12 +88,12 @@
         {
             $currentUser = $this->getUser();
             if (!$currentUser instanceof User) {
-                throw $this->createAccessDeniedException('Utilisateur non authentifie.');
+                throw $this->createAccessDeniedException('Utilisateur non authentifié.');
             }
 
             $organisation = $currentUser->getOrganisation();
             if ($organisation === null) {
-                throw $this->createAccessDeniedException('Aucune organisation associee a cet utilisateur.');
+                throw $this->createAccessDeniedException('Aucune organisation associée à cet utilisateur.');
             }
 
             $demande = new Demande();
@@ -198,7 +198,7 @@
                 return;
             }
 
-            throw $this->createNotFoundException('Photo non rattachee a une ressource.');
+            throw $this->createNotFoundException('Photo non rattachée à une ressource.');
         }
 
         #[Route('/{id}/qualifier', name: 'app_demande_qualifier', methods: ['POST'])]
@@ -214,7 +214,7 @@
             }
 
             if ($demande->getStatut() !== StatutDemande::A_QUALIFIER) {
-                $this->addFlash('danger', 'Cette demande ne peut pas etre qualifiee (statut actuel : ' . $demande->getStatut()->label() . ').');
+                $this->addFlash('danger', 'Cette demande ne peut pas être qualifiée (statut actuel : ' . $demande->getStatut()->label() . ').');
                 return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
             }
 
@@ -222,7 +222,7 @@
             $entityManager->flush();
             $this->notificationService->notifyDemandeQualifiee($demande);
 
-            $this->addFlash('success', 'Demande qualifiee avec succes.');
+            $this->addFlash('success', 'Demande qualifiée avec succès.');
             return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
         }
 
@@ -239,7 +239,7 @@
             }
 
             if ($demande->getStatut() !== StatutDemande::A_QUALIFIER && $demande->getStatut() !== StatutDemande::QUALIFIE) {
-                $this->addFlash('danger', 'Cette demande ne peut pas etre rejetee (statut actuel : ' . $demande->getStatut()->label() . ').');
+                $this->addFlash('danger', 'Cette demande ne peut pas être rejetée (statut actuel : ' . $demande->getStatut()->label() . ').');
                 return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
             }
 
@@ -254,7 +254,7 @@
             $entityManager->flush();
             $this->notificationService->notifyDemandeRejetee($demande);
 
-            $this->addFlash('success', 'Demande rejetee.');
+            $this->addFlash('success', 'Demande rejetée.');
             return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
         }
 
@@ -264,7 +264,7 @@
             $this->denyAccessUnlessGranted('DEMANDE_EDIT', $demande);
             $currentUser = $this->getUser();
             if (!$currentUser instanceof User) {
-                throw $this->createAccessDeniedException('Utilisateur non authentifie.');
+                throw $this->createAccessDeniedException('Utilisateur non authentifié.');
             }
 
             $form = $this->createForm(DemandeType::class, $demande, ['organisation' => $currentUser->getOrganisation()]);
