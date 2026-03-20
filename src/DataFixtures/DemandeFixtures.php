@@ -163,6 +163,7 @@ class DemandeFixtures extends Fixture implements DependentFixtureInterface
     {
         $organisations = $manager->getRepository(Organisation::class)->findAll();
         $demandeNum = 1;
+        $year = (int)date('Y');
 
         foreach ($organisations as $organisation) {
             $users = $manager->getRepository(User::class)->findBy(
@@ -198,7 +199,7 @@ class DemandeFixtures extends Fixture implements DependentFixtureInterface
                     ->setDescription($data['description'])
                     ->setPriorite($data['priorite'])
                     ->setStatut($data['statut'])
-                    ->setNumero(sprintf('DEM-%04d', $demandeNum))
+                    ->setNumero(sprintf('DEM-%d-%04d', $year, $demandeNum))
                     ->setUser($user)
                     ->setSite($site)
                     ->setOrganisation($organisation);

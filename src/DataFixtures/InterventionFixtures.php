@@ -95,6 +95,7 @@ class InterventionFixtures extends Fixture implements DependentFixtureInterface
     {
         $organisations = $manager->getRepository(Organisation::class)->findAll();
         $interventionNum = 1;
+        $year = (int)date('Y');
 
         foreach ($organisations as $organisation) {
             // On recupère les demandes qui ont un statut eligible (PLANIFIE, EN_COURS, CLOTURE)
@@ -138,7 +139,7 @@ class InterventionFixtures extends Fixture implements DependentFixtureInterface
                 $planificateur = $allUsers[($index + 1) % count($allUsers)];
 
                 $intervention = (new Intervention())
-                    ->setNumero(sprintf('INT-%04d', $interventionNum))
+                    ->setNumero(sprintf('INT-%d-%04d', $year, $interventionNum))
                     ->setStatut($data['statut'])
                     ->setDemande($demande)
                     ->setTechnicien($technicien)
