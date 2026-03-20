@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/public/manifest.json">
     <meta name="theme-color" content="#CF9D7B">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="apple-touch-icon" href="/public/icons/icon-192x192.png">
+    <title>{% block title %}SINOKO{% endblock %}</title>
     <link rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><polygon points=%2232,2 58,17 58,47 32,62 6,47 6,17%22 fill=%22%23CF9D7B%22/><text y=%2244%22 x=%2232%22 font-size=%2236%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22>S</text></svg>">
 
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}

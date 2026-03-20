@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" width="240" height="64">
+  <defs>
+    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#CF9D7B"/>
+      <stop offset="100%" style="stop-color:#724B39"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Wordmark SINOKO — le "O" est remplacé par un cercle engrenage -->
+  <!-- S -->
+  <text x="0" y="42" font-family="'Arial Black', 'Arial', sans-serif" font-size="36" font-weight="900" fill="url(#grad3)">SIN</text>
+
+  <!-- O stylisé : cercle avec crans d'engrenage -->
+  <g transform="translate(112, 24)">
+    <!-- Cercle extérieur -->
+    <circle cx="0" cy="0" r="16" fill="none" stroke="url(#grad3)" stroke-width="4"/>
+    <!-- Cercle intérieur -->
+    <circle cx="0" cy="0" r="7" fill="#CF9D7B"/>
+    <!-- 6 crans d'engrenage -->
+    <rect x="-3" y="-19" width="6" height="8" rx="2" fill="#CF9D7B"/>
+    <rect x="-3" y="11" width="6" height="8" rx="2" fill="#CF9D7B"/>
+    <rect x="11" y="-3" width="8" height="6" rx="2" fill="#CF9D7B"/>
+    <rect x="-19" y="-3" width="8" height="6" rx="2" fill="#CF9D7B"/>
+    <rect x="8" y="-15" width="6" height="8" rx="2" transform="rotate(45 11 -11)" fill="#CF9D7B"/>
+    <rect x="-14" y="7" width="6" height="8" rx="2" transform="rotate(45 -11 11)" fill="#CF9D7B"/>
+    <rect x="-14" y="-15" width="6" height="8" rx="2" transform="rotate(-45 -11 -11)" fill="#CF9D7B"/>
+    <rect x="8" y="7" width="6" height="8" rx="2" transform="rotate(-45 11 11)" fill="#CF9D7B"/>
+  </g>
+
+  <!-- KO -->
+  <text x="134" y="42" font-family="'Arial Black', 'Arial', sans-serif" font-size="36" font-weight="900" fill="url(#grad3)">KO</text>
+
+  <!-- Ligne accent sous le texte -->
+  <rect x="0" y="50" width="235" height="3" rx="1.5" fill="url(#grad3)" opacity="0.6"/>
+</svg>

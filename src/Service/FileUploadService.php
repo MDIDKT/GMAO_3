@@ -13,13 +13,23 @@
         {
         }
 
-//        #[Assert\File(
-//            maxSize: '5M',
-//            mimeTypes: ['image/jpeg', 'image/png', 'image/gif'],
-//            mimeTypesMessage: 'Veuillez télécharger une image valide (JPEG, PNG, GIF).',
-//        )]
         public function upload(UploadedFile $file): string
         {
+            $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            $maxSize = 5 * 1024 * 1024; // 5 Mo
+
+            if (!in_array($file->getMimeType(), $allowedMimeTypes, true)) {
+                throw new InvalidArgumentException(
+                    sprintf('Type de fichier non autorisé : %s. Formats acceptés : JPEG, PNG, GIF.', $file->getMimeType())
+                );
+            }
+
+            if ($file->getSize() > $maxSize) {
+                throw new InvalidArgumentException(
+                    sprintf('Fichier trop volumineux : %s Mo. Maximum autorisé : 5 Mo.', round($file->getSize() / 1024 / 1024, 2))
+                );
+            }
+
             $newFilename = uniqid() . '.' . $file->guessExtension();
             $file->move($this->uploadDirectory, $newFilename);
             return $newFilename;
@@ -44,8 +54,8 @@
                 throw new InvalidArgumentException('Tentative de suppression en dehors du répertoire d\'upload');
             }
 
-            if (file_exists($realPath)) {
-                unlink($realPath);
+            if (file_exists($realPath) && !@unlink($realPath)) {
+                throw new \RuntimeException(sprintf('Impossible de supprimer le fichier : %s', $realPath));
             }
         }
 

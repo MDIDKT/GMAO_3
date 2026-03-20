@@ -64,6 +64,16 @@
                     ->getSingleScalarResult() > 0;
         }
 
+        public function findWithInterventions(int $id): ?Demande
+        {
+            return $this->createQueryBuilder('d')
+                ->leftJoin('d.interventions', 'i')->addSelect('i')
+                ->andWhere('d.id = :id')
+                ->setParameter('id', $id)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
+
         public function findByFilters(?Organisation $organisation, ?Site $site, ?StatutDemande $statut, ?Priorite $priorite, ?string $search, ?User $user = null): array
         {
             return $this->getQueryBuilderByFilters($organisation, $site, $statut, $priorite, $search, $user)

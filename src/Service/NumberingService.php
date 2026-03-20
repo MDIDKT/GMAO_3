@@ -23,8 +23,9 @@
             $nextSequence = 1;
 
             if ($lastNumero !== null) {
+                // Format attendu : PREFIX-ANNEE-SEQUENCE (ex: DEM-2026-0042)
                 $parts = explode('-', $lastNumero);
-                $nextSequence = ((int)($parts[2] ?? 0)) + 1;
+                $nextSequence = ((int)(end($parts) ?: '0')) + 1;
             }
 
             do {

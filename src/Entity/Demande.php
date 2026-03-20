@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DemandeRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_DEMANDE_NUMERO', fields: ['numero'])]
+#[ORM\Index(fields: ['titre'], name: 'idx_demande_titre')]
 #[ORM\HasLifecycleCallbacks]
 class Demande
 {
@@ -254,6 +255,9 @@ class Demande
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
+        if ($this->createdAt === null) {
+            $this->createdAt = new DateTimeImmutable();
+        }
         $this->updatedAt = new DateTimeImmutable();
     }
 

@@ -174,8 +174,13 @@ class Photo
     #[ORM\PreRemove]
     public function onPreRemove(): void
     {
-        if ($this->fileUploadService !== null && $this->fileName !== null) {
+        if ($this->fileUploadService === null || $this->fileName === null) {
+            return;
+        }
+        try {
             $this->fileUploadService->delete($this->fileName);
+        } catch (\Throwable) {
+            // Le fichier physique est absent ou inaccessible — on laisse Doctrine terminer la suppression en base
         }
     }
 

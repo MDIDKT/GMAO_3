@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}GMAO SaaS — Gestion de Maintenance{% endblock %}
+{% block title %}Sinoko — Gestion de Maintenance{% endblock %}
 
 {% block html_class %}dark{% endblock %}
 
@@ -11,13 +11,12 @@
     <nav class="bg-fondun/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-fondcinq to-fondquatre rounded-xl flex items-center justify-center shadow-lg">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                </div>
-                <span class="text-xl font-bold">GMAO <span class="text-fondcinq">SaaS</span></span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="40" height="40">
+                    <defs><linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#CF9D7B"/><stop offset="100%" style="stop-color:#724B39"/></linearGradient></defs>
+                    <polygon points="32,2 58,17 58,47 32,62 6,47 6,17" fill="url(#navGrad)"/>
+                    <g transform="translate(32,32)" fill="white"><rect x="-2.5" y="-14" width="5" height="18" rx="2.5"/><circle cx="0" cy="-14" r="6" fill="none" stroke="white" stroke-width="3"/><circle cx="0" cy="-14" r="2.5"/><rect x="-4.5" y="4" width="9" height="6" rx="2.5"/></g>
+                </svg>
+                <span class="text-xl font-bold">Sinoko <span class="text-fondcinq">Maintenance</span></span>
             </div>
             <a href="{{ path('app_login') }}" class="bg-gradient-to-r from-fondcinq to-fondquatre hover:from-fondcinq/90 hover:to-fondquatre/90 text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition">
                 Se connecter
@@ -223,7 +222,7 @@
     {# FOOTER #}
     <footer class="border-t border-white/5 py-8">
         <div class="max-w-6xl mx-auto px-6 text-center">
-            <p class="text-sm text-gray-600">GMAO SaaS &mdash; Symfony 8.0.5 &middot; PHP 8.4 &middot; Tailwind CSS v4</p>
+            <p class="text-sm text-gray-600">Sinoko &mdash; Gestion de Maintenance &middot; Symfony 8 &middot; PHP 8.4</p>
         </div>
     </footer>
 {% endblock %}

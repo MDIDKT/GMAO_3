@@ -27,6 +27,5 @@
 
         public function checkPostAuth(UserInterface $user, ?TokenInterface $token = null): void
         {
-//rien
         }
     }
