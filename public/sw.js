@@ -1,22 +1,34 @@
-const CACHE_NAME = 'gmao-v1';
-const urlsToCache = [
-    '/',
-    '/build/app.css',    // ton CSS compile
-    '/build/app.js',     // ton JS compile
-];
+const CACHE_NAME = 'gmao-v2';
 
-// Installation : met en cache les fichiers essentiels
+// Installation : on ne pré-cache rien pour éviter les erreurs de fichiers hashés
 self.addEventListener('install', event => {
+    self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+    // Supprimer les anciens caches
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(urlsToCache))
+        caches.keys().then(names =>
+            Promise.all(
+                names.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))
+            )
+        )
     );
 });
 
-// Fetch : sert depuis le cache si disponible, sinon reseau
+// Stratégie network-first : réseau d'abord, cache en fallback
 self.addEventListener('fetch', event => {
+    // Ignorer les requêtes non-GET
+    if (event.request.method !== 'GET') return;
+
     event.respondWith(
-        caches.match(event.request)
-            .then(response => response || fetch(event.request))
+        fetch(event.request)
+            .then(response => {
+                // Mettre en cache la réponse pour usage offline
+                const clone = response.clone();
+                caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+                return response;
+            })
+            .catch(() => caches.match(event.request))
     );
 });
