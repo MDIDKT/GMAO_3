@@ -59,7 +59,9 @@ class InterventionRepository extends ServiceEntityRepository
 
     public function getQueryBuilderByFilters(?Organisation $organisation, ?User $user = null, ?StatutIntervention $statut = null): QueryBuilder
     {
-        $qb = $this->createQueryBuilder('d');
+        $qb = $this->createQueryBuilder('d')
+            ->leftJoin('d.demande', 'dem')->addSelect('dem')
+            ->leftJoin('d.technicien', 't')->addSelect('t');
 
         if ($organisation !== null) {
             $qb->andWhere('d.organisation = :organisation')

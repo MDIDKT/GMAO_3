@@ -1,7 +1,7 @@
 {% extends 'layouts/app.html.twig' %}
 
 {% block page_title %}{{ intervention.numero ?: ('INT-' ~ intervention.id) }}{% endblock %}
-{% block page_subtitle %}Detail de l'intervention{% endblock %}
+{% block page_subtitle %}Détail de l'intervention{% endblock %}
 
 {% block page_actions %}
     <a href="{{ path('app_intervention_edit', {'id': intervention.id}) }}"
@@ -33,7 +33,7 @@
                     <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Informations de l'intervention</h3>
                     <div class="flex flex-wrap items-center gap-2">
                         <span class="px-3 py-1 text-sm font-semibold rounded-full {{ statutClass }}">
-                            {{ intervention.statut ? intervention.statut.label() : 'Statut non defini' }}
+                            {{ intervention.statut ? intervention.statut.label() : 'Statut non défini' }}
                         </span>
                     </div>
                 </div>
@@ -41,11 +41,11 @@
 
             <div class="space-y-4">
                 <div>
-                    <p class="text-sm font-medium text-gray-500 mb-1">Numero</p>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Numéro</p>
                     <p class="text-gray-800 dark:text-white">{{ intervention.numero ?: '-' }}</p>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-500 mb-1">Demande associee</p>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Demande associée</p>
                     <p class="text-gray-800 dark:text-white">
                         {% if intervention.demande %}
                             <a href="{{ path('app_demande_show', {'id': intervention.demande.id}) }}" class="text-primary hover:text-primary/80">
@@ -80,11 +80,11 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <p class="text-sm font-medium text-gray-500 mb-1">Date planifiee</p>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Date planifiée</p>
                         <p class="text-gray-800 dark:text-white">{{ intervention.datePlanifiee ? intervention.datePlanifiee|date('d/m/Y H:i') : '-' }}</p>
                     </div>
                     <div>
-                        <p class="text-sm font-medium text-gray-500 mb-1">Date debut</p>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Date début</p>
                         <p class="text-gray-800 dark:text-white">{{ intervention.dateDebut ? intervention.dateDebut|date('d/m/Y H:i') : '-' }}</p>
                     </div>
                     <div>
@@ -94,7 +94,7 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <p class="text-sm font-medium text-gray-500 mb-1">Duree</p>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Durée</p>
                         <p class="text-gray-800 dark:text-white">{{ intervention.dureeMinutes ? intervention.dureeMinutes ~ ' minutes' : '-' }}</p>
                     </div>
                     <div>
@@ -124,7 +124,7 @@
                                     <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">{{ label }}</p>
                                     <div class="flex flex-wrap gap-3">
                                         {% for photo in photoGroup %}
-                                            <a href="{{ path('app_intervention_photo_show', {'id': photo.id}) }}" target="_blank">
+                                            <a href="{{ path('app_intervention_photo_show', {'id': photo.id}) }}" target="_blank" rel="noopener noreferrer">
                                                 <img src="{{ path('app_intervention_photo_show', {'id': photo.id}) }}"
                                                      alt="{{ photo.originalName ?: 'Photo' }}"
                                                      class="h-24 w-24 object-cover rounded-xl border border-gray-200 dark:border-white/10 hover:opacity-80 transition">
@@ -137,17 +137,6 @@
                     </div>
                 {% endif %}
 
-                    <a href="{{ path('app_intervention_edit', {'id': intervention.id}) }}"
-                       class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
-                        Modifier
-                    </a>
-
-                    <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_PLANIFICATEUR') ? path('app_intervention_index') : path('app_intervention_mes_interventions') }}"
-                       class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
-                        Retour a la liste
-                    </a>
-
-                {{ include('intervention/_delete_form.html.twig') }}
             </div>
         </div>
 
@@ -161,7 +150,6 @@
                 {% else %}
                     <p class="text-gray-400 dark:text-gray-500 italic">Aucun compte rendu pour le moment</p>
                 {% endif %}
-            </div>
 
                 {# Formulaire upload — visible uniquement si EN_COURS ET technicien assigné #}
                 {% if intervention.statut.value == 'EN_COURS' and app.user == intervention.technicien %}
@@ -177,30 +165,14 @@
                         {{ form_end(photoForm) }}
                     </div>
                 {% endif %}
-
-                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PLANIFICATEUR') %}
-                    <a href="{{ path('app_intervention_edit', {'id': intervention.id}) }}"
-                       class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
-                        Modifier
-                    </a>
-                {% endif %}
-
-                <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_PLANIFICATEUR') ? path('app_intervention_index') : path('app_intervention_mes_interventions') }}"
-                   class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
-                    Retour a la liste
-                </a>
-
-                {{ include('intervention/_delete_form.html.twig') }}
             </div>
-        </div>
 
-        <div class="space-y-6">
             <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-primary">
                 <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">ID intervention</p>
                 <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ intervention.id }}</p>
             </div>
             <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 kpi-accent-secondary">
-                <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Creee le</p>
+                <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Créée le</p>
                 <p class="text-lg font-semibold text-gray-800 dark:text-white mt-1">{{ intervention.createdAt ? intervention.createdAt|date('d/m/Y H:i') : '-' }}</p>
                 <p class="text-sm text-gray-500 mt-2">Maj: {{ intervention.updatedAt ? intervention.updatedAt|date('d/m/Y H:i') : '-' }}</p>
             </div>
@@ -208,7 +180,7 @@
                 <div class="flex flex-col gap-3">
                     <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_PLANIFICATEUR') ? path('app_intervention_index') : path('app_intervention_mes_interventions') }}"
                        class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
-                        Retour a la liste
+                        Retour à la liste
                     </a>
 
                     {% if intervention.statut.value == 'PLANIFIE' %}
@@ -228,7 +200,7 @@
                                 <label for="compteRendu" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Compte rendu *</label>
                                 <textarea id="compteRendu" name="compte_rendu" rows="3" required
                                           class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm focus:ring-green-500 focus:border-green-500 text-sm bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white"
-                                          placeholder="Decrivez les travaux realises...">{{ intervention.compteRendu }}</textarea>
+                                          placeholder="Décrivez les travaux réalisés...">{{ intervention.compteRendu }}</textarea>
                             </div>
                             <button type="submit"
                                     class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition font-medium">

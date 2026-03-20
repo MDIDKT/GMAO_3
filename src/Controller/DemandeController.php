@@ -110,6 +110,7 @@
                 $demande->setUser($currentUser);
                 $demande->setOrganisation($organisation);
 
+                $photoFiles = array_slice($photoFiles, 0, 5);
                 if ($photoFiles) {
                     foreach ($photoFiles as $photoFile) {
                         if (!$photoFile instanceof UploadedFile || !$photoFile->isValid()) {
@@ -282,6 +283,7 @@
                     $photoFiles = [$photoFiles];
                 }
 
+                $photoFiles = array_slice($photoFiles, 0, 5);
                 foreach ($photoFiles as $photoFile) {
                     if (!$photoFile instanceof UploadedFile || !$photoFile->isValid()) {
                         continue;

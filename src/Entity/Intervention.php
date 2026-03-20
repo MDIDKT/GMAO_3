@@ -76,7 +76,7 @@ class Intervention
     /**
      * @var Collection<int, Photo>
      */
-    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'intervention')]
+    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'intervention', cascade: ['remove'], orphanRemoval: true)]
     private Collection $photos;
 
     public function __construct()

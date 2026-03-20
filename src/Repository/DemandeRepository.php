@@ -83,7 +83,11 @@
 
         public function getQueryBuilderByFilters(?Organisation $organisation, ?Site $site, ?StatutDemande $statut, ?Priorite $priorite, ?string $search, ?User $user = null): QueryBuilder
         {
-            $qb = $this->createQueryBuilder('d');
+            $qb = $this->createQueryBuilder('d')
+                ->leftJoin('d.site', 's')->addSelect('s')
+                ->leftJoin('d.batiment', 'b')->addSelect('b')
+                ->leftJoin('d.equipement', 'eq')->addSelect('eq')
+                ->leftJoin('d.user', 'u')->addSelect('u');
 
             if ($organisation !== null) {
                 $qb->andWhere('d.organisation = :organisation')

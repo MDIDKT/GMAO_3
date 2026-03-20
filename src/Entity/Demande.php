@@ -82,7 +82,7 @@ class Demande
     /**
      * @var Collection<int, Photo>
      */
-    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'demande', cascade: ['remove'])]
+    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'demande', cascade: ['remove'], orphanRemoval: true)]
     private Collection $photos;
 
     /**

@@ -136,12 +136,18 @@ final class InterventionController extends AbstractController
             throw $this->createNotFoundException('Fichier photo introuvable.');
         }
 
-        $filePath = rtrim((string)$this->getParameter('upload_directory'), '/') . '/' . $filename;
-        if (!is_file($filePath) || !is_readable($filePath)) {
+        $uploadDir = realpath((string)$this->getParameter('upload_directory'));
+        $filePath  = $uploadDir . '/' . $filename;
+        $realPath  = realpath($filePath);
+
+        if ($realPath === false || !str_starts_with($realPath, $uploadDir)) {
+            throw $this->createNotFoundException('Fichier photo introuvable sur le serveur.');
+        }
+        if (!is_file($realPath) || !is_readable($realPath)) {
             throw $this->createNotFoundException('Fichier photo introuvable sur le serveur.');
         }
 
-        $response = new BinaryFileResponse($filePath);
+        $response = new BinaryFileResponse($realPath);
         $response->setContentDisposition(
             ResponseHeaderBag::DISPOSITION_INLINE,
             $photo->getOriginalName() ?: basename($filePath)
@@ -198,6 +204,7 @@ final class InterventionController extends AbstractController
             }
             $typePhoto = $form->get('typePhoto')->getData();
             $legende = $form->get('legende')->getData();
+            $photoFiles = array_slice($photoFiles, 0, 5);
 
             foreach ($photoFiles as $photoFile) {
                 if (!$photoFile instanceof UploadedFile || !$photoFile->isValid()) {

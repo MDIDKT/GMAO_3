@@ -96,7 +96,7 @@
         }
 
         #[Route('/{id}/toggle', name: 'app_admin_user_toggle', methods: ['POST'])]
-        public function toggleStatus(User $user, EntityManagerInterface $em): Response
+        public function toggleStatus(User $user, Request $request, EntityManagerInterface $em): Response
         {
             $currentUser = $this->getUser();
             if ($user === $currentUser) {
@@ -106,6 +106,11 @@
 
             if ($user->getOrganisation() !== $currentUser->getOrganisation()) {
                 throw $this->createAccessDeniedException('Cet utilisateur ne fait pas partie de votre organisation.');
+            }
+
+            if (!$this->isCsrfTokenValid('toggle' . $user->getId(), $request->request->get('_token'))) {
+                $this->addFlash('danger', 'Token CSRF invalide.');
+                return $this->redirectToRoute('app_admin_user_index');
             }
 
             $user->setActif(!$user->isActif());
@@ -130,6 +135,11 @@
                 throw $this->createAccessDeniedException('Cet utilisateur ne fait pas partie de votre organisation.');
             }
 
+            if (!$this->isCsrfTokenValid('role' . $user->getId(), $request->request->get('_token'))) {
+                $this->addFlash('danger', 'Token CSRF invalide.');
+                return $this->redirectToRoute('app_admin_user_index');
+            }
+
             $newRole = $request->request->get('role');
             $validRoles = ['ROLE_USER', 'ROLE_PLANIFICATEUR', 'ROLE_ADMIN'];
 
@@ -137,6 +147,8 @@
                 $user->setRoles([$newRole]);
                 $em->flush();
                 $this->addFlash('success', "Le rôle de {$user->getEmail()} a été mis à jour.");
+            } else {
+                $this->addFlash('danger', 'Rôle invalide.');
             }
 
             return $this->redirectToRoute('app_admin_user_index');

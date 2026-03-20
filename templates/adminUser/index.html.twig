@@ -76,6 +76,7 @@
                             {% if user != app.user %}
                                 <form action="{{ path('app_admin_user_role', {'id': user.id}) }}" method="post"
                                       class="flex items-center space-x-2">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('role' ~ user.id) }}">
                                     <select name="role" aria-label="Changer le rôle de l'utilisateur"
                                             class="block w-full px-2 py-1 text-sm border border-gray-300 dark:border-white/10 rounded-lg focus:ring-primary bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white">
                                         <option
@@ -107,6 +108,7 @@
                             <div class="flex items-center gap-3">
                                 {% if user != app.user %}
                                     <form action="{{ path('app_admin_user_toggle', {'id': user.id}) }}" method="post">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ user.id) }}">
                                         <button type="submit"
                                                 class="{{ user.actif ? 'text-orange-600 hover:text-orange-700' : 'text-green-600 hover:text-green-700' }} transition">
                                             {{ user.actif ? 'Désactiver' : 'Activer' }}
@@ -126,7 +128,7 @@
                 {% else %}
                     <tr>
                         <td colspan="5" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400">Aucun
-                            utilisateur trouve.
+                            utilisateur trouvé.
                         </td>
                     </tr>
                 {% endfor %}

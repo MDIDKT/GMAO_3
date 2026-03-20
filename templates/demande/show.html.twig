@@ -95,7 +95,7 @@
                         <p class="text-sm font-medium text-gray-500 mb-2">Photos</p>
                         <div class="flex flex-wrap gap-3">
                             {% for photo in demande.photos %}
-                                <a href="{{ path('photo_show', {'id': photo.id}) }}" target="_blank">
+                                <a href="{{ path('photo_show', {'id': photo.id}) }}" target="_blank" rel="noopener noreferrer">
                                     <img src="{{ path('photo_show', {'id': photo.id}) }}"
                                          alt="{{ photo.originalName ?: 'Photo' }}"
                                          class="h-24 w-24 object-cover rounded-xl border border-gray-200 dark:border-white/10 hover:opacity-80 transition">
