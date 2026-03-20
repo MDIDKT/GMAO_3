@@ -79,7 +79,13 @@
                 'selectedSearch' => $search ?? '',
                 'sites' => $siteRepository->findBy(['organisation' => $organisation, 'actif' => true], ['nom' => 'ASC']),
                 'priorites' => Priorite::cases(),
-                'statuts' => StatutDemande::cases(),
+                'statuts' => [
+                    StatutDemande::NOUVELLE,
+                    StatutDemande::PLANIFIEE,
+                    StatutDemande::EN_COURS,
+                    StatutDemande::CLOTUREE,
+                    StatutDemande::REJETEE,
+                ],
             ]);
         }
 
@@ -106,7 +112,7 @@
                 }
                 $number = $this->numberingService->generateNumero('DEM');
                 $demande->setNumero($number);
-                $demande->setStatut(StatutDemande::A_QUALIFIER);
+                $demande->setStatut(StatutDemande::NOUVELLE);
                 $demande->setUser($currentUser);
                 $demande->setOrganisation($organisation);
 
@@ -208,31 +214,6 @@
             throw $this->createNotFoundException('Photo non rattachée à une ressource.');
         }
 
-        #[Route('/{id}/qualifier', name: 'app_demande_qualifier', methods: ['POST'])]
-        public function qualifier(Request $request, Demande $demande, EntityManagerInterface $entityManager): Response
-        {
-            if (!$this->isGranted('ROLE_PLANIFICATEUR') && !$this->isGranted('ROLE_ADMIN')) {
-                throw $this->createAccessDeniedException('Seul un planificateur ou admin peut qualifier une demande.');
-            }
-
-            if (!$this->isCsrfTokenValid('qualifier' . $demande->getId(), $request->getPayload()->getString('_token'))) {
-                $this->addFlash('danger', 'Token CSRF invalide.');
-                return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
-            }
-
-            if ($demande->getStatut() !== StatutDemande::A_QUALIFIER) {
-                $this->addFlash('danger', 'Cette demande ne peut pas être qualifiée (statut actuel : ' . $demande->getStatut()->label() . ').');
-                return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
-            }
-
-            $demande->setStatut(StatutDemande::QUALIFIE);
-            $entityManager->flush();
-            $this->notificationService->notifyDemandeQualifiee($demande);
-
-            $this->addFlash('success', 'Demande qualifiée avec succès.');
-            return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
-        }
-
         #[Route('/{id}/rejeter', name: 'app_demande_rejeter', methods: ['POST'])]
         public function rejeter(Request $request, Demande $demande, EntityManagerInterface $entityManager): Response
         {
@@ -245,7 +226,7 @@
                 return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
             }
 
-            if ($demande->getStatut() !== StatutDemande::A_QUALIFIER && $demande->getStatut() !== StatutDemande::QUALIFIE) {
+            if ($demande->getStatut() !== StatutDemande::NOUVELLE) {
                 $this->addFlash('danger', 'Cette demande ne peut pas être rejetée (statut actuel : ' . $demande->getStatut()->label() . ').');
                 return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
             }

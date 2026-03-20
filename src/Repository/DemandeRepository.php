@@ -142,7 +142,7 @@
             $qb->andWhere('d.priorite = :priorite')
                 ->setParameter('priorite', Priorite::P1_URGENTE);
             $qb->andWhere('d.statut NOT IN (:exclus)')
-                ->setParameter('exclus', [StatutDemande::CLOTURE, StatutDemande::REJETEE]);
+                ->setParameter('exclus', [StatutDemande::CLOTUREE, StatutDemande::REJETEE]);
 
             return $qb->getQuery()->getSingleScalarResult();
         }
@@ -160,7 +160,7 @@
                 ->andWhere('d.priorite = :priorite')
                 ->setParameter('priorite', Priorite::P1_URGENTE)
                 ->andWhere('d.statut NOT IN (:exclus)')
-                ->setParameter('exclus', [StatutDemande::CLOTURE, StatutDemande::REJETEE])
+                ->setParameter('exclus', [StatutDemande::CLOTUREE, StatutDemande::REJETEE])
                 ->orderBy('d.createdAt', 'DESC')
                 ->addOrderBy('d.id', 'DESC')
                 ->setMaxResults($limit)
@@ -178,7 +178,7 @@
 
             $qb->select('COUNT(d.id)');
             $qb->andWhere('d.statut = :statut')
-                ->setParameter('statut', StatutDemande::A_QUALIFIER);
+                ->setParameter('statut', StatutDemande::NOUVELLE);
 
             return $qb->getQuery()->getSingleScalarResult();
 
@@ -193,7 +193,7 @@
                 ->andWhere('d.priorite = :priorite')
                 ->setParameter('priorite', Priorite::P1_URGENTE)
                 ->andWhere('d.statut NOT IN (:exclus)')
-                ->setParameter('exclus', [StatutDemande::CLOTURE, StatutDemande::REJETEE])
+                ->setParameter('exclus', [StatutDemande::CLOTUREE, StatutDemande::REJETEE])
                 ->getQuery()
                 ->getSingleScalarResult();
         }
@@ -205,7 +205,7 @@
                 ->andWhere('d.organisation = :organisation')
                 ->setParameter('organisation', $organisation)
                 ->andWhere('d.statut NOT IN (:exclus)')
-                ->setParameter('exclus', [StatutDemande::CLOTURE, StatutDemande::REJETEE])
+                ->setParameter('exclus', [StatutDemande::CLOTUREE, StatutDemande::REJETEE])
                 ->getQuery()
                 ->getSingleScalarResult();
         }
@@ -217,7 +217,7 @@
                 ->andWhere('d.organisation = :organisation')
                 ->setParameter('organisation', $organisation)
                 ->andWhere('d.statut IN (:statuts)')
-                ->setParameter('statuts', [StatutDemande::CLOTURE, StatutDemande::REJETEE])
+                ->setParameter('statuts', [StatutDemande::CLOTUREE, StatutDemande::REJETEE])
                 ->getQuery()
                 ->getSingleScalarResult();
         }
@@ -267,7 +267,7 @@
                 ->andWhere('d.organisation = :org')
                 ->setParameter('org', $organisation)
                 ->andWhere('d.statut = :statut')
-                ->setParameter('statut', StatutDemande::CLOTURE);
+                ->setParameter('statut', StatutDemande::CLOTUREE);
 
             if ($site !== null) {
                 $qb->andWhere('d.site = :site')->setParameter('site', $site);

@@ -122,7 +122,7 @@ class InterventionFixtures extends Fixture implements DependentFixtureInterface
             $demandesEligibles = array_values(array_filter(
                 $demandes,
                 static fn (Demande $d) => !in_array($d->getStatut(), [
-                    StatutDemande::A_QUALIFIER,
+                    StatutDemande::NOUVELLE,
                     StatutDemande::REJETEE,
                 ], true)
             ));

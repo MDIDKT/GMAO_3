@@ -29,15 +29,11 @@ readonly class InterventionService
             $intervention->setNumero($number);
         }
 
-        if ($intervention->getTechnicien() && $intervention->getDatePlanifiee()) {
-            $intervention->setStatut(StatutIntervention::PLANIFIE);
-        } else {
-            $intervention->setStatut(StatutIntervention::A_PLANIFIER);
-        }
+        $this->synchroniserPlanification($intervention);
 
         $demande = $intervention->getDemande();
         if ($demande instanceof Demande) {
-            $demande->setStatut(StatutDemande::PLANIFIE);
+            $demande->setStatut(StatutDemande::PLANIFIEE);
             $demande->addIntervention($intervention);
         }
 
@@ -53,6 +49,21 @@ readonly class InterventionService
         $this->notificationService->notifyTechnicienAssigne($intervention);
     }
 
+    public function synchroniserPlanification(Intervention $intervention): void
+    {
+        if ($intervention->getTechnicien()) {
+            $intervention->setStatut(StatutIntervention::PLANIFIE);
+
+            if ($intervention->getDatePlanifiee() === null) {
+                $intervention->setDatePlanifiee(new DateTimeImmutable());
+            }
+
+            return;
+        }
+
+        $intervention->setStatut(StatutIntervention::A_PLANIFIER);
+    }
+
         /**
          * @param \App\Entity\Intervention $intervention
          * @param \App\Entity\Demande $demande
@@ -61,7 +72,7 @@ readonly class InterventionService
     public function demarrerIntervention(Intervention $intervention, Demande $demande): void
     {
         if ($intervention->getStatut() !== StatutIntervention::PLANIFIE) {
-            throw new LogicException('Impossible de démarrer : intervention non planifiée.');
+            throw new LogicException('Impossible de démarrer : intervention non affectée.');
         }
 
         $intervention->setStatut(StatutIntervention::EN_COURS);
@@ -118,7 +129,7 @@ readonly class InterventionService
         }
 
         if ($toutesTerminees) {
-            $demande->setStatut(StatutDemande::CLOTURE);
+            $demande->setStatut(StatutDemande::CLOTUREE);
         }
 
         $this->entityManager->persist($intervention);
@@ -132,7 +143,7 @@ readonly class InterventionService
         }
 
         $this->notificationService->notifyInterventionTerminee($intervention);
-        if ($demande->getStatut() === StatutDemande::CLOTURE) {
+        if ($demande->getStatut() === StatutDemande::CLOTUREE) {
             $this->notificationService->notifyDemandeCloturee($demande);
         }
     }

@@ -23,7 +23,6 @@
     </script>
     <style>
         /* Sidebar transition */
-        .sidebar-expanded { width: 240px; }
         .sidebar-collapsed { width: 72px; }
         .sidebar-label { transition: opacity 0.2s, width 0.2s; }
         .sidebar-collapsed .sidebar-label { opacity: 0; width: 0; overflow: hidden; }
@@ -293,7 +292,7 @@
                     </div>
                     <div class="bg-white dark:bg-fonddeux rounded-xl border border-gray-200 dark:border-white/10 p-5 border-l-4 border-l-yellow-500">
                         <div class="flex items-center justify-between mb-2">
-                            <p class="text-sm text-gray-500 dark:text-gray-400">A qualifier</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Nouvelles demandes</p>
                         </div>
                         <p class="text-3xl font-bold dark:text-white">5</p>
                         <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Demandes en attente</p>
@@ -336,7 +335,8 @@
                                     <p class="text-sm font-medium dark:text-gray-200 truncate">Climatisation HS bureau direction</p>
                                     <p class="text-xs text-gray-500">DEM-003 &bull; P1 Urgente</p>
                                 </div>
-                                <span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded-full">A qualifier</span>
+                                <span
+                                    class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded-full">Nouvelle</span>
                             </div>
                             <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-fondun rounded-lg">
                                 <span class="w-2 h-2 bg-red-500 rounded-full shrink-0"></span>
@@ -344,7 +344,8 @@
                                     <p class="text-sm font-medium dark:text-gray-200 truncate">Panne ascenseur batiment A</p>
                                     <p class="text-xs text-gray-500">DEM-007 &bull; P1 Urgente</p>
                                 </div>
-                                <span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded-full">A qualifier</span>
+                                <span
+                                    class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded-full">Nouvelle</span>
                             </div>
                         </div>
                     </div>
@@ -386,7 +387,7 @@
                         <select aria-label="Filtrer par statut" class="bg-gray-50 dark:bg-fondun border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-fondcinq">
                             <option>Tous statuts</option>
                             <option>En cours</option>
-                            <option>A qualifier</option>
+                            <option>Nouvelle</option>
                         </select>
                         <div class="relative">
                             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -440,7 +441,9 @@
                                     <td class="px-4 py-3 font-medium dark:text-gray-200">DEM-002</td>
                                     <td class="px-4 py-3 dark:text-gray-300">Eclairage defaillant couloir C1</td>
                                     <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400">P2 Haute</span></td>
-                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">A qualifier</span></td>
+                                    <td class="px-4 py-3"><span
+                                        class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">Nouvelle</span>
+                                    </td>
                                     <td class="px-4 py-3 dark:text-gray-400">Site Lyon</td>
                                     <td class="px-4 py-3 text-gray-500 dark:text-gray-500">09/03/2026</td>
                                     <td class="px-4 py-3"><a href="#" class="text-fondcinq hover:underline text-xs font-medium">Voir</a></td>
@@ -449,7 +452,9 @@
                                     <td class="px-4 py-3 font-medium dark:text-gray-200">DEM-003</td>
                                     <td class="px-4 py-3 dark:text-gray-300">Climatisation HS bureau direction</td>
                                     <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">P1 Urgente</span></td>
-                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">A qualifier</span></td>
+                                    <td class="px-4 py-3"><span
+                                        class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">Nouvelle</span>
+                                    </td>
                                     <td class="px-4 py-3 dark:text-gray-400">Site Paris</td>
                                     <td class="px-4 py-3 text-gray-500 dark:text-gray-500">08/03/2026</td>
                                     <td class="px-4 py-3"><a href="#" class="text-fondcinq hover:underline text-xs font-medium">Voir</a></td>

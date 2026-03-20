@@ -86,21 +86,23 @@ final class InterventionController extends AbstractController
             throw $this->createAccessDeniedException('Cette demande ne vous appartient pas.');
         }
 
-        if ($demande->getStatut() === StatutDemande::CLOTURE || $demande->getStatut() === StatutDemande::REJETEE) {
-            $this->addFlash('danger', 'Impossible de planifier une intervention sur une demande clôturée ou rejetée.');
+        if (in_array($demande->getStatut(), [StatutDemande::EN_COURS, StatutDemande::CLOTUREE, StatutDemande::REJETEE], true)) {
+            $this->addFlash('danger', 'Impossible d\'affecter une demande en cours, clôturée ou rejetée.');
             return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()]);
         }
 
         $intervention = new Intervention();
         $intervention->setDemande($demande);
         $intervention->setOrganisation($organisation);
+        $intervention->setPlanificateur($currentUser);
 
         $form = $this->createForm(InterventionType::class, $intervention, ['organisation' => $organisation]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $intervention->setPlanificateur($currentUser);
             $this->interventionService->createIntervention($intervention);
-            $this->addFlash('success', 'Intervention ' . $intervention->getNumero() . ' planifiée avec succès.');
+            $this->addFlash('success', 'Affectation enregistrée avec succès.');
             return $this->redirectToRoute('app_demande_show', ['id' => $demande->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -254,11 +256,7 @@ final class InterventionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Recalcul statut uniquement si l'intervention est encore planifiable
             if (in_array($intervention->getStatut(), [StatutIntervention::A_PLANIFIER, StatutIntervention::PLANIFIE])) {
-                if ($intervention->getTechnicien() && $intervention->getDatePlanifiee()) {
-                    $intervention->setStatut(StatutIntervention::PLANIFIE);
-                } else {
-                    $intervention->setStatut(StatutIntervention::A_PLANIFIER);
-                }
+                $this->interventionService->synchroniserPlanification($intervention);
             }
             $entityManager->flush();
 

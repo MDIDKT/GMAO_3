@@ -109,54 +109,53 @@
 
         {# Partie droite : Actions contextuelles #}
         <div class="bg-white dark:bg-fonddeux rounded-2xl shadow-md dark:shadow-none border border-gray-200 dark:border-white/10 p-6 h-fit">
-            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">Actions</h3>
-            <div class="flex flex-col gap-3">
-                {% if demande.statut and demande.statut.value == 'A_QUALIFIER' and (is_granted('ROLE_PLANIFICATEUR') or is_granted('ROLE_ADMIN')) %}
-                    <form method="post" action="{{ path('app_demande_qualifier', {'id': demande.id}) }}">
-                        <input type="hidden" name="_token" value="{{ csrf_token('qualifier' ~ demande.id) }}">
-                        <button type="submit"
-                                class="w-full px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl transition font-medium">
-                            Qualifier
-                        </button>
-                    </form>
-                {% endif %}
-
-                {% if demande.statut and (demande.statut.value == 'A_QUALIFIER' or demande.statut.value == 'QUALIFIE') and (is_granted('ROLE_PLANIFICATEUR') or is_granted('ROLE_ADMIN')) %}
-                    <form method="post" action="{{ path('app_demande_rejeter', {'id': demande.id}) }}" onsubmit="return this.motif_rejet.value.trim() !== '' || (alert('Le motif de rejet est obligatoire.'), false);">
-                        <input type="hidden" name="_token" value="{{ csrf_token('rejeter' ~ demande.id) }}">
-                        <div class="mb-2">
-                            <label for="motif_rejet" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Motif de rejet *</label>
-                            <textarea id="motif_rejet" name="motif_rejet" rows="3" required
-                                      class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm focus:ring-red-500 focus:border-red-500 text-sm bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white"
-                                      placeholder="Indiquez le motif de rejet..."></textarea>
-                        </div>
-                        <button type="submit"
-                                class="w-full px-4 py-2 bg-danger hover:bg-danger/90 text-white rounded-xl transition font-medium">
-                            Rejeter
-                        </button>
-                    </form>
-                {% endif %}
-
-                {% if demande.statut and demande.statut.value != 'CLOTURE' and demande.statut.value != 'REJETEE'
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">Traitement de la demande</h3>
+            <div class="grid grid-cols-2 gap-3">
+                {% if demande.statut and demande.statut.value != 'EN_COURS' and demande.statut.value != 'CLOTURE' and demande.statut.value != 'REJETEE'
                       and (is_granted('ROLE_PLANIFICATEUR') or is_granted('ROLE_ADMIN')) %}
                     <a href="{{ path('app_intervention_new', {'demande': demande.id}) }}"
-                       class="text-center px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary/90 transition font-medium">
-                        Planifier une intervention
+                       class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-primary text-white rounded-xl hover:bg-primary/90 transition font-medium text-sm">
+                        Affecter la demande
                     </a>
                 {% endif %}
 
+                {# 2. Actions neutres #}
                 {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PLANIFICATEUR') %}
                     <a href="{{ path('app_demande_edit', {'id': demande.id}) }}"
-                       class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
+                       class="inline-flex items-center justify-center w-full px-4 py-2.5 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium text-sm">
                         Modifier
                     </a>
                 {% endif %}
 
                 <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_PLANIFICATEUR') ? path('app_demande_index') : path('app_demande_mes_demandes') }}"
-                   class="text-center px-4 py-2 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium">
+                   class="inline-flex items-center justify-center w-full px-4 py-2.5 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition font-medium text-sm">
                     Retour à la liste
                 </a>
+            </div>
 
+            {# 3. Actions destructrices — séparateur visuel #}
+            {% if demande.statut and demande.statut.value == 'A_QUALIFIER' and (is_granted('ROLE_PLANIFICATEUR') or is_granted('ROLE_ADMIN')) %}
+                <div class="border-t border-gray-200 dark:border-white/10 pt-4 mt-4">
+                    <form method="post" action="{{ path('app_demande_rejeter', {'id': demande.id}) }}"
+                          onsubmit="return this.motif_rejet.value.trim() !== '' || (alert('Le motif de rejet est obligatoire.'), false);">
+                        <input type="hidden" name="_token" value="{{ csrf_token('rejeter' ~ demande.id) }}">
+                        <div class="flex flex-col sm:flex-row gap-3 items-start">
+                            <div class="flex-1 w-full">
+                                <label for="motif_rejet"></label><textarea id="motif_rejet" name="motif_rejet" rows="1"
+                                                                           required
+                                                                           class="w-full rounded-xl border-gray-300 dark:border-white/10 shadow-sm focus:ring-red-500 focus:border-red-500 text-sm bg-gray-50 dark:bg-fondun text-gray-900 dark:text-white"
+                                                                           placeholder="Motif de rejet..."></textarea>
+                            </div>
+                            <button type="submit"
+                                    class="px-4 py-2.5 bg-danger hover:bg-danger/90 text-white rounded-xl transition font-medium text-sm whitespace-nowrap">
+                                Rejeter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+
+            <div class="border-t border-gray-200 dark:border-white/10 pt-4 mt-4">
                 {{ include('demande/_delete_form.html.twig') }}
             </div>
         </div>

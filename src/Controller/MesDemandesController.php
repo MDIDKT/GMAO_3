@@ -34,9 +34,10 @@ final class MesDemandesController extends AbstractController
             'pagination' => $pagination,
             'statut' => $statut,
             'statuts' => [
-                StatutDemande::PLANIFIE,
+                StatutDemande::NOUVELLE,
+                StatutDemande::PLANIFIEE,
                 StatutDemande::EN_COURS,
-                StatutDemande::CLOTURE,
+                StatutDemande::CLOTUREE,
                 StatutDemande::REJETEE,
             ],
         ]);

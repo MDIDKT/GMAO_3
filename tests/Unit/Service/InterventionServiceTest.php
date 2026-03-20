@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Service;
 
 use App\Entity\Demande;
 use App\Entity\Intervention;
+use App\Entity\User;
 use App\Enum\StatutIntervention;
 use App\Service\InterventionService;
 use App\Service\NotificationService;
@@ -43,6 +44,19 @@ final class InterventionServiceTest extends TestCase
 
         $this->expectException(LogicException::class);
         $this->service->demarrerIntervention($intervention, $demande);
+    }
+
+    public function testCreateInterventionPassePlanifieQuandTechnicienAffecteSansDate(): void
+    {
+        $intervention = new Intervention();
+        $intervention->setNumero('INT-TEST');
+        $intervention->setDemande(new Demande());
+        $intervention->setTechnicien(new User());
+
+        $this->service->createIntervention($intervention);
+
+        $this->assertSame(StatutIntervention::PLANIFIE, $intervention->getStatut());
+        $this->assertInstanceOf(DateTimeImmutable::class, $intervention->getDatePlanifiee());
     }
 
     public function testTerminerVerifiePasseTerminer(): void

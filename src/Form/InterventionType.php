@@ -34,25 +34,7 @@ class InterventionType extends AbstractType
                     return $qb;
                 },
             ])
-            ->add('datePlanifiee')
-            ->add('planificateur', EntityType::class, [
-                'class' => User::class,
-                'required' => false,
-                'choice_label' => function ($user) {
-                    return $user->getNom() . ' ' . $user->getPrenom();
-                },
-                'query_builder' => function (EntityRepository $er) use ($organisation) {
-                    $qb = $er->createQueryBuilder('u');
-                    if ($organisation) {
-                        $qb->andWhere('u.organisation = :organisation')
-                            ->setParameter('organisation', $organisation);
-                    }
-                    $qb->andWhere('u.roles LIKE :role')
-                        ->setParameter('role', '%"ROLE_PLANIFICATEUR"%');
-                    return $qb;
-                },
-            ])
-;
+            ->add('datePlanifiee');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

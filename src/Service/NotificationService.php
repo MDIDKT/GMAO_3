@@ -89,25 +89,6 @@ final class NotificationService
         );
     }
 
-    public function notifyDemandeQualifiee(Demande $demande): void
-    {
-        $demandeur = $demande->getUser();
-        if (!$demandeur instanceof User) {
-            return;
-        }
-
-        $this->sendToUser(
-            $demandeur,
-            'Votre demande a été qualifiée : ' . ($demande->getNumero() ?? 'sans numéro'),
-            'email/demande_qualifiee.html.twig',
-            [
-                'demandeur' => $demandeur,
-                'demande' => $demande,
-                'demandeUrl' => $this->generateDemandeUrl($demande),
-            ]
-        );
-    }
-
     public function notifyDemandeCloturee(Demande $demande): void
     {
         $demandeur = $demande->getUser();

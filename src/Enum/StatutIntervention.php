@@ -12,8 +12,8 @@
         public function label(): string
         {
             return match ($this) {
-                self::A_PLANIFIER => 'À planifier',
-                self::PLANIFIE => 'Planifié',
+                self::A_PLANIFIER => 'À affecter',
+                self::PLANIFIE => 'Affectée',
                 self::EN_COURS => 'En cours',
                 self::TERMINEE => 'Terminée',
                 self::VALIDEE => 'Validée',
